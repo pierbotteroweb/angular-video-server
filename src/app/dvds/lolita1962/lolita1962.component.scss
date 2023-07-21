@@ -1,8 +1,8 @@
 
 @mixin colorText {
-    color: #F33320;
+    color: #fff;
     letter-spacing: 2px;
-    font-family: 'Pacifico', cursive;
+    font-family: 'Teko', sans-serif;
     font-size: 30px;
     cursor: pointer;
 }
@@ -28,11 +28,11 @@
             margin: auto;
             background: transparent;
             position: relative;
-            top: 19vh;
-            left: 19vw;
+            top: 71vh;
+            left: 57.5vw;
             text-align: left;
             &__button{
-                display: block;                
+                margin: 10px;              
                 font-weight: bolder;        
                 user-select: none;
                 @include colorText
@@ -45,10 +45,10 @@
     overflow-y: scroll;
     max-height: 40vh;
     text-align: left;
-    width: 25vw;
+    width: 27vw;
     position: absolute;
-    top: 53vh;
-    left: 19vw;
+    top: 25vh;
+    left: 58.5vw;
     .scene{
         @include colorText;
         line-height: 16px;
@@ -74,8 +74,8 @@
 
 .scene-menu{
     position: absolute;
-    top: 63vh;
-    left: 54vh;
+    top: 25vh;
+    left: 58.5vw;
 
     &__button{        
         font-size: 35px;
@@ -89,7 +89,7 @@
 @mixin languages-menu {
     text-align: left;
     position: absolute;
-    top: 62vh;
+    top: 35vh;
 }
 
 @mixin languages-menu-button{
@@ -102,7 +102,7 @@
 
 .subtitles-menu{
     @include languages-menu();
-    left: 19vw;
+    left: 59vw;
     &__button{      
         @include languages-menu-button()  
     }
@@ -110,7 +110,7 @@
 
 .audio-language-menu{
     @include languages-menu();
-    left: 36vw;
+    left: 71vw;
     &__button{      
         @include languages-menu-button()  
     }
@@ -136,7 +136,7 @@
     height: 17px;
     }
     ::-webkit-scrollbar-thumb{
-    background: #F33320;
+    background: #DB3738;
     border-radius: 30px;
     }
     ::-webkit-scrollbar-track{

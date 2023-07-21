@@ -15,23 +15,36 @@ export class Lolita1962Component implements OnInit {
   elem: any;
   data:any={};
 
-  chapterPoints:any=[{"title":"Opening Credits","point":"00:00:00"},
-                     {"title":"4 Years Earlier","point":"00:12:17"},
-                     {"title":"The Summer Dance","point":"00:20:05"},
-                     {"title":"A Cozy Little Dinner","point":"00:28:52"},
-                     {"title":"Dreamy Childishness","point":"00:36:44"},
-                     {"title":"A Father to My Little Girl","point":"00:48:47"},
-                     {"title":"The Perfect Murder","point":"00:57:36"},
-                     {"title":"Perfectly Decent","point":"01:06:38"},
-                     {"title":"Two Normal Guys","point":"01:18:19"},
-                     {"title":"Hey, Let's Tell Mother","point":"01:28:10"},
-                     {"title":"Six Months Have Passed","point":"01:38:30"},
-                     {"title":"Tremble Not, Little Nymph","point":"01:50:50"},
-                     {"title":"A Strange Car Following Us","point":"02:00:30"},
-                     {"title":"A White, Widowed Male","point":"02:11:12"},
-                     {"title":"Ironing Day","point":"02:17:34"},
-                     {"title":"We'll Start Afresh","point":"02:28:53"},
-                     {"title":"Quilty!","point":"02:32:11"}]
+  chapterPoints:any=[
+    {"title": "Start","point": "00:00:00"},
+    {"title": "Condition Red","point": "00:03:07"},
+    {"title": "Abroad the Leper Colony: Wing Attack Plan R","point": "00:05:48"},
+    {"title": "Fred calls Buck","point": "00:11:38"},
+    {"title": "Three Simple Rules","point": "00:14:53"},
+    {"title": "Attack Profile","point": "00:16:25"},
+    {"title": "Briefing Group Captain Mandrake","point": "00:19:15"},
+    {"title": "In the War Room","point": "00:24:11"},
+    {"title": "General Turgidson's Six Points","point": "00:31:59"},
+    {"title": "Survival Kit Contents Check","point": "00:35:28"},
+    {"title": "Ambassador De Sadesky","point": "00:36:26"},
+    {"title": "Friendly Fire","point": "00:38:19"},
+    {"title": "Merkin and Dimitri","point": "00:39:58"},
+    {"title": "A Monstruous Commie Plot","point": "00:45:32"},
+    {"title": "The Doomsday Machine: Dr. Strangelove","point": "00:49:08"},
+    {"title": "Ripper Fires back:How he Developed his Theory","point": "00:53:56"},
+    {"title": "The Base Surrenders: Ripper Checks Out","point": "00:57:22"},
+    {"title": "Evasive Action: Three Engines Hit","point": "01:01:20"},
+    {"title": "POE: Colonel 'Bat' Guano","point": "01:05:25"},
+    {"title": "Assessing the Damage","point": "01:07:45"},
+    {"title": "Deviant Pervert: Calling the President","point": "01:09:29"},
+    {"title": "Code OPE Acknowledged: One Plane Left","point": "01:13:14"},
+    {"title": "A Charge of Target","point": "01:17:46"},
+    {"title": "Is There Really a Chance...","point": "01:19:23"},
+    {"title": "Final checks: Bombs Doors Negative","point": "01:20:35"},
+    {"title": "Yahoo!!!","point": "01:26:55"},
+    {"title": "100-Year Plan: 'Mein Fuhrer! I Can Walk!'","point": "01:27:35"},
+    {"title": "We'll Meet Again","point": "01:32:56"}
+]
 
   url:string
   backgroundMenuUrl:any
@@ -57,7 +70,8 @@ export class Lolita1962Component implements OnInit {
   ngOnInit(): void {
     this.currentVideoTime=0
     this.scenePage=1
-    this.data.dvd="Lolita 1962"
+    this.data.dvd="Dr Strangelove 1964"
+    this.data.nomeDublado="Dr Fantastico"
     this.subtitlesList=[
       {idioma:"ENG", titulo:"english", fileName:"Sub"},
       {idioma:"OFF", titulo:"portuguese",  fileName:""}]
@@ -66,22 +80,21 @@ export class Lolita1962Component implements OnInit {
       {idioma:"PORT", titulo:"portuguese",tipo:"madrugadaFilmes"}]
     this.data.subtitlesList=this.subtitlesList
     this.data.audioList=this.audioList
-    this.data.duracaoDoFilme="2:33:32"
+    this.data.duracaoDoFilme="1:37:27"
     this.data.url=this.baseUrl+encodeURI(this.data.dvd)+".mp4#t="+this.currentVideoTime
     this.elem = document.documentElement;
     this.menuAudioUrl=this.baseUrl+encodeURI(this.data.dvd)+"/menu.mp3"
     this.setBackgroundImage("mainMenu")
     setTimeout(()=>{
       let audio = document.getElementsByTagName('audio')[0]
-      audio.volume = 0.05
-    },500)
+      audio.volume = 0.05},500)
   }
   
   changeScreen(screen,currentTime?){
     if(currentTime){
       this.currentVideoTime=currentTime
     }
-    this.data.duracaoDoFilme="2:33:32"
+    this.data.duracaoDoFilme="1:37:27"
     this.scenePage=1
     this.menuMode=true
     this.movieMode=false
@@ -115,8 +128,7 @@ export class Lolita1962Component implements OnInit {
 
 
   goToScene(i){
-    this.data.url=this.baseUrl+encodeURI(this.data.dvd)+".mp4#t="+
-                  this.commonServices.toSeconds(this.chapterPoints[i]['point'])
+    this.data.url=this.baseUrl+encodeURI(this.data.dvd)+".mp4#t="+this.commonServices.toSeconds(this.chapterPoints[i]['point'])
     this.playMovie()
   }
 
@@ -134,7 +146,7 @@ export class Lolita1962Component implements OnInit {
   }
   
   playTrailer(){
-    this.data.duracaoDoFilme = "0:01:01"
+    this.data.duracaoDoFilme = "0:03:25"
     this.data.url=this.baseUrl+encodeURI(this.data.dvd)+"/Trailer.mp4"
     this.menuMode=false
     this.movieMode=true
