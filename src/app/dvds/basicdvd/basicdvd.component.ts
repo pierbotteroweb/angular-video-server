@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { CommonService } from 'src/services/common.service';
 
 @Component({
@@ -9,11 +10,22 @@ import { CommonService } from 'src/services/common.service';
 export class BasicdvdComponent implements OnInit {
 
   constructor(
-    private commonServices: CommonService
+    private commonServices: CommonService,
+    private sanitizer: DomSanitizer
     ) { }
   baseUrl:any="http://casadopier.ddns.net:1984/api/assets/dvds/"
   elem: any;
   data:any={};
+  googleFont:any
+  labels={"movie":"Movie",
+          "menu":"Menu",
+          "scenes":"Scenes",
+          "languages":"Languages",
+          "trailer":"Trailer",
+          "subtitles":"SUBTITLES",
+          "audio":"AUDIO"}
+  textColor:"#fff"
+  textFontFamily:"'Teko', sans-serif";
 
   chapterPoints:any=[{"title":"Opening Credits","point":"00:00:00"},
                      {"title":"4 Years Earlier","point":"00:12:17"},
@@ -55,6 +67,7 @@ export class BasicdvdComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.googleFont= this.sanitizer.bypassSecurityTrustResourceUrl("https://fonts.googleapis.com/css2?family=Teko&display=swap");
     this.currentVideoTime=0
     this.scenePage=1
     this.data.dvd="Lolita 1962"
@@ -75,6 +88,19 @@ export class BasicdvdComponent implements OnInit {
       let audio = document.getElementsByTagName('audio')[0]
       audio.volume = 0.05
     },500)
+  }
+  
+  ngAfterViewChecked(){
+    console.log("ngAfterViewChecked")
+    this.setStyle()
+  }
+  setStyle(){
+    let classCount = document.getElementsByClassName("main-menu-control__button").length
+    console.log("classCount",classCount)
+    for (let i=0;i<classCount;i++){
+      console.log("X")
+      document.getElementsByClassName("main-menu-control__button")[i]["style"]["color"]="green"
+    }
   }
   
   changeScreen(screen,currentTime?){
