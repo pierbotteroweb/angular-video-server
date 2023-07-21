@@ -87,7 +87,8 @@ export class Lolita1962Component implements OnInit {
     this.setBackgroundImage("mainMenu")
     setTimeout(()=>{
       let audio = document.getElementsByTagName('audio')[0]
-      audio.volume = 0.05},500)
+      audio.volume = 0.05
+    },500)
   }
 
   ngAfterViewChecked(){
