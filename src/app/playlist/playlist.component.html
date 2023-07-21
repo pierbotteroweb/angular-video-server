@@ -1,0 +1,41 @@
+<video preload="auto" crossorigin="anonymous" (ended)="proximo()"  mousevolume  class="desktop-only"
+       [ngClass]="{'maldicaodamosca': maldicaodamosca,'square': square}" 
+       *ngIf="exibeVideo && this.innerWidth>500" autoplay>
+  <source [src]=url [type]="tipodeVideo">
+  Your browser does not support the video tag.
+</video>
+
+<span *ngIf="exibeVideo && this.innerWidth>500 && exibeNumCanal" class="numCanal">{{numCanal}}</span>
+<div class="dir"></div>
+<div class="esq"></div>
+
+<!-- CONTROLES DE VIDEO (PAUSE, PLAY, BARRA DE TEMPO... ) -->
+<div class="movieMode--controls desktop-only" [ngStyle]="{'visibility': mouseMoving ? 'visible' : 'hidden'}">
+
+  <span (click)="fullScreen()" class="movieMode--controls__fullscreen">
+    <i-bs *ngIf="!fullScreenMode" name="fullscreen" width="50" height="50"></i-bs>
+    <i-bs *ngIf="fullScreenMode" name="fullscreen-exit" width="50" height="50"></i-bs>
+  </span>
+
+
+  <span (click)="clickPauseMovie()" class="movieMode--controls__pause">
+    <i-bs *ngIf="pause" name="play-fill" width="50" height="50"></i-bs>
+    <i-bs *ngIf="!pause" name="pause-fill" width="50" height="50"></i-bs>
+  </span>
+
+</div>
+
+<p class="logo" [ngClass]="{'text-logo-visible':textLogoVisible}"><img src="../../assets/logos/globo.png" alt=""></p>
+<p class="text" [ngClass]="{'text-logo-visible':textLogoVisible}">{{textoAbaixoDoLogo}}</p>
+
+<div class="remote-control" *ngIf="this.innerWidth<500">
+  <button (click)="changeChannel(1)">1</button>
+  <button (click)="changeChannel(2)">2</button>
+  <button (click)="changeChannel(3)">3</button>
+  <button (click)="changeChannel(4)" [ngStyle]="{'backgroundColor':((selectedCanal==4)? 'lightgray': 'white')}">4</button>
+  <button (click)="changeChannel(5)" [ngStyle]="{'backgroundColor':((selectedCanal==5)? 'lightgray': 'white')}">5</button>
+  <button (click)="changeChannel(6)">6</button>
+  <button (click)="changeChannel(7)">7</button>
+  <button (click)="changeChannel(8)">8</button>
+  <button (click)="changeChannel(9)">9</button>
+</div>

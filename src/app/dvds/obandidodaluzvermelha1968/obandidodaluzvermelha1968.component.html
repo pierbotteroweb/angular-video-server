@@ -1,0 +1,143 @@
+<div class="container">
+
+    <video *ngIf="exibeVideo" 
+    [ngClass]="{'movieMode': movieMode}"
+    (ended)="gerenciaLoop()" 
+    [controls]='movieMode'
+    [loop]=loop crossorigin="anonymous" [muted]=mudo autoplay>
+      <source [src]=url type="video/mp4">
+      <track label="subtitle" kind="subtitles" srclang="en" [src]=subUrl default>
+    </video>
+  
+    <audio *ngIf="audioExterno" style="visibility:hidden;position:absolute">
+      <source [src]=audioUrl type="audio/mpeg">
+    </audio>
+
+    <div class="pictureMode" *ngIf="pictureMode">
+          <img [src]=picUrl alt="">
+    </div>
+  
+    <div *ngIf="movieMode" class="movieMode--controls">
+          <span (click)="changeScreen(menuPrincipal)"
+                class="movieMode--controls__main">MAIN</span>
+    </div>
+  
+    <div  *ngIf="selectedScreen==menuPrincipal"  
+          class="main-menu-control">
+      <span (click)="playMovie()" 
+            class="main-menu-control__play"></span>
+      <span (click)="changeScreen(menuSceneSelection)" 
+            class="main-menu-control__scene-selections"></span>
+      <span (click)="changeScreen(menuLanguageSelection)" 
+            class="main-menu-control__language-selections"></span>  
+      <span (click)="changeScreen(menuSpecialFeatures)" 
+            class="main-menu-control__special-features"></span>  
+    </div>
+  
+    <div  *ngIf="selectedScreen==menuSceneSelection"   
+           class="scene-selection-menu-control">
+           <span (click)="changeScreen(menuPrincipal)"
+                 class="scene-selection-menu-control__main"></span>
+           <span (click)="changeChapterRange('1-4')" 
+                 class="scene-selection-menu-control__1-4"></span>
+           <span (click)="changeChapterRange('5-8')" 
+                 class="scene-selection-menu-control__5-8"></span>
+           <span (click)="changeChapterRange('9-12')" 
+                 class="scene-selection-menu-control__9-12"></span>
+  
+           <div class="scene-selection" 
+                *ngIf="selectedScreen==menuSceneSelection" >
+              <span (click)="selectScene('1')" 
+                    class="scene-selection__scene-1"></span>             
+              <span (click)="selectScene(2)" 
+                    class="scene-selection__scene-2"></span>
+              <span (click)="selectScene(3)" 
+                    class="scene-selection__scene-3"></span>
+              <span (click)="selectScene(4)" 
+                    class="scene-selection__scene-4"></span>
+           </div>
+        
+    </div>
+  
+    <div  *ngIf="selectedScreen==menuLanguageSelection"  
+          class="language-selection">
+  
+      <span (click)="setSubtitle('english')" 
+            class="language-selection--sub__english"></span>
+      <span (click)="setSubtitle('none')" 
+            class="language-selection--sub__none"></span>
+      <span (click)="changeScreen(menuPrincipal)"
+            class="language-selection__main"></span>
+    </div>
+  
+    <div  *ngIf="selectedScreen==menuSpecialFeatures"  
+          class="special-features">
+  
+      <span (click)="playTrailer(Trailer)" 
+          class="special-features__trailer"></span>
+
+      <span (click)="changeScreen(menuCurtas)" 
+            class="special-features__curtas"></span>
+            
+      <span (click)="changeScreen(menuEntrevistas)" 
+            class="special-features__entrevistas"></span>
+            
+      <span (click)="changeScreen(menuEntrevistas)" 
+            class="special-features__restauracao"></span>
+
+      <span (click)="changeScreen(menuEntrevistas)" 
+            class="special-features__perfil"></span>
+
+      <span (click)="changeScreen(menuEntrevistas)" 
+            class="special-features__fotos"></span>
+
+      <span (click)="changeScreen(menuEntrevistas)" 
+            class="special-features__manifesto"></span>
+
+      <span (click)="changeScreen(menuEntrevistas)" 
+            class="special-features__cineasta"></span>
+
+      <span (click)="changeScreen(menuEntrevistas)" 
+            class="special-features__fichatecnica"></span>
+
+      <span (click)="changeScreen(menuPrincipal)"
+            class="special-features__main"></span>
+
+    </div>
+  
+    <div  *ngIf="selectedScreen==menuCurtas"  
+          class="trailers">  
+      <span (click)="playTrailer('Die Hard Trailer')" 
+            class="trailers__diehard"></span>
+      <span (click)="playTrailer('Die Hard 2 Trailer')" 
+            class="trailers__diehard2"></span>
+      <span (click)="changeScreen(menuSpecialFeatures)" 
+            class="trailers__special-features"></span>  
+    </div>
+  
+    <div  *ngIf="selectedScreen==menuEntrevistas"  
+          class="trailers">  
+      <span (click)="playTrailer('Die Hard Trailer')" 
+            class="trailers__diehard"></span>
+      <span (click)="playTrailer('Die Hard 2 Trailer')" 
+            class="trailers__diehard2"></span>
+    </div>
+  
+    <div  *ngIf="pictureMode"  
+          class="picture-screen">
+      <span (click)="picturePrevious()" 
+            *ngIf="pictureCount>1"
+            class="picture-screen__previous"></span>
+  
+      <span (click)="pictureNext()" 
+            *ngIf="pictureCount<pictureLimit"
+            class="picture-screen__next"></span>
+  
+      <span (click)="changeScreen(menuSpecialFeatures)"  
+            class="picture-screen__back"></span>
+  
+      <span (click)="changeScreen(menuPrincipal)"
+            class="picture-screen__main"></span>
+    </div>
+  
+  </div>

@@ -1,0 +1,309 @@
+<!-- VIDEO ELEMENT SEM WRAP -->
+<video preload="auto" crossorigin="anonymous" autoplay mousevolume *ngIf="exibeVideo"
+       class="movieMode" [ngClass]="{'maldicaodamosca': maldicaodamosca,'square': square}"
+       [ngStyle]="{'opacity':screenOpacity}"
+       (ended)="proximoVideo()" (pause)="videoPausado()"
+       (play)="videoStartado()" (click)="clickScreenMovie()">
+        <source [src]=url [type]="tipodeVideo">
+        <track label="Legenda 1" kind="subtitles" srclang="en" [src]=subUrl default>
+          Your browser does not support the video tag.
+</video>
+
+<!-- <img class="image" [ngClass]="{'image-visible':exibeImg}" src="../../assets/festaDeCrianca1.jpg" alt=""> -->
+
+<!-- CONTROLES DE VIDEO (PAUSE, PLAY, BARRA DE TEMPO... ) -->
+<div class="movieMode--controls"
+     [ngStyle]="{'visibility': (mouseMoving||modoCadastro) ? 'visible' : 'hidden'}">
+  <h1 class="tituloVideoRodando">{{nomeDoFilmeAtual?nomeDoFilmeAtual.split(".")[0].replace('Dublado - ',''):""}}</h1>
+
+ <span (click)="fullScreen()"
+   class="movieMode--controls__fullscreen">
+   <i-bs *ngIf="!fullScreenMode" name="fullscreen" width="50" height="50"></i-bs>
+   <i-bs *ngIf="fullScreenMode"  name="fullscreen-exit" width="50" height="50"></i-bs>
+ </span>
+
+ <!-- <span class="movieMode--controls__subs">
+   <ul class="movieMode--controls__subs__list"
+      [ngStyle]="{'display': exibeSubList ? 'initial' : 'none'}">
+     <li *ngFor="let sub of subtitlesList" 
+         (click)="setSubtitleFromPlayer(sub.fileName)" >{{sub.idioma}}</li>
+   </ul>
+  <i-bs name="chat-left-text" width="50" height="50"
+        (click)="toggleSubsList()"></i-bs>
+</span> -->
+ <span class="movieMode--controls__time">
+  {{videoCurrentTime}}/{{commonServices.toTime(duracaoVideoSelecionado)}}
+ </span>
+
+ <span (click)="clickPauseMovie()"
+   class="movieMode--controls__pause">
+   <i-bs *ngIf="pause" name="play-fill" width="50" height="50"></i-bs>
+   <i-bs *ngIf="!pause" name="pause-fill" width="50" height="50"></i-bs>
+ </span>
+
+ <!-- <span (click)="clickNextChapter()"
+   class="movieMode--controls__next">
+   <i-bs name="skip-forward-fill" width="50" height="50"></i-bs>
+ </span>
+ 
+ <span (click)="clickPreviousChapter()"
+   class="movieMode--controls__previous">
+   <i-bs name="skip-backward-fill" width="50" height="50"></i-bs>
+ </span> -->
+
+ <div class="audioVolumeBarWrap">
+     <input type="range" [formControl]="audiovolumebar"
+           (class)="audiovolumebar"
+           (input)="updatevideoVolumeOnBarChange()">
+ </div>
+
+ <div class="audioVolumeIconWrap" (click)="toggleVolume()">
+
+     <i-bs *ngIf="!muteVolume&&audiovolumebar.value>0
+                  &&audiovolumebar.value<=30" 
+           name="volume-off-fill" width="50" height="50"></i-bs>
+
+     <i-bs *ngIf="!muteVolume&&audiovolumebar.value>30
+                  &&audiovolumebar.value<=60" 
+           name="volume-down-fill" width="50" height="50"></i-bs>
+           
+     <i-bs  *ngIf="!muteVolume&&audiovolumebar.value>60" 
+           name="volume-up-fill" width="50" height="50"></i-bs>
+
+     <i-bs *ngIf="muteVolume||audiovolumebar.value==0"
+           name="volume-mute-fill" width="50" height="50"></i-bs>
+ </div>
+
+ <div class="videoBarWrap" mousevolume>
+   <ul class="pontosDeCorteNaVideobar"  *ngIf="modoCadastro">
+     <li [ngStyle]="{'background': pontosDeCorte.corteInicio.selected?'lightblue':'transparent'}"
+         [style]="pontosDeCorte.corteInicio.left"
+         class="tag-ponto-de-corte" (click)="selecionaPontoDeCorte('corteInicio')">
+         <p>Inicio</p></li>
+     <li [ngStyle]="{'background': pontosDeCorte.cortesParaIntervalo[i].selected?'lightblue':'transparent'}"
+         [style]="corte.left"
+         class="tag-ponto-de-corte" 
+         (click)="selecionaPontoDeCorte('cortesParaIntervalo',i)" 
+         *ngFor="let corte of pontosDeCorte.cortesParaIntervalo; let i = index">
+         <p>{{i+1}}º Int</p></li>
+     <li [ngStyle]="{'background': pontosDeCorte.corteFinal.selected?'lightblue':'transparent'}"
+         [style]="pontosDeCorte.corteFinal.left"
+         class="tag-ponto-de-corte" 
+          (click)="selecionaPontoDeCorte('corteFinal')">
+          <p>Final</p></li>
+   </ul>
+   <input type="range" [formControl]="videobar"
+         step="0.1"
+         (click)="clickVideoBar()"
+         (class)="videobar" id="volume"
+         (input)="updatevideoTimeOnBarChange()">
+
+ </div>
+</div>
+
+<br>
+
+<!-- MENUS PARA SELEÇÃO DE VIDEO -->
+<div  id="selectWrap" [formGroup]="selectVideoForm">
+  <select class="select form-control" 
+          formControlName="noiteFilmesFormControl" 
+          (change)="mudaFilme($event.target.value,'noiteFilmes')">
+    <option value="">Noite </option>
+    <option *ngFor="let filme of filtredvideonoiteFilmes" [value]='filme._id'>
+      <div><span>{{filme.titulo.replace("Dublado - ","")}}</span></div></option>
+  </select>
+  
+  <select class="select form-control" 
+          formControlName="dubladoFormControl" 
+          (change)="mudaFilme($event.target.value,'dublado')">
+    <option value="">Dublado </option>
+    <option *ngFor="let filme of filtredvideodublado" [value]='filme._id'>
+      <div><span >{{filme.titulo}}</span></div></option>
+  </select>
+  
+  <select class="select form-control" 
+          formControlName="madrugadaFilmesFormControl" 
+          (change)="mudaFilme($event.target.value,'madrugadaFilmes')">
+    <option value="">Madrugada </option>
+    <option *ngFor="let filme of filtredvideomadrugadaFilmes" [value]='filme._id'>
+      <div><span>{{filme.titulo.replace("Dublado - ","")}}</span></div></option>
+  </select>
+  
+  <select class="select form-control" 
+          formControlName="novelasFormControl" 
+          (change)="mudaFilme($event.target.value,'novelas')">
+    <option value="">Novela </option>
+    <option *ngFor="let filme of filtredvideonovelas" [value]='filme._id'>
+      <div><span>{{filme.titulo}}</span></div></option>
+  </select>
+  
+  <select class="select form-control" 
+          formControlName="originaisFormControl" 
+          (change)="mudaFilme($event.target.value,'originais')">
+    <option value="">Original </option>
+    <option *ngFor="let filme of filtredvideooriginais" [value]='filme._id'>
+      <div><span>{{filme.titulo}}</span></div></option>
+  </select>  
+  
+  <select class="select form-control" 
+          formControlName="intervalosFormControl" 
+          (change)="mudaFilme($event.target.value,'intervalos')">
+    <option value="">Intervalos </option>
+    <option *ngFor="let filme of filtredvideointervalos" [value]='filme._id'>
+      <div><span>{{filme.titulo}}</span></div></option>
+  </select>  
+  
+  <select class="select form-control"  *ngIf="!modoCadastro"
+          formControlName="moviesFormControl" 
+          (change)="mudaFilme($event.target.value,'movies')">
+    <option value="">Movie </option>
+    <option *ngFor="let filme of filtredvideomovies" [value]='filme._id'>
+      <div><span>{{filme.titulo}}</span></div></option>
+  </select>  
+  
+  <select class="select form-control"  *ngIf="!modoCadastro"
+          formControlName="dvdsFormControl" 
+          (change)="mudaFilme($event.target.value,'dvds')">
+    <option value="">DVD </option>
+    <option *ngFor="let filme of filtredvideodvds" [value]='filme._id'>
+      <div><span>{{filme.titulo}}</span></div></option>
+  </select>   
+  
+  <select class="select form-control"  *ngIf="modoCadastro"
+          formControlName="canaisFormControl">
+    <option value="">Canal </option>
+    <option *ngFor="let canal of canais" [value]='canal._id'>
+      <span>{{canal.emissora}}</span>
+     </option>
+  </select>  
+  
+  <select class="select form-control"  *ngIf="modoCadastro"
+          formControlName="programaDeTvFormControl" 
+          (change)="mudaFilme($event.target.value,'dvds')">
+          <option value="">Prog de TV </option>
+          <option *ngFor="let programa of programaDeTvFiltered" [value]='programa.value'>
+            <span>{{programa.titulo}}</span>
+           </option>
+  </select>  
+
+  <button class="btn btn-success btn-modo-cadastro" (click)="modoCadastro=!modoCadastro">Modo Cadastro</button>
+</div>
+
+<!-- PAINEL PARA CADASTRO DE INTERVALOS E OUTRAS PROPRIEDADES -->
+<div class="container-fluid controle-cadastro-de-video" *ngIf="modoCadastro">
+  <div class="row">
+    <div class="col controle-cadastro-de-video--esquerdo">
+      <div class="row">
+        <div class="col-3">
+        </div>
+        <div class="col-9">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-primary botao-tempo"
+                  (click)="posicaoDeTempo('-',0.5)">-0,5 s</button>
+          <button class="btn btn-primary botao-tempo"
+                  (click)="posicaoDeTempo('-',1)">-1 s</button>
+          <button class="btn btn-primary botao-tempo"
+                  (click)="posicaoDeTempo('-',10)">-10 s</button>
+          <button class="btn btn-primary botao-tempo"
+                  (click)="posicaoDeTempo('-',60)">-1 min</button>
+          <button class="btn btn-primary botao-tempo"
+                  (click)="posicaoDeTempo('-',600)">-10 min</button>
+          <button class="btn btn-primary botao-tempo"
+                  (click)="posicaoDeTempo('+',600)"><</button>
+        </div>
+        <div class="col">
+          <button class="btn btn-primary botao-tempo"
+                  (click)="posicaoDeTempo('+',0.5)">+0,5 s</button>
+          <button class="btn btn-primary botao-tempo"
+                  (click)="posicaoDeTempo('+',1)">+1 s</button>
+          <button class="btn btn-primary botao-tempo"
+                  (click)="posicaoDeTempo('+',10)">+10 s</button>
+          <button class="btn btn-primary botao-tempo"
+                  (click)="posicaoDeTempo('+',60)">+1 min</button>
+          <button class="btn btn-primary botao-tempo"
+                  (click)="posicaoDeTempo('+',600)">+10 min</button>
+          <button class="btn btn-primary botao-tempo"
+                  (click)="proximoVideoManual()">></button>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+    </div>
+    <div class="col">
+    </div>
+
+
+    <div class="col controle-cadastro-de-video--direito">
+      <button class="btn btn-primary" style="margin: 0px 10px;" 
+              (click)="marcarPontoDeCorte()">Marcar</button>
+      <button class="btn btn-warning" style="margin: 0px 10px;" 
+              (click)="editarPontoDeCorte()">Editar</button>
+      <button class="btn btn-danger" style="margin: 0px 10px;" 
+              (click)="deletaPontoDeCorte()">Deletar</button>
+      <button class="btn btn-success" style="margin: 0px 10px;" 
+              (click)="salvarPontoDeCorte()">Salvar</button>
+      <button class="btn btn-success" style="margin: 0px 10px;" 
+              (click)="setComComerciais()">Set CC</button>
+      <button (click)="adicionaPontoDeCorte()"
+              class="btn btn-primary botao-add-remove-pontos">
+              <p>+</p></button>
+      <button (click)="removePontoDeCorte()"
+              class="btn btn-primary botao-add-remove-pontos">
+              <p class="botao-add-remove-pontos--menos">-</p></button>
+      <div class="row">
+        <div class="col-6">
+
+                <ul style="height: 184px;">
+                  <li [ngStyle]="{'background': pontosDeCorte.corteInicio.selected?'lightblue':'transparent'}"
+                      class="ponto-de-corte" (click)="selecionaPontoDeCorte('corteInicio')">
+                      <!-- <p [style]="pontosDeCorte.corteInicio.left" >Inicio</p> -->
+                    Início {{pontosDeCorte.corteInicio.valor}}</li>
+                  <li [ngStyle]="{'background': pontosDeCorte.cortesParaIntervalo[i].selected?'lightblue':'transparent'}"
+                      class="ponto-de-corte" 
+                      (click)="selecionaPontoDeCorte('cortesParaIntervalo',i)" 
+                      *ngFor="let corte of pontosDeCorte.cortesParaIntervalo; let i = index">
+                      <!-- <p [style]="corte.left">{{i+1}}º Intervalo</p> -->
+                              {{i+1}}º Intervalo | {{corte.valor}}</li>
+                  <li [ngStyle]="{'background': pontosDeCorte.corteFinal.selected?'lightblue':'transparent'}"
+                      class="ponto-de-corte" 
+                       (click)="selecionaPontoDeCorte('corteFinal')">
+                       <!-- <p [style]="pontosDeCorte.corteFinal.left">Fim</p> -->
+                    Fim {{pontosDeCorte.corteFinal.valor}}</li>
+                </ul>
+
+        </div>
+        <div class="col-6">
+                <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off" style="display: none">
+                <label class="btn btn-outline-primary" for="btn-check-outlined">Square</label>
+        </div>
+      </div>
+      <div class="boostcontrols">
+        <div class="row">
+                <div class="col-6">
+                        <h4>Boost Volume</h4>
+                        <button (click)="audioBoost(0,'+')"
+                                class="btn btn-primary botao-add-remove-pontos">
+                                <p>+</p></button>
+                        <button (click)="audioBoost(0,'-')"
+                                class="btn btn-primary botao-add-remove-pontos">
+                                <p class="botao-add-remove-pontos--menos">-</p></button>
+                        <i class="boostcontrols__boostValue">{{boost}}</i>
+                </div>
+                <div class="col-3">
+                        <h4>Volume</h4>
+                        <i class="boostcontrols__boostValue">{{videoElement.volume | number : '1.2-2'}}</i>
+                </div>
+                <div class="col-3">
+                        <button class="btn btn-success" style="margin: 0px 10px;" 
+                                (click)="salvarVolume()">Salvar Vol</button>
+                </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

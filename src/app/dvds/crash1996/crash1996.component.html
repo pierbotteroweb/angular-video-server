@@ -1,0 +1,75 @@
+<div class="container-fluid">
+    <!-- NÃO DELETAR ESSE IFRAME. PRECISA DELE PRO AUTOPLAY DE AUDIO -->
+    <iframe src="../../../assets/silence.mp3" 
+     allow="autoplay" id="audio" style="display: none">
+    </iframe>
+  
+    <div *ngIf="movieMode" >
+    <app-dvd-player [chapterPoints]="chapterPoints" 
+         [data]="data" (mainMenu)="changeScreen('mainMenu',$event)" ></app-dvd-player>
+    </div>
+  
+    <div class="menu-container" *ngIf="menuMode" [style]="backgroundMenu">
+    
+      <!-- <audio autoplay loop>
+        <source [src]=menuAudioUrl type="audio/mpeg">
+      </audio> -->  
+    
+      <div *ngIf="selectedScreen == 'mainMenu'"
+           class="main-menu-control">
+        <span (click)="playMovie()" 
+          class="main-menu-control__button">PLAY MOVIE</span>
+        <span (click)="changeScreen('scenesMenu')"
+          class="main-menu-control__button">SCENE SELECTION</span>
+        <span (click)="changeScreen('subtitlesMenu')"
+          class="main-menu-control__button">LANGUAGE SELECTION</span>
+        <span (click)="playTrailer()"
+          class="main-menu-control__button">THEATRICAL TRAILER</span>
+      </div>
+    
+      <div *ngIf="selectedScreen == 'subtitlesMenu'"
+           class="scene-selection-menu-control">
+  
+           <div class="subtitles-menu">
+            <span class="subtitles-menu__button"
+                  (click)="setSubtitle('eng')" >ENGLISH</span>
+              <span class="subtitles-menu__button"
+                    (click)="setSubtitle('port')" >PORTUGUESE</span>
+              <span class="subtitles-menu__button"
+                    (click)="setSubtitle('none')" >OFF</span>
+           </div>
+  
+           <div class="subtitles-menu-control">
+             <span (click)="changeScreen('mainMenu')"
+               class="main-menu-control__button">MAIN MENU</span>
+           </div>
+      </div>
+    
+      <div *ngIf="selectedScreen == 'scenesMenu'"
+           class="scene-selection-menu-control">
+  
+           <div class="scenes">
+             <div class="scene" *ngFor="let scene of chapterPoints; let i = index" 
+                  (click)="goToScene(i)" (mouseenter)="hoverScene(i)" >
+                <span class="scene-title">
+                    {{scene.title}}
+                </span>
+             </div>
+           </div>
+           
+           <video *ngIf="exibeScenePreview" class="scene-preview"
+             [controls]="false"
+             loop crossorigin="anonymous"
+             [muted]="true" autoplay>
+             <source [src]="scenePreviewUrl" type="video/mp4" />
+           </video>
+  
+           <div class="subtitles-menu-control">
+             <span (click)="changeScreen('mainMenu')"
+               class="main-menu-control__button">MAIN MENU</span>
+           </div>
+      </div>
+  
+    </div>
+  </div>
+  

@@ -1,0 +1,109 @@
+<div class="container-fluid">
+    <!-- NÃO DELETAR ESSE IFRAME. PRECISA DELE PRO AUTOPLAY DE AUDIO -->
+    <iframe src="../../../assets/silence.mp3" 
+     allow="autoplay" id="audio" style="display: none">
+    </iframe>
+  
+    
+    <div *ngIf="movieMode">
+      <app-dvd-player [chapterPoints]="chapterPoints" 
+           [data]="data" (mainMenu)="changeScreen('mainMenu',$event)" >
+      </app-dvd-player>
+    </div>
+  
+    <div *ngIf="menuMode" class="menu-container" [style]="backgroundMenu"> 
+      <div *ngIf="selectedScreen == 'mainMenu'">
+
+        <div class="main-menu-control">
+          <span (click)="playMovie()" 
+            class="main-menu-control__button">MOVIE</span>
+          <span (click)="changeScreen('subtitlesMenu')"
+            class="main-menu-control__button">SUBS</span>
+          <span (click)="changeScreen('scenesMenu')"
+            class="main-menu-control__button">SCENES</span>
+            <span (click)="changeScreen('extrasMenu')"
+            class="main-menu-control__button">EXTRAS</span>
+        </div>
+
+      </div>
+
+    
+      <div *ngIf="selectedScreen == 'subtitlesMenu'">
+  
+        <div class="main-menu-control main-menu-control__alt">
+          <span (click)="playMovie()" 
+            class="main-menu-control__button">MOVIE</span>
+          <span (click)="changeScreen('mainMenu')"
+            class="main-menu-control__button">MENU</span>
+          <span (click)="changeScreen('scenesMenu')"
+            class="main-menu-control__button">SCENES</span>
+            <span (click)="changeScreen('extrasMenu')"
+            class="main-menu-control__button">EXTRAS</span>
+        </div>
+  
+        <div class="subtitles-menu">
+          <span class="subtitles-menu__button" *ngFor="let sub of subtitlesList"
+                (click)="setSubtitle(sub.idioma)" >{{sub.titulo}}</span>
+        </div>
+
+      </div>
+    
+      <div *ngIf="selectedScreen == 'scenesMenu'">
+  
+        <div class="scenes">
+          <div class="scene" *ngFor="let scene of chapterPoints; let i = index"
+               (click)="goToScene(i)" (mouseenter)="hoverScene(i)">
+            <p class="scene-title">{{scene.title}}</p>
+          </div>
+           
+          <video *ngIf="exibeScenePreview" class="scene-preview"
+            [controls]="false"
+            loop crossorigin="anonymous"
+            [muted]="true" autoplay>
+            <source [src]="scenePreviewUrl" type="video/mp4" />
+          </video>
+
+        </div>
+
+        
+        <div class="main-menu-control main-menu-control__alt">
+            <span (click)="playMovie()" 
+              class="main-menu-control__button">MOVIE</span>
+            <span (click)="changeScreen('mainMenu')"
+              class="main-menu-control__button">MENU</span>
+            <span (click)="changeScreen('subtitlesMenu')"
+              class="main-menu-control__button">SUBS</span>
+              <span (click)="changeScreen('extrasMenu')"
+              class="main-menu-control__button">EXTRAS</span>
+        </div>
+
+      </div>
+    
+      <div *ngIf="selectedScreen == 'extrasMenu'">
+  
+        <div class="extras">
+            <p class="extra-title"(click)="playExtra('Trailer')">TRAILER</p>
+            <p class="extra-title"(click)="playMovieInColor(false)">IN B/W</p>
+            <p class="extra-title"(click)="playMovieInColor(true)">IN COLOR</p>
+            <p class="extra-title"(click)="playExtra('Interview')">BELA LUGOSI INTERVIEW</p>
+            <p class="extra-title"(click)="playExtra('mst3k')">MISTERY SCIENCE THEATER 3000</p>
+        </div>
+
+        
+        <div class="main-menu-control main-menu-control__alt">
+            <span (click)="playMovie()" 
+              class="main-menu-control__button">MOVIE</span>
+            <span (click)="changeScreen('mainMenu')"
+              class="main-menu-control__button">MENU</span>
+            <span (click)="changeScreen('subtitlesMenu')"
+              class="main-menu-control__button">SUBS</span>
+              <span (click)="changeScreen('scenesMenu')"
+              class="main-menu-control__button">SCENES</span>
+        </div>
+
+      </div>
+  
+    </div>
+
+</div>
+  

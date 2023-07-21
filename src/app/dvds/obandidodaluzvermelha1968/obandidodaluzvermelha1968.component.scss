@@ -1,0 +1,804 @@
+.container{
+    width: 100%;
+    text-align: center;
+}
+
+video{
+    width: 1020px;
+    height: auto;
+}
+
+.pictureMode,
+.movieMode{
+    width: 100vw;
+    height: 97vh;
+    display: block;
+    margin: auto;
+
+    img{
+        height: 100%;
+        width: auto;
+    }
+}
+
+.movieMode{
+    width: 100%;
+    background: transparent;
+}
+
+video:hover ~ .movieMode--controls{
+    visibility: visible;
+}
+
+.movieMode--controls{
+    visibility: hidden;
+    transition: all 0.5s;
+    &__main{
+        color:white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bolder;
+        font-size: 34px;
+        display: block;
+        width: 128px;
+        height: 49px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(402px, 261px);
+        cursor: pointer;
+        &:hover{
+            visibility: visible;
+        }
+    }
+}
+
+
+.main-menu-control{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    &__play{
+        display: block;
+        width: 64px;
+        height: 33px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-416px, 225px) rotate(-1deg);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 70px;
+            height: 8px;
+            position: absolute;
+            transform: rotate(-1deg);
+            top: 37px;
+            left: -3px;
+        }
+        &:hover::before{
+            background: red;
+
+        }
+    }
+    &__scene-selections{
+        display: block;
+        width: 76px;
+        height: 33px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-202px, 225px) rotate(-3deg);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 80px;
+        height: 8px;
+            position: absolute;
+            transform: rotate(0deg);
+            top: 37px;
+            left: -3px;
+        }
+        &:hover::before{
+            background: red;
+        }
+    }
+    &__language-selections{
+        display: block;
+        width: 115px;
+        height: 33px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-333px, 218px) rotate(-1deg);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 119px;
+        height: 8px;
+            position: absolute;
+            transform: rotate(-1deg);
+            top: 37px;
+            left: -3px;
+        }
+        &:hover::before{
+            background: red;
+        }
+    }
+    &__special-features{
+        display: block;
+        width: 92px;
+        height: 33px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-113px, 211px) rotate(-3deg);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 98px;
+        height: 8px;
+            position: absolute;
+            transform: rotate(-1deg);
+            top: 37px;
+            left: -3px;
+        }
+        &:hover::before{
+            background: red;
+        }
+    }
+}
+
+.scene-selection{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    &-menu-control{
+        &__main{
+            display: block;
+            width: 76px;
+            height: 38px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-393px, 248px);
+            cursor: pointer;
+        }
+        &__1-4{
+            display: block;
+            width: 66px;
+            height: 38px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(356px, 120px);
+            cursor: pointer;
+        }
+        &__5-8{
+            display: block;
+            width: 83px;
+            height: 38px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(316px, 182px);
+            cursor: pointer;
+        }
+        &__9-12{
+            display: block;
+            width: 96px;
+            height: 38px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(322px, 249px);
+            cursor: pointer;
+        }
+    }
+
+    &__scene{
+        &-1{
+            display: block;
+            width: 203px;
+            height: 253px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-237px, -152px);
+            cursor: pointer;
+            -webkit-clip-path: polygon(45% 38%, 100% 0%, 100% 58%, 45% 100%);
+            clip-path: polygon(47% 40%, 106% -4%, 100% 62%, 45% 100%);
+        }
+        &-2{
+            width: 203px;
+            height: 253px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-97px, -291px);
+            cursor: pointer;
+            -webkit-clip-path: polygon(45% 38%, 100% 0%, 100% 58%, 45% 100%);
+            clip-path: polygon(45% 31%, 109% -12%, 97% 63%, 45% 100%);
+        }
+        &-3{
+            width: 198px;
+            height: 253px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-244px, 29px);
+            cursor: pointer;
+            -webkit-clip-path: polygon(45% 38%, 100% 0%, 100% 58%, 45% 100%);
+            clip-path: polygon(49% 40%, 119% -6%, 160% 62%, 45% 100%);
+        }
+        &-4{
+            width: 252px;
+            height: 297px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-91px, -106px);
+            cursor: pointer;
+            -webkit-clip-path: polygon(45% 38%, 100% 0%, 100% 58%, 45% 100%);
+            clip-path: polygon(44% 32%, 97% -3%, 120% 63%, 45% 102%);
+        }
+    }
+
+    &--grid6{
+        .scene-selection__scene{
+            &-4{
+                transform: translate(-326px, -6px);
+            }
+            &-5{
+                transform: translate(-101px, -6px);
+            }
+            &-6{
+                display: block;
+                width: 204px;
+                height: 141px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(124px, -6px);
+                cursor: pointer;                
+            }
+
+        }
+
+    }
+
+}
+
+.language-selection{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    &--sub{
+        &__english{
+            display: block;
+            width: 115px;
+            height: 47px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(93px, -115px)rotate(
+        -13deg
+        );
+            cursor: pointer;
+            &::before{
+                content: "";
+                display: block;
+                width: 116px;
+                height: 8px;
+                position: absolute;
+                top: 52px;
+                left: -1px;
+            }
+            &:hover::before{
+                background: red;
+    
+            }
+        }
+        &__none{
+            display: block;
+            width: 192px;
+            height: 39px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(43px, -6px)rotate(
+        -13deg
+        );
+            cursor: pointer;
+            &::before{
+                content: "";
+                display: block;
+                width: 192px;
+                height: 8px;
+                position: absolute;
+                top: 42px;
+                left: -1px;
+            }
+            &:hover::before{
+                background: red;
+    
+            }
+        }
+    }
+    &__main{
+        display: block;
+        width: 76px;
+        height: 38px;
+        opacity: 0.6;
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translate(182px, 149px) rotate(
+    -5deg
+    );
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 77px;
+            height: 8px;
+            position: absolute;
+            top: 40px;
+            left: 0px;
+        }
+        &:hover::before{
+            background: red;
+
+        }
+    }
+    
+}
+
+.special-features{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    &__trailer{
+        display: block;
+        width: 228px;
+        height: 38px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-306px, -282px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 22px;
+            height: 22px;
+            position: absolute;
+            border-radius: 50%;
+            top: 7px;
+            left: -26px;
+        }
+        &:hover::before{
+            background: white;
+        }
+    }
+
+    &__curtas{
+        display: block;
+        width: 228px;
+        height: 38px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-356px, -239px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 22px;
+            height: 22px;
+            position: absolute;
+            border-radius: 50%;
+            top: 7px;
+            left: -26px;
+        }
+        &:hover::before{
+            background: white;
+        }
+    }
+    
+    &__entrevistas{
+        display: block;
+        width: 146px;
+        height: 38px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-199px, -188px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 22px;
+            height: 22px;
+            position: absolute;
+            border-radius: 50%;
+            top: 7px;
+            left: -26px;
+        }
+        &:hover::before{
+            background: white;
+        }
+    }
+    
+    &__restauracao{
+        display: block;
+        width: 192px;
+        height: 38px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-282px, -133px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 22px;
+            height: 22px;
+            position: absolute;
+            border-radius: 50%;
+            top: 7px;
+            left: -26px;
+        }
+        &:hover::before{
+            background: white;
+        }
+    }
+
+    &__perfil{
+        display: block;
+        width: 350px;
+        height: 38px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-417px, -82px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 22px;
+            height: 22px;
+            position: absolute;
+            border-radius: 50%;
+            top: 7px;
+            left: -26px;
+        }
+        &:hover::before{
+            background: white;
+        }
+    }
+
+    &__fotos{
+        display: block;
+        width: 228px;
+        height: 38px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-391px, -31px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 22px;
+            height: 22px;
+            position: absolute;
+            border-radius: 50%;
+            top: 7px;
+            left: -26px;
+        }
+        &:hover::before{
+            background: white;
+        }
+    }
+
+    &__manifesto{
+        display: block;
+        width: 130px;
+        height: 38px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-266px, 18px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 22px;
+            height: 22px;
+            position: absolute;
+            border-radius: 50%;
+            top: 7px;
+            left: -26px;
+        }
+        &:hover::before{
+            background: white;
+        }
+    }
+
+    &__cineasta{
+        display: block;
+        width: 417px;
+        height: 38px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-415px, 62px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 22px;
+            height: 22px;
+            position: absolute;
+            border-radius: 50%;
+            top: 7px;
+            left: -26px;
+        }
+        &:hover::before{
+            background: white;
+        }
+    }
+
+    &__fichatecnica{
+        display: block;
+        width: 272px;
+        height: 38px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-415px, 122px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 22px;
+            height: 22px;
+            position: absolute;
+            border-radius: 50%;
+            top: 7px;
+            left: -26px;
+        }
+        &:hover::before{
+            background: white;
+        }
+    }
+    &__main{
+        display: block;
+        width: 76px;
+        height: 38px;
+        opacity: 0.6;
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translate(-347px, 259px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 78px;
+            height: 8px;
+            position: absolute;
+            top: 38px;
+            left: -2px;
+        }
+        &:hover::before{
+            background: red;
+
+        }
+    }  
+
+}
+
+.trailers{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    &__diehard{
+        display: block;
+        width: 174px;
+        height: 38px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-58px, -124px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 70px;
+            height: 8px;
+            position: absolute;
+            top: 6px;
+            left: -35px;
+        }
+        &:hover::before{
+            background: red;
+
+        }
+    }
+    &__diehard2{
+        display: block;
+        width: 230px;
+        height: 70px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(46px, -47px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 70px;
+            height: 8px;
+            position: absolute;
+            top: 4px;
+            left: -21px;
+        }
+        &:hover::before{
+            background: red;
+
+        }
+    }
+    &__diehard3{
+        display: block;
+        width: 373px;
+        height: 66px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-213px, 59px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 70px;
+            height: 8px;
+            position: absolute;
+            top: 5px;
+            left: 61px;
+        }
+        &:hover::before{
+            background: red;
+
+        }
+    }
+    &__play{
+        display: block;
+        width: 120px;
+        height: 38px;
+        opacity: 0.6;
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translate(-347px, 222px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 70px;
+            height: 8px;
+            position: absolute;
+            top: -1px;
+            left: -35px;
+        }
+        &:hover::before{
+            background: red;
+
+        }
+    }
+    &__back{
+        display: block;
+        width: 120px;
+        height: 38px;
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translate(17px, 222px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 70px;
+            height: 8px;
+            position: absolute;
+            top: -1px;
+            left: -35px;
+        }
+        &:hover::before{
+            background: red;
+
+        }
+    }
+    &__main{
+        display: block;
+        width: 120px;
+        height: 38px;
+        opacity: 0.6;
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translate(224px, 222px);
+        cursor: pointer;
+        &::before{
+            content: "";
+            display: block;
+            width: 70px;
+            height: 8px;
+            position: absolute;
+            top: 1px;
+            left: -35px;
+        }
+        &:hover::before{
+            background: red;
+
+        }
+    }
+    
+}
+
+.picture-screen{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    &__back{
+        display: block;
+        width: 92px;
+        height: 30px;
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translate(-346px, 209px);
+        cursor: pointer;
+    }
+    &__previous{
+        display: block;
+        width: 164px;
+        height: 30px;
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translate(191px, 251px);
+        cursor: pointer;
+    }
+    &__next{
+        display: block;
+        width: 92px;
+        height: 30px;
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translate(264px, 208px);
+        cursor: pointer;
+    }
+    &__main{
+        display: block;
+        width: 92px;
+        height: 30px;
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translate(-295px, 250px);
+        cursor: pointer;
+    }
+    
+}
+
+::cue {
+    font-weight: bold;
+    background: transparent;
+    text-shadow: 2px 2px #000;
+  }

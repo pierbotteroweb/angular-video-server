@@ -1,0 +1,90 @@
+<video class="movieMode" mousevolume
+      (click)="clickScreenMovie()"
+      crossorigin="anonymous" autoplay>
+      <source [src]="url" type="video/mp4" />
+      <track label="subtitle" kind="subtitles"
+        srclang="en" [src]="subUrl" default/>
+</video>
+
+<div class="movieMode--controls"
+     [ngStyle]="{'visibility': mouseMoving ? 'visible' : 'hidden'}">
+
+  <span class="movieMode--controls__time">
+   {{commonServices.toTime(videoElement.currentTime)}}/
+   {{commonServices.toTime(duracaoDoFilme)}}
+  </span>
+
+ <span (click)="goToMain()"
+   class="movieMode--controls__main">MAIN</span>
+
+ <span (click)="fullScreen()"
+   class="movieMode--controls__fullscreen">
+   <i-bs *ngIf="!fullScreenMode" name="fullscreen" width="50" height="50"></i-bs>
+   <i-bs *ngIf="fullScreenMode"  name="fullscreen-exit" width="50" height="50"></i-bs>
+ </span>
+
+ <span class="movieMode--controls__subs">
+  <ul class="movieMode--controls__subs__list"
+     [ngStyle]="{'display': exibeSubList ? 'initial' : 'none'}">
+    <li style="text-decoration: underline;">Sub</li>
+    <li *ngFor="let sub of subtitlesList" 
+        (click)="setSubtitleFromPlayer(sub.fileName)" >{{sub.idioma}}</li>
+  </ul>
+  <i-bs name="chat-left-text" width="50" height="50"
+        (click)="toggleSubsList()"></i-bs>
+</span>
+
+<span class="movieMode--controls__audio" *ngIf="audioList.length>0">
+ <ul class="movieMode--controls__audio__list"
+    [ngStyle]="{'display': exibeSubList ? 'initial' : 'none'}">
+    <li style="text-decoration: underline;">Audio</li>
+   <li *ngFor="let audio of audioList" 
+       (click)="setAudioFromPlayer(audio)" >{{audio.idioma}}</li>
+ </ul>
+</span>
+
+ <span (click)="clickPauseMovie()"
+   class="movieMode--controls__pause">
+   <i-bs *ngIf="pause" name="play-fill" width="50" height="50"></i-bs>
+   <i-bs *ngIf="!pause" name="pause-fill" width="50" height="50"></i-bs>
+ </span>
+
+ <span (click)="clickNextChapter()"
+   class="movieMode--controls__next">
+   <i-bs name="skip-forward-fill" width="50" height="50"></i-bs>
+ </span>
+ 
+ <span (click)="clickPreviousChapter()"
+   class="movieMode--controls__previous">
+   <i-bs name="skip-backward-fill" width="50" height="50"></i-bs>
+ </span>
+ <div class="audioVolumeBarWrap">
+     <input type="range" [formControl]="audiovolumebar"
+           (class)="audiovolumebar"
+           (input)="updatevideoVolumeOnBarChange()">
+ </div>
+ <div class="audioVolumeIconWrap" (click)="toggleVolume()">
+
+     <i-bs *ngIf="!muteVolume&&audiovolumebar.value>0
+                  &&audiovolumebar.value<=30" 
+           name="volume-off-fill" width="50" height="50"></i-bs>
+
+     <i-bs *ngIf="!muteVolume&&audiovolumebar.value>30
+                  &&audiovolumebar.value<=60" 
+           name="volume-down-fill" width="50" height="50"></i-bs>
+           
+     <i-bs  *ngIf="!muteVolume&&audiovolumebar.value>60" 
+           name="volume-up-fill" width="50" height="50"></i-bs>
+
+     <i-bs *ngIf="muteVolume||audiovolumebar.value==0"
+           name="volume-mute-fill" width="50" height="50"></i-bs>
+
+ </div>
+ <div class="videoBarWrap" mousevolume>
+   <input type="range" [formControl]="videobar"
+         (click)="clickVideoBar()"
+         (class)="videobar" id="volume"
+         (input)="updatevideoTimeOnBarChange()">
+
+ </div>
+</div>

@@ -1,0 +1,92 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<div class="container-fluid">
+      <!-- NÃO DELETAR ESSE IFRAME. PRECISA DELE PRO AUTOPLAY DE AUDIO -->
+      <iframe src="../../../assets/silence.mp3" 
+       allow="autoplay" id="audio" style="display: none">
+      </iframe>
+    
+      
+      <div *ngIf="movieMode">
+        <app-dvd-player [chapterPoints]="chapterPoints" 
+             [data]="data" (mainMenu)="changeScreen('mainMenu',$event)" >
+        </app-dvd-player>
+      </div>
+    
+      <div *ngIf="menuMode" class="menu-container" [style]="backgroundMenu">
+<!--       
+        <audio autoplay loop>
+          <source [src]=menuAudioUrl type="audio/mpeg">
+        </audio> -->
+        
+        <div *ngIf="selectedScreen == 'mainMenu'">
+  
+          <div class="main-menu-control">
+            <span (click)="playMovie()" 
+              class="main-menu-control__button">filme</span>
+            <span (click)="changeScreen('scenesMenu')"
+              class="main-menu-control__button">cenas</span>
+            <span (click)="changeScreen('subtitlesMenu')"
+              class="main-menu-control__button">legendas</span>
+              <span (click)="changeScreen('extrasMenu')"
+              class="main-menu-control__button">extras</span>
+          </div>
+  
+        </div>  
+      
+        <div *ngIf="selectedScreen == 'subtitlesMenu'">
+  
+          <div class="subtitles-menu">
+            <span class="subtitles-menu__button" *ngFor="let sub of subtitlesList"
+                  (click)="setSubtitle(sub.idioma)" >{{sub.titulo}}</span>
+          </div>
+  
+        </div>
+      
+        <div *ngIf="selectedScreen == 'scenesMenu'">
+    
+          <div class="scenes" >
+            <div class="scene" *ngFor="let scene of selectedChapterPoints; let i = index">
+              
+              <video [src]="returnSceneUrl(i)" 
+                    (click)="goToScene(i)" 
+                    [controls]="false"
+                    loop crossorigin="anonymous"
+                    [muted]="true" autoplay>
+              </video>
+  
+            </div>
+          </div>
+  
+          <div class="scene-pagination-wrap">
+            <div class="scene-page" *ngFor="let page of scenePages; let i = index" >
+                 <span (click)="scenePagination(i)">{{page}}</span>
+            </div>
+          </div>
+          
+          <div class="scene-menu">
+            <span (click)="changeScreen('mainMenu')"
+              class="scene-menu__button">MENU</span>
+          </div>
+  
+        </div>  
+      
+        <div *ngIf="selectedScreen == 'extrasMenu'">
+    
+          <div class="extras-menu">
+            <span class="extras-menu__button"
+                  (click)="playExtra('makingof')" >making of</span>
+            <span class="extras-menu__button"
+                  (click)="playExtra('Trailer')" >trailer de cinema</span>
+            <span class="extras-menu__button"
+                  (click)="changeScreen('mainMenu')" >menu</span>
+          </div>
+  
+        </div>
+    
+      </div>
+  
+  </div>
+    

@@ -1,0 +1,107 @@
+@mixin textStyle {
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bolder;        
+    user-select: none;
+}
+
+.container-fluid{
+    width: 100%;
+    text-align: center;
+
+    .menu-container{
+        background-size: contain;
+        width: 100%;
+        height: 97vh;
+        display: block;
+        margin: auto;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        audio{
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .main-menu-control{
+            margin: auto;
+            width: 30%;
+            background: transparent;
+            display: flex;
+            justify-content: space-around;
+            position: relative;
+            top: 84.5vh;
+            &__button{
+                @include textStyle;
+            }
+            &__alt{
+                top: 69.5vh;
+                left: 6.5vw;
+                color: #fff;
+                &__button{
+                    @include textStyle;
+                }    
+            }
+        }
+    }
+}
+
+.subtitles-menu{
+    text-align: left;
+    position: relative;
+    top: 52vh;
+    display: flex;
+    justify-content: space-evenly;
+    width: 47vw;
+    left: 31vw;
+
+    &__button{   
+        @include textStyle;
+        font-size: 35px;
+        color: #fff;
+    }
+}
+
+.scenes{
+    margin: auto;
+    position: absolute;
+    left: 37vw;
+    top: 6vh;
+    width: 20vw;
+    .scene{
+        text-align: left;
+        .scene-title{
+            @include textStyle;
+            color: #fff;
+            font-size: 16px;
+            margin: 15px;
+            ;
+        }
+    }
+
+    .scene-preview{
+        width: 16vw;
+        height: auto;
+        position: absolute;
+        right: -16vw;
+        top: 33vh;
+        outline: solid white 9px
+    }
+    
+}
+
+.extras{
+    margin: auto;
+    position: absolute;
+    left: 37vw;
+    top: 30.4vh;
+    width: 20vw;
+    text-align: left;
+    .extra-title{
+        @include textStyle;
+        color: #fff;
+        font-size: 16px;
+        margin: 15px;
+        ;
+    }
+}

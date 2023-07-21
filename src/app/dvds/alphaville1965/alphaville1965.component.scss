@@ -1,0 +1,119 @@
+@mixin colorText {
+	color: #555;
+	font-size: 40px;
+    cursor: pointer;
+    font-weight: bolder;        
+    user-select: none;
+    font-family: 'Oswald', sans-serif;
+}
+
+
+.container-fluid{
+    width: 100%;
+    text-align: center;
+
+
+    .menu-container{
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 100vh;
+        display: block;
+        margin: auto;
+        background-position: center;
+
+        audio{
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .main-menu-control{
+            margin: auto;
+            width: 70%;
+            background: transparent;
+            display: flex;
+            justify-content: space-around;
+            position: relative;
+            top: 88vh;
+            &__button{
+                @include colorText
+            }
+        }
+
+        .main-menu-control-alt{
+            position: relative;
+            top: 30vh;
+            left: 66vh;
+            &__button{
+                margin-bottom: 4.5vh;
+                width: 10vh;
+                display: block;
+                @include colorText;
+                font-size: 4.5vh;
+                &:nth-child(4){
+                    position: relative;
+                    left: 33vh;
+                    top: 3.8vh;
+                }
+            }
+
+        }
+    }
+}
+
+.scenes{
+    width: 34vw;
+    margin: auto;
+    justify-content: space-between;
+    gap: 30px 20px;
+    position: absolute;
+    left: 50vw;
+    transform: translate(-58%, 7vh);
+    padding: 5px;
+    height: 57vh;
+    overflow: hidden;
+    .scene_index{
+        color: lightgrey;
+        font-size: 10vh;
+        font-weight: bolder;
+        position: absolute;
+        right: 0.5vh;   
+        user-select: none;
+    }
+    video{
+        opacity: 0.5;
+        cursor: pointer;        
+        width: 100%;
+    }
+}
+.arrowWrap{
+    position: absolute;
+    left: 50%;
+    top: 10vw;
+    color: #040404;
+    transform: translateX(17vw);
+    .arrowUp,
+    .arrowDown{
+        cursor: pointer;
+        font-size: 1vh;
+    }
+}
+
+.subtitles-menu{
+    text-align: left;
+    position: relative;
+    top: 57vh;
+    display: flex;
+    justify-content: space-evenly;
+    width: 83vh;
+    left: 50%;
+    transform: translateX(-48%);
+    &__button{
+        cursor: pointer;
+        font-size: 35px;
+        font-weight: bolder;        
+        user-select: none;
+        display: block;
+        @include colorText
+    }
+}

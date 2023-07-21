@@ -1,0 +1,115 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+
+<div class="container-fluid">
+    <!-- NÃO DELETAR ESSE IFRAME. PRECISA DELE PRO AUTOPLAY DE AUDIO -->
+    <iframe src="../../../assets/silence.mp3" 
+     allow="autoplay" id="audio" style="display: none">
+    </iframe>
+  
+    
+    <div *ngIf="movieMode">
+      <app-dvd-player [chapterPoints]="chapterPoints" 
+           [data]="data" (mainMenu)="changeScreen('mainMenu',$event)" >
+      </app-dvd-player>
+    </div>
+  
+    <div *ngIf="menuMode" class="menu-container" [style]="backgroundMenu">
+    
+      <!-- <audio autoplay loop>
+        <source [src]=menuAudioUrl type="audio/mpeg">
+      </audio> -->
+      
+      <div *ngIf="selectedScreen == 'mainMenu'">
+
+        <div class="main-menu-control-alt">
+          <span (click)="changeScreen('subtitlesMenu')"
+            class="main-menu-control-alt__button">SUBS</span>
+          <span (click)="changeScreen('scenesMenu')"
+            class="main-menu-control-alt__button">SCENES</span>
+          <span (click)="playTrailer()"
+            class="main-menu-control-alt__button">TRAILER</span>
+          <span (click)="playMovie()" 
+            class="main-menu-control-alt__button">
+            <i-bs name="play-fill" width="75" height="75"></i-bs>
+          </span>
+        </div>
+
+      </div>
+
+    
+      <div *ngIf="selectedScreen == 'subtitlesMenu'">
+  
+        <div class="main-menu-control">
+          <span (click)="playMovie()" 
+            class="main-menu-control__button">MOVIE</span>
+          <span (click)="changeScreen('mainMenu',currentVideoTime)"
+            class="main-menu-control__button">MENU</span>
+          <span (click)="changeScreen('scenesMenu')"
+            class="main-menu-control__button">SCENES</span>
+          <span (click)="playTrailer()"
+            class="main-menu-control__button">TRAILER</span>
+        </div>
+  
+        <div class="subtitles-menu">
+          <span class="subtitles-menu__button" *ngFor="let sub of subtitlesList; let i = index"
+                [ngStyle]="{'color': (i==0||i==3) ? '#fff' : 'initial'}"
+                (click)="setSubtitle(sub.idioma)" >{{sub.idioma}}</span>
+        </div>
+
+      </div>
+    
+      <div *ngIf="selectedScreen == 'scenesMenu'">
+
+        <div class="arrowWrap">
+          <div class="arrowUp">
+            <i-bs name="caret-up-fill" 
+                  width="50" height="50"
+                  (click)="scenePagination('up')">
+            </i-bs>
+          </div>
+          <div class="arrowDown">
+            <i-bs name="caret-down-fill" 
+                  width="50" height="50"
+                  (click)="scenePagination('down')">
+            </i-bs>
+          </div>
+        </div>
+  
+        <div class="scenes">
+          <div class="scene" *ngFor="let scene of chapterPoints; let i = index">
+            <span class="scene_index" >{{scenePage}}</span>
+            <!-- <img [src]="returnSceneUrl(i)" alt=""> -->
+            <video [src]="returnSceneUrl(i)"
+                  *ngIf="returnSceneUrl(i)"
+                  (click)="goToScene(i)" 
+                  [controls]="false"
+                  loop crossorigin="anonymous"
+                  [muted]="true" autoplay>
+            </video>
+
+          </div>
+        </div>
+  
+        <div class="main-menu-control">
+          <span (click)="playMovie()"
+            style="color: #ddd;" 
+            class="main-menu-control__button">MOVIE</span>
+            <span (click)="changeScreen('mainMenu',currentVideoTime)"
+            style="color: #ddd;"
+            class="main-menu-control__button">MENU</span>
+          <span (click)="changeScreen('subtitlesMenu')"
+            class="main-menu-control__button"
+            style="color: #ddd;">SUBS</span>
+          <span (click)="playTrailer()"
+            style="color: #ddd;"
+            class="main-menu-control__button">TRAILER</span>
+        </div>
+
+      </div>
+  
+    </div>
+
+</div>
+  

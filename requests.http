@@ -1,0 +1,46 @@
+ http://casadopier.ddns.net:2099/data
+
+###
+
+GET http://casadopier.ddns.net:2099/data/1
+
+###
+
+PATCH http://casadopier.ddns.net:2099/data/0 HTTP/1.1
+content-type: application/json
+
+{
+      "horaInicio": 1288
+}
+
+###
+
+POST http://casadopier.ddns.net:2099/data HTTP/1.1
+content-type: application/json
+
+{
+      "nome":"Mauricio",
+      "sobrenome":"Bezerra",
+      "telefone":"11-955336091",
+      "data":"15/11/2021",
+      "mensagem":"Olá! Você está recebendo uma mensagem de teste",
+      "hora":"14:07"
+}
+
+###
+
+PUT http://casadopier.ddns.net:2099/data/3 HTTP/1.1
+content-type: application/json
+
+{
+      "nome":"Genesio",
+      "sobrenome":"Filho",
+      "telefone":"11-955336091",
+      "data":"15/11/2021",
+      "mensagem":"Olá! Você está recebendo uma mensagem de teste",
+      "hora":"14:07"
+}
+
+###
+
+DELETE http://casadopier.ddns.net:2099/data/5

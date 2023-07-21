@@ -1,0 +1,179 @@
+<div class="container-fluid">
+  <!-- NÃO DELETAR ESSE IFRAME. PRECISA DELE PRO AUTOPLAY DE AUDIO -->
+  <iframe src="../../../assets/silence.mp3" 
+   allow="autoplay" id="audio" style="display: none">
+  </iframe>
+
+  
+  <div *ngIf="movieMode">
+    <app-dvd-player [chapterPoints]="chapterPoints" 
+         [data]="data" (mainMenu)="changeScreen('mainMenu',$event)" >
+    </app-dvd-player>
+  </div>
+  
+  <div *ngIf="menuMode" class="menu-container" [style]="backgroundMenu">
+  
+    <!-- <audio autoplay loop *ngIf="menuAudioUrl" >
+      <source [src]=menuAudioUrl type="audio/mpeg">
+    </audio> -->
+
+
+    <h1 *ngIf="selectedScreen == 'mainMenu'" 
+        class="main-menu-title">SHIVERS</h1>
+
+    <div *ngIf="selectedScreen == 'mainMenu'"
+         class="main-menu-control">
+      <span (click)="playMovie()" 
+        class="main-menu-control__button">Movie</span>
+      <span (click)="changeScreen('subtitlesMenu')"
+        class="main-menu-control__button">Subtitles</span>
+      <span (click)="changeScreen('scenesMenu')"
+        class="main-menu-control__button">Scenes</span>
+      <span (click)="changeScreen('bonusMenu')"
+        class="main-menu-control__button">Bonus</span>
+    </div>
+  
+    <div *ngIf="selectedScreen == 'subtitlesMenu'">
+
+      <div class="main-menu-control">
+        <span (click)="playMovie()" 
+          class="main-menu-control__button">Movie</span>
+        <span (click)="changeScreen('mainMenu')"
+          class="main-menu-control__button">Main Menu</span>
+        <span (click)="changeScreen('scenesMenu')"
+          class="main-menu-control__button">Scenes</span>
+        <span (click)="changeScreen('bonusMenu')"
+          class="main-menu-control__button">Bonus</span>
+      </div>
+  
+      <div class="subtitles-menu">
+        <span class="subtitles-menu__button" *ngFor="let sub of subtitlesList"
+              (click)="setSubtitle(sub.idioma)" >{{sub.idioma}}</span>
+      </div>
+      
+    </div>
+  
+    <div *ngIf="selectedScreen == 'scenesMenu'">
+
+         <div class="scenes">
+           <div class="scene" *ngFor="let scene of chapterPoints; let i = index" 
+                (click)="goToScene(i)" >
+             <!-- <img [src]="returnSceneUrl(i)" alt=""> -->
+             <video [src]="returnSceneUrl(i)"
+                    [controls]="false"
+                    loop crossorigin="anonymous"
+                    [muted]="true" autoplay>
+             </video>
+
+           </div>
+         </div>
+
+         <div class="main-menu-control">
+           <span (click)="playMovie()" 
+             class="main-menu-control__button">Movie</span>
+           <span (click)="changeScreen('mainMenu')"
+             class="main-menu-control__button">Main Menu</span>
+           <span (click)="changeScreen('subtitlesMenu')"
+             class="main-menu-control__button">Subtitles</span>
+           <span (click)="changeScreen('bonusMenu')"
+             class="main-menu-control__button">Bonus</span>
+         </div>
+    </div>
+  
+    <div *ngIf="selectedScreen == 'bonusMenu'">
+
+         <div class="bonus-menu">
+            <span class="bonus-menu__button"
+                  (click)="playBonus('Extra_1')" >David Cronenberg Interview</span>
+            <span class="bonus-menu__button"
+                  (click)="playBonus('Trailer')" >Trailer</span>
+            <span class="bonus-menu__button"
+                  (click)="changeScreen('bioMenu')" >Bio David Cronenberg</span>
+         </div>
+
+         <div class="main-menu-control">
+           <span (click)="playMovie()" 
+             class="main-menu-control__button">Movie</span>
+           <span (click)="changeScreen('mainMenu')"
+             class="main-menu-control__button">Main Menu</span>
+           <span (click)="changeScreen('scenesMenu')"
+             class="main-menu-control__button">Scenes</span>
+           <span (click)="changeScreen('subtitlesMenu')"
+             class="main-menu-control__button">Subtitles</span>
+         </div>
+    </div>
+  
+    <div *ngIf="selectedScreen == 'bioMenu'"
+         class="bonus-menu-control">
+
+         <div class="bonus-text">
+             <h1 style="margin: 12px;text-align: center;">DAVID CRONENBERG</h1>
+            <img [src]="urlBioPic">
+            <p>Nasceu em Toronto-Canadá em 1943. Filho de mãe pianista e pai editor de revistas de quadrinho e romances policiais. 
+              O gosto pelo "fantástico" surgiu quando era garoto. Apenas com nove anos de idade Cronenberg já escrevia contos. 
+              Seus escritores de cabeceira foram Henry Miller, Burroughs e Nabokov. Como estudante, foi um aluno brilhante, 
+              tanto no campo cientifico, como literário. </p>
+              <p>Em 1966, ja interessado por cinema, roda seu primeiro curta-metragem de ficção, 
+              em bitola de 16 milimetros, a que deu o nome de "Transfer", que o leva a consagrar-se e a filmar mais 3 médias de inspirações 
+              "fantásticas": "From the Drain" (1967), "Stereo" f1969), e "Crimes of the Future" (1970.) 
+              Com o subsidio do Canadian Film Development Corporation, filma em quinze dias e com um orçamento de US$ 179 mil, 
+              "The Parasite Murders/Shivers" (1975).</p>
+              <p>Vários países se interessaram em distribuir. 
+              Algun cineastas, como John Carpenter e Scorsese, elogiaram a ousadia e a renovação do gênero horror. 
+              O filme que despertou os olhos de Hollywood foi "A Mosca" (1986). Remake de um filme rodado em 1958 por 
+              Kurt Newman (A Mosca da Cabeça Branca). Adaptou obras literãrias de Stephen King (Dead ZoneJ, 
+              William Burroughs (Naked Lunchi e J. Ballard (Crashl. </p>
+              <p>David Cronenberg é um cineasta-pensador do nosso tempo, 
+              correspondendo por inteiro as inquietações e angustias que atormentam a humanidade. De maneira muito peculiar, 
+              mas sempre com inteligência, tratou de temas como a ameaça de epidemias, fenõmenos parapiscológicos, 
+              influência dos "mass media" na formação (deformação) das mentalidades, as transformações genéticas, 
+              a interação descontrolada da tecnologia com o homem. </p>
+              <p>Enfim, um amplo conjunto de problemas que se encontram 
+              entre os mais preocupantes da atualidade. Para Cronenberg, a matéria e o espirito aparecem indissociáveis num 
+              mesmo corpo orgânico, uma "zona" de ressonância dos perigos a que o homem se encontra exposto. 
+              Por isso os seus filmes adquirem essa fórmula "mutante", onde nada está fixo e imutável e onde tudo é possível.</p>
+
+              <h3>FILMOGRAFIA</h3>
+              <ul>
+                <li>1966 Transfer (curta) </li>
+                <li>1967 From the Drain (curta) </li>
+                <li>1969 Stereo (média) </li>
+                <li>1970 Crimes of the Future (média) </li>
+                <li>1971 Tourettes, letter from Michelangelo, Jim Ritchie Sculptor (TV) </li>
+                <li>1972 Secret Weapons (TV) </li>
+                <li>1972 Don Valley, Fort Yorlc, Lakeshore, Winter Garden, Scarborough Bluffs, In the Dirt (TV) </li>
+                <li>1975 The Victim (TV) </li>
+                <li>1975 The Lie Chair (TV) </li>
+                <li>1975 The Parasite Murders/Shivers </li>
+                <li>1976 The Italian Machine (TV) </li>
+                <li>1976 Rabid </li>
+                <li>1979 Fast Company </li>
+                <li>1979 The Brood </li>
+                <li>1980 Scanners </li>
+                <li>1982 Videodrome </li>
+                <li>1983 The Dead Zone </li>
+                <li>1986 The Fly </li>
+                <li>1988 Dead Ringers </li>
+                <li>1991 Naked Lunch </li>
+                <li>1993 M. Butterfly </li>
+                <li>1996 Crash </li>
+                <li>1998 eXistenZ </li>
+                <li>2002 Spider</li>
+
+              </ul>
+         </div>
+
+         <div class="main-menu-control">
+           <span (click)="playMovie()" 
+             class="main-menu-control__button">Movie</span>
+           <span (click)="changeScreen('mainMenu')"
+             class="main-menu-control__button">Main Menu</span>
+           <span (click)="changeScreen('scenesMenu')"
+             class="main-menu-control__button">Scenes</span>
+           <span (click)="changeScreen('bonusMenu')"
+             class="main-menu-control__button">Bonus</span>
+         </div>
+    </div>
+
+  </div>
+</div>

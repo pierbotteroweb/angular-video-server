@@ -1,0 +1,14 @@
+.lista{
+    width: 100%;
+    height: 100vh;
+    overflow: scroll;
+    background: mediumturquoise;
+}
+
+.botao{
+    &--vermelho,
+    &{
+        background: red !important;
+    }
+}
+

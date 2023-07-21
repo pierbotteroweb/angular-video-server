@@ -1,0 +1,1615 @@
+[{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0b5"
+  },
+  "titulo": "Mulholland Drive - 2001.mp4",
+  "sub": true,
+  "tipo": "dvds",
+  "duracao": 8794
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0b6"
+  },
+  "duracao": 8022,
+  "tipo": "dvds",
+  "sub": true,
+  "titulo": "One Flew Over The Cuckoo's Nest.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0b7"
+  },
+  "sub": true,
+  "tipo": "dvds",
+  "duracao": 8348,
+  "titulo": "Fight Club.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0b8"
+  },
+  "tipo": "dvds",
+  "titulo": "Inglourious Basterds 2009.mkv",
+  "sub": true,
+  "duracao": 9180
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0b9"
+  },
+  "tipo": "dvds",
+  "sub": false,
+  "duracao": 7279,
+  "titulo": "Pirates 1986.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0ba"
+  },
+  "titulo": "M (1931).mkv",
+  "canal": "Cultura",
+  "duracao": 6640,
+  "order": 1,
+  "tituloAtracao": "Cine Cultura",
+  "programaDeTv": "cineCultura",
+  "tipo": "dvds",
+  "added": false,
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0bb"
+  },
+  "canal": "",
+  "titulo": "Nightcrawler 2014.mp4",
+  "tipo": "dvds",
+  "duracao": 7085,
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0bc"
+  },
+  "duracao": 6155,
+  "titulo": "Casablanca 1942.mkv",
+  "tipo": "dvds",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0bd"
+  },
+  "sub": true,
+  "tipo": "dvds",
+  "programaDeTv": "cineCultura",
+  "tituloAtracao": "Cine Cultura",
+  "duracao": 5606,
+  "canal": "Cultura",
+  "titulo": "El Angel Exterminador (1963).mkv",
+  "order": 5
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0be"
+  },
+  "titulo": "Eyes Wide Shut 1999.mp4",
+  "duracao": 9542,
+  "sub": true,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0bf"
+  },
+  "duracao": 9047,
+  "sub": false,
+  "tipo": "dvds",
+  "titulo": "Papillon 1973.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0c0"
+  },
+  "tipo": "dvds",
+  "titulo": "Coming To America 1988.mkv",
+  "duracao": 7007,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0c1"
+  },
+  "tipo": "dvds",
+  "sub": true,
+  "duracao": 6531,
+  "titulo": "Psycho 1960.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0c2"
+  },
+  "titulo": "The Lost Weekend 1945.mp4",
+  "duracao": 6045,
+  "tipo": "dvds",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0c3"
+  },
+  "sub": true,
+  "titulo": "Naked Lunch 1991.mp4",
+  "tipo": "dvds",
+  "duracao": 6906
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0c4"
+  },
+  "tipo": "dvds",
+  "titulo": "Rear Window 1954.mkv",
+  "sub": false,
+  "duracao": 6820
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0c5"
+  },
+  "tipo": "dvds",
+  "duracao": 5653,
+  "titulo": "The Blackout 1997.mkv",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0c6"
+  },
+  "titulo": "Furyo 1983.mkv",
+  "tipo": "dvds",
+  "duracao": 7075,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0c7"
+  },
+  "titulo": "Cannibal Holocaust 1980.mp4",
+  "tipo": "dvds",
+  "duracao": 5744,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0c8"
+  },
+  "tipo": "dvds",
+  "duracao": 5631,
+  "titulo": "Trainspotting 1996.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0c9"
+  },
+  "duracao": 4293,
+  "tipo": "dvds",
+  "sub": false,
+  "titulo": "The Invisible Man 1933.mkv"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0ca"
+  },
+  "titulo": "Christiane F 1981.mkv",
+  "duracao": 7861,
+  "sub": true,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0cb"
+  },
+  "duracao": 6817,
+  "titulo": "Death Proof (2007).mkv",
+  "tipo": "dvds",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0cc"
+  },
+  "duracao": 8218,
+  "sub": true,
+  "tipo": "dvds",
+  "titulo": "Kill Bill Vol 2.mkv"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0cd"
+  },
+  "tipo": "dvds",
+  "duracao": 5640,
+  "titulo": "The Warriors 1979.mp4",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0ce"
+  },
+  "duracao": 8826,
+  "tipo": "dvds",
+  "sub": true,
+  "titulo": "Traffic 2000.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0cf"
+  },
+  "duracao": 4955,
+  "sub": false,
+  "tipo": "dvds",
+  "titulo": "Secret Agent 1936.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0d0"
+  },
+  "tipo": "dvds",
+  "titulo": "Murder 1930.mp4",
+  "sub": false,
+  "duracao": 6138
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0d1"
+  },
+  "titulo": "Taxi Driver 1976.mp4",
+  "sub": true,
+  "tipo": "dvds",
+  "duracao": 6828
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0d2"
+  },
+  "tipo": "dvds",
+  "titulo": "Lolita 1962.mp4",
+  "duracao": 9211,
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0d3"
+  },
+  "titulo": "Sssssss 1973.m4v",
+  "sub": false,
+  "tipo": "dvds",
+  "duracao": 5932
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0d4"
+  },
+  "sub": true,
+  "tipo": "dvds",
+  "titulo": "An American Werewolf In London 1981.mkv",
+  "duracao": 5843
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0d5"
+  },
+  "sub": true,
+  "tipo": "dvds",
+  "duracao": 7772,
+  "titulo": "Twelve Monkeys 1995.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0d6"
+  },
+  "tipo": "dvds",
+  "duracao": 6604,
+  "titulo": "In The Heat Of The Night 1967.mp4",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0d7"
+  },
+  "duracao": 5559,
+  "titulo": "Phantom Of The Opera 1943.mp4",
+  "sub": false,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0d8"
+  },
+  "duracao": 9476,
+  "tipo": "dvds",
+  "sub": true,
+  "titulo": "The Godfather Part III 1990.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0d9"
+  },
+  "titulo": "Dr Strangelove 1964.mp4",
+  "duracao": 5684,
+  "sub": true,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0da"
+  },
+  "tipo": "dvds",
+  "titulo": "Raging Bull 1980.mp4",
+  "duracao": 7743,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0db"
+  },
+  "duracao": 5633,
+  "titulo": "Meeting People Is Easy 1998.m4v",
+  "sub": true,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0dc"
+  },
+  "sub": true,
+  "tipo": "dvds",
+  "duracao": 7402,
+  "titulo": "Batman Returns 1992.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0dd"
+  },
+  "titulo": "Blue Velvet 1986 The Lost Footage.mkv",
+  "tipo": "dvds",
+  "sub": false,
+  "duracao": 3196
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0de"
+  },
+  "sub": false,
+  "duracao": 6801,
+  "titulo": "Midnight Cowboy 1969.mkv",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0df"
+  },
+  "sub": true,
+  "titulo": "Goodfellas 1990.mp4",
+  "tipo": "dvds",
+  "duracao": 8721
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0e0"
+  },
+  "sub": true,
+  "titulo": "Blade Runner 1982.mkv",
+  "tipo": "dvds",
+  "duracao": 7057
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0e1"
+  },
+  "tipo": "dvds",
+  "sub": true,
+  "duracao": 4582,
+  "titulo": "Batman The Dark Knight Returns Part 1 2012.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0e2"
+  },
+  "titulo": "Requiem For A Dream 2000.mp4",
+  "tipo": "dvds",
+  "duracao": 6086,
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0e3"
+  },
+  "duracao": 7233,
+  "tipo": "dvds",
+  "sub": true,
+  "titulo": "Blue Velvet 1986.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0e4"
+  },
+  "sub": false,
+  "titulo": "Night Of The Living Dead 1968.mp4",
+  "duracao": 5796,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0e5"
+  },
+  "sub": true,
+  "tipo": "dvds",
+  "duracao": 6998,
+  "titulo": "Alien 1979.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0e6"
+  },
+  "tipo": "dvds",
+  "sub": true,
+  "duracao": 6811,
+  "titulo": "Total Recall 1990.mkv"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0e7"
+  },
+  "sub": false,
+  "duracao": 8626,
+  "titulo": "The Shining 1980.mp4",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0e8"
+  },
+  "tipo": "dvds",
+  "titulo": "Cape Fear 1962.mp4",
+  "duracao": 6354,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0e9"
+  },
+  "tipo": "dvds",
+  "duracao": 5771,
+  "sub": true,
+  "titulo": "Bad Lieutenant 1992.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0ea"
+  },
+  "sub": true,
+  "titulo": "The Funhouse 1981.mp4",
+  "duracao": 5715,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0eb"
+  },
+  "tipo": "dvds",
+  "duracao": 4600,
+  "titulo": "Sabotage 1936.mp4",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0ec"
+  },
+  "duracao": 5334,
+  "titulo": "Eraserhead 1977.mp4",
+  "sub": true,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0ed"
+  },
+  "duracao": 7112,
+  "tipo": "dvds",
+  "titulo": "The Silence Of The Lambs 1991.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0ee"
+  },
+  "sub": true,
+  "titulo": "The French Connection 1971.mp4",
+  "duracao": 6235,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0ef"
+  },
+  "sub": true,
+  "titulo": "Poltergeist 1982.mkv",
+  "tipo": "dvds",
+  "duracao": 6868
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0f0"
+  },
+  "sub": false,
+  "tipo": "dvds",
+  "titulo": "Bagdad Cafe 1987.mkv",
+  "duracao": 6519
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0f1"
+  },
+  "sub": true,
+  "tipo": "dvds",
+  "duracao": 6467,
+  "titulo": "Absolute Beginners 1986.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0f2"
+  },
+  "sub": false,
+  "tipo": "dvds",
+  "titulo": "Vertigo 1958.mp4",
+  "duracao": 7707
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0f3"
+  },
+  "titulo": "Possession 1981.mp4",
+  "tipo": "dvds",
+  "sub": true,
+  "duracao": 7423
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0f4"
+  },
+  "titulo": "The Cabinet Of Dr Caligari 1920.mkv",
+  "tipo": "dvds",
+  "duracao": 4638,
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0f5"
+  },
+  "tipo": "dvds",
+  "titulo": "Young Frankenstein 1974.mp4",
+  "duracao": 6341,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0f6"
+  },
+  "tipo": "dvds",
+  "titulo": "The Texas Chainsaw Massacre 1974.mp4",
+  "duracao": 5002,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0f7"
+  },
+  "duracao": 6013,
+  "tipo": "dvds",
+  "titulo": "It Follows 2014.mp4",
+  "canal": ""
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0f8"
+  },
+  "tipo": "dvds",
+  "sub": true,
+  "titulo": "Cape Fear (1991).mkv",
+  "duracao": 7666
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0f9"
+  },
+  "titulo": "Platoon.1986.mkv",
+  "sub": true,
+  "duracao": 7190,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0fa"
+  },
+  "duracao": 8751,
+  "titulo": "Artificial Intelligence 2001.mp4",
+  "tipo": "dvds",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0fb"
+  },
+  "titulo": "Scanners 1981.mp4",
+  "sub": false,
+  "tipo": "dvds",
+  "duracao": 6198
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0fc"
+  },
+  "titulo": "Night Of The Living Dead 1968 Color.mp4",
+  "tipo": "dvds",
+  "duracao": 5494,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0fd"
+  },
+  "sub": false,
+  "titulo": "Dressed To Kill 1980.mkv",
+  "tipo": "dvds",
+  "duracao": 6301
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0fe"
+  },
+  "tipo": "dvds",
+  "titulo": "The Bride Of Frankenstein 1935.mp4",
+  "sub": true,
+  "duracao": 4484
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc0ff"
+  },
+  "titulo": "The Funeral 1996.mkv",
+  "tipo": "dvds",
+  "duracao": 5701,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc100"
+  },
+  "sub": true,
+  "order": 4,
+  "tipo": "dvds",
+  "titulo": "Ladri Di Biciclette 1948.mkv",
+  "duracao": 5367,
+  "canal": "Cultura",
+  "tituloAtracao": "Cine Cultura",
+  "programaDeTv": "cineCultura"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc101"
+  },
+  "titulo": "Merry Christmas Mr. Lawrence 1983.mp4",
+  "duracao": 7398,
+  "tipo": "dvds",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc102"
+  },
+  "titulo": "Chinatown 1974.mp4",
+  "tipo": "dvds",
+  "duracao": 7832,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc103"
+  },
+  "sub": false,
+  "titulo": "Creature From The Black Lagoon 1954.mp4",
+  "tipo": "dvds",
+  "duracao": 4754
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc104"
+  },
+  "sub": true,
+  "duracao": 7164,
+  "tipo": "dvds",
+  "titulo": "Citizen Kane (1941).mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc105"
+  },
+  "sub": false,
+  "tipo": "dvds",
+  "titulo": "The Killing 1956.mp4",
+  "duracao": 5060
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc106"
+  },
+  "duracao": 6993,
+  "titulo": "War Of The Worlds 2005.mp4",
+  "tipo": "dvds",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc107"
+  },
+  "sub": true,
+  "titulo": "Sin City 2005.mp4",
+  "tipo": "dvds",
+  "duracao": 8505
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc108"
+  },
+  "tipo": "dvds",
+  "sub": true,
+  "duracao": 5791,
+  "titulo": "The Hunger 1983.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc109"
+  },
+  "titulo": "The Fearless Vampire Killers 1967.mp4",
+  "tipo": "dvds",
+  "duracao": 6444,
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc10a"
+  },
+  "duracao": 5055,
+  "canal": "",
+  "tipo": "dvds",
+  "titulo": "Pi 1998.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc10b"
+  },
+  "sub": false,
+  "titulo": "Last Tango In Paris 1972.mp4",
+  "tipo": "dvds",
+  "duracao": 7777
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc10c"
+  },
+  "tipo": "dvds",
+  "titulo": "The King Of Comedy 1982.mp4",
+  "sub": true,
+  "duracao": 6540
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc10d"
+  },
+  "sub": true,
+  "duracao": 6807,
+  "titulo": "Memento 2000.mkv",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc10e"
+  },
+  "titulo": "The Exorcist 1973.mp4",
+  "sub": true,
+  "duracao": 7941,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc10f"
+  },
+  "titulo": "Biloxi Blues 1988.mp4",
+  "duracao": 6399,
+  "tipo": "dvds",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc110"
+  },
+  "titulo": "Rhapsody In August 1991.m4v",
+  "tituloAtracao": "Cine Cultura",
+  "canal": "Cultura",
+  "duracao": 5856,
+  "order": 2,
+  "sub": true,
+  "programaDeTv": "cineCultura",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc111"
+  },
+  "tipo": "dvds",
+  "sub": false,
+  "titulo": "Alphaville 1965.mkv",
+  "duracao": 5970
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc112"
+  },
+  "tipo": "dvds",
+  "titulo": "New York Stories 1989.mp4",
+  "sub": true,
+  "duracao": 7467
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc113"
+  },
+  "titulo": "Reservoir Dogs 1992.mp4",
+  "sub": true,
+  "tipo": "dvds",
+  "duracao": 5958
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc114"
+  },
+  "duracao": 7952,
+  "sub": false,
+  "tipo": "dvds",
+  "titulo": "V for Vendetta (2005).mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc115"
+  },
+  "titulo": "Anguish 1987.mp4",
+  "sub": false,
+  "duracao": 5078,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc116"
+  },
+  "sub": false,
+  "duracao": 7610,
+  "titulo": "Se7en 1995.mp4",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc117"
+  },
+  "duracao": 8354,
+  "titulo": "The Man Who Fell To Earth 1976.mp4",
+  "tipo": "dvds",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc118"
+  },
+  "tipo": "dvds",
+  "duracao": 9264,
+  "sub": true,
+  "titulo": "Pulp Fiction 1994.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc119"
+  },
+  "titulo": "Minority Report 2002.mp4",
+  "tipo": "dvds",
+  "sub": true,
+  "duracao": 8709
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc11a"
+  },
+  "tipo": "dvds",
+  "duracao": 6937,
+  "titulo": "Invasion Of The Body Snatchers 1978.mp4",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc11b"
+  },
+  "tipo": "dvds",
+  "duracao": 7612,
+  "titulo": "Mississippi Burning 1988.mp4",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc11c"
+  },
+  "tipo": "dvds",
+  "titulo": "Metropolis (1927).mp4",
+  "sub": true,
+  "duracao": 9011
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc11d"
+  },
+  "titulo": "La Dolce Vita 1960.mp4",
+  "tipo": "dvds",
+  "duracao": 10546,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc11e"
+  },
+  "sub": false,
+  "tipo": "dvds",
+  "duracao": 6885,
+  "titulo": "Internal Affairs 1990.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc11f"
+  },
+  "titulo": "Three Oclock High 1987.mp4",
+  "tipo": "dvds",
+  "sub": false,
+  "duracao": 5370
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc120"
+  },
+  "titulo": "O Bandido Da Luz Vermelha 1968.mp4",
+  "tipo": "dvds",
+  "duracao": 5595,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc121"
+  },
+  "duracao": 11770,
+  "titulo": "Apocalypse Now Redux 1979.mp4",
+  "tipo": "dvds",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc122"
+  },
+  "sub": false,
+  "titulo": "Less Than Zero 1987.mp4",
+  "tipo": "dvds",
+  "duracao": 5902
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc123"
+  },
+  "tipo": "dvds",
+  "titulo": "Paris, Texas 1984.mp4",
+  "duracao": 8696,
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc124"
+  },
+  "tipo": "dvds",
+  "sub": true,
+  "duracao": 6043,
+  "titulo": "The Running Man 1987.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc125"
+  },
+  "duracao": 6483,
+  "titulo": "Blow Out 1981.mp4",
+  "tipo": "dvds",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc126"
+  },
+  "duracao": 4388,
+  "tipo": "dvds",
+  "sub": false,
+  "titulo": "The Mummy 1932.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc127"
+  },
+  "tipo": "dvds",
+  "duracao": 4466,
+  "sub": true,
+  "titulo": "Dracula 1931.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc128"
+  },
+  "sub": false,
+  "tipo": "dvds",
+  "titulo": "The Dead Zone 1983.mp4",
+  "duracao": 6223
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc129"
+  },
+  "sub": false,
+  "tipo": "dvds",
+  "duracao": 5003,
+  "titulo": "O Estranho Mundo De Ze Do Caixao (1968).mkv"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc12a"
+  },
+  "duracao": 8521,
+  "sub": false,
+  "titulo": "Stanley Kubrick A Life In Pictures.mkv",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc12b"
+  },
+  "duracao": 8365,
+  "tipo": "dvds",
+  "titulo": "Bitter Moon 1992.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc12c"
+  },
+  "duracao": 6515,
+  "tipo": "dvds",
+  "sub": true,
+  "titulo": "Dangerous Game 1993.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc12d"
+  },
+  "titulo": "Batman Year One 2011.mp4",
+  "sub": false,
+  "tipo": "dvds",
+  "duracao": 3849
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc12e"
+  },
+  "duracao": 6363,
+  "titulo": "The Graduate 1967.mkv",
+  "tipo": "dvds",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc12f"
+  },
+  "duracao": 4212,
+  "titulo": "Frankenstein 1931.mp4",
+  "sub": false,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc130"
+  },
+  "titulo": "The Duellists 1977.mp4",
+  "tipo": "dvds",
+  "sub": false,
+  "duracao": 6032
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc131"
+  },
+  "sub": true,
+  "duracao": 8178,
+  "titulo": "Dune 1984.mp4",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc132"
+  },
+  "sub": false,
+  "titulo": "The Godfather Part II 1974.mp4",
+  "tipo": "dvds",
+  "duracao": 12126
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc133"
+  },
+  "duracao": 6631,
+  "tipo": "dvds",
+  "titulo": "Nineteen Eighty Four 1984.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc134"
+  },
+  "tipo": "dvds",
+  "titulo": "Sex, Lies, And Videotape 1989.mp4",
+  "sub": true,
+  "duracao": 6000
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc135"
+  },
+  "titulo": "Fahrenheit 451 1966.mp4",
+  "sub": false,
+  "tipo": "dvds",
+  "duracao": 6745
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc136"
+  },
+  "canal": "",
+  "titulo": "Once Upon A Time In Hollywood 2019.mp4",
+  "tipo": "dvds",
+  "duracao": 9690,
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc137"
+  },
+  "sub": false,
+  "tipo": "dvds",
+  "duracao": 5627,
+  "titulo": "The Fly 1958.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc138"
+  },
+  "titulo": "Angel Heart 1987.mp4",
+  "sub": true,
+  "duracao": 6792,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc139"
+  },
+  "duracao": 7184,
+  "sub": true,
+  "titulo": "Akira Kurosawas Dreams 1990.mkv",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc13a"
+  },
+  "duracao": 8830,
+  "tipo": "dvds",
+  "sub": true,
+  "titulo": "Apocalypse Now - 1979.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc13b"
+  },
+  "tipo": "dvds",
+  "sub": false,
+  "titulo": "After Hours (1985).mp4",
+  "duracao": 5826
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc13c"
+  },
+  "duracao": 6083,
+  "titulo": "American Splendor 2003.mp4",
+  "sub": true,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc13d"
+  },
+  "titulo": "The Godfather Part I 1972.mp4",
+  "duracao": 10629,
+  "sub": true,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc13e"
+  },
+  "sub": true,
+  "duracao": 6122,
+  "titulo": "American Psycho 2000.mp4",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc13f"
+  },
+  "sub": true,
+  "titulo": "The Straight Story 1999.mp4",
+  "tipo": "dvds",
+  "duracao": 6730
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc140"
+  },
+  "tipo": "dvds",
+  "duracao": 8048,
+  "titulo": "Lost Highway 1997.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc141"
+  },
+  "sub": false,
+  "duracao": 6663,
+  "tipo": "dvds",
+  "titulo": "The Omen 1976.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc142"
+  },
+  "tipo": "dvds",
+  "duracao": 5723,
+  "titulo": "Shadow Of The Vampire 2000.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc143"
+  },
+  "tituloAtracao": "Cine Cultura",
+  "duracao": 5137,
+  "order": 6,
+  "programaDeTv": "cineCultura",
+  "canal": "Cultura",
+  "titulo": "Jungfrukällan 1960.mkv",
+  "tipo": "dvds",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc144"
+  },
+  "titulo": "Silent Running 1972.mp4",
+  "tipo": "dvds",
+  "duracao": 5369,
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc145"
+  },
+  "titulo": "Double Indemnity 1944.mkv",
+  "sub": true,
+  "tipo": "dvds",
+  "duracao": 6192
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc146"
+  },
+  "canal": "Cultura",
+  "programaDeTv": "cineCultura",
+  "duracao": 5591,
+  "tituloAtracao": "Cine Cultura",
+  "tipo": "dvds",
+  "titulo": "Gycklarnas Afton 1953.mp4",
+  "order": 10,
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc147"
+  },
+  "titulo": "Twin Peaks Fire Walk with Me - 1992.mp4",
+  "duracao": 8080,
+  "tipo": "dvds",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc148"
+  },
+  "duracao": 4549,
+  "titulo": "Batman The Dark Knight Returns Part 2 2013.mp4",
+  "tipo": "dvds",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc149"
+  },
+  "tipo": "dvds",
+  "sub": true,
+  "duracao": 5735,
+  "titulo": "The Fly 1986.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc14a"
+  },
+  "tipo": "dvds",
+  "sub": false,
+  "duracao": 6180,
+  "titulo": "Ferris Buellers Day Off 1986.mkv"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc14b"
+  },
+  "tipo": "dvds",
+  "duracao": 8219,
+  "titulo": "Rosemarys Baby 1968.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc14c"
+  },
+  "canal": "",
+  "tipo": "dvds",
+  "titulo": "The Man Who Wasnt There 2001.mp4",
+  "duracao": 6966,
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc14d"
+  },
+  "tipo": "dvds",
+  "duracao": 7074,
+  "sub": false,
+  "titulo": "The Fury 1978.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc14e"
+  },
+  "tipo": "dvds",
+  "duracao": 6686,
+  "titulo": "Leaving Las Vegas (1995).mkv",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc14f"
+  },
+  "tipo": "dvds",
+  "sub": true,
+  "duracao": 8197,
+  "titulo": "A Clockwork Orange 1971.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc150"
+  },
+  "programaDeTv": "cineCultura",
+  "titulo": "Vargtimmen 1968.mp4",
+  "duracao": 5250,
+  "order": 9,
+  "tituloAtracao": "Cine Cultura",
+  "tipo": "dvds",
+  "canal": "Cultura",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc151"
+  },
+  "tipo": "dvds",
+  "sub": false,
+  "duracao": 11104,
+  "titulo": "Barry Lyndon 1975.mkv"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc152"
+  },
+  "duracao": 5456,
+  "tipo": "dvds",
+  "sub": true,
+  "titulo": "Halloween 1978.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc153"
+  },
+  "duracao": 6884,
+  "titulo": "Tropa de Elite 2007.mkv",
+  "programaDeTv": "",
+  "canal": "Cultura",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc154"
+  },
+  "sub": true,
+  "duracao": 7323,
+  "tipo": "dvds",
+  "titulo": "Natural Born Killers 1994.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc155"
+  },
+  "sub": true,
+  "titulo": "Jackie Brown 1997.mp4",
+  "duracao": 9266,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc156"
+  },
+  "duracao": 9133,
+  "tipo": "dvds",
+  "sub": true,
+  "titulo": "The Dark Knight 2008.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc157"
+  },
+  "titulo": "Nocturnal Animals 2016.mp4",
+  "duracao": 6968,
+  "tipo": "dvds",
+  "canal": ""
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc158"
+  },
+  "titulo": "Once Upon A Time In The West 1968.mp4",
+  "tipo": "dvds",
+  "sub": true,
+  "duracao": 9962
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc159"
+  },
+  "sub": false,
+  "duracao": 4195,
+  "titulo": "The Wolfman (1941).mp4",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc15a"
+  },
+  "sub": true,
+  "titulo": "Persona 1966.mp4",
+  "tipo": "dvds",
+  "duracao": 5044
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc15b"
+  },
+  "tipo": "dvds",
+  "duracao": 7420,
+  "canal": "",
+  "titulo": "The Elephant Man.1980.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc15c"
+  },
+  "sub": true,
+  "titulo": "Peeping Tom 1960.mp4",
+  "duracao": "6099",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc15d"
+  },
+  "canal": "",
+  "tipo": "dvds",
+  "titulo": "The Driller Killer 1979.mp4",
+  "duracao": 6059
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc15e"
+  },
+  "tipo": "dvds",
+  "canal": "",
+  "duracao": 10065,
+  "titulo": "The Hateful Eight 2015.mkv",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc15f"
+  },
+  "titulo": "Confessions of A Dangerous Mind 2002.mp4",
+  "duracao": 6808,
+  "tipo": "dvds",
+  "canal": "",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc160"
+  },
+  "duracao": 7712,
+  "titulo": "Die Hard With a Vengance 1995.mkv",
+  "sub": false,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc161"
+  },
+  "titulo": "The Evil Dead 1981.mp4",
+  "tipo": "dvds",
+  "sub": false,
+  "duracao": 5126
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc162"
+  },
+  "duracao": 5229,
+  "canal": "",
+  "titulo": "Shivers 1975.mp4",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc163"
+  },
+  "duracao": 6644,
+  "sub": true,
+  "tipo": "dvds",
+  "titulo": "Kill Bill Vol 1.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc164"
+  },
+  "duracao": 7854,
+  "tipo": "dvds",
+  "titulo": "Whos Afraid Of Virginia Woolf 1966.mkv",
+  "sub": false
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc165"
+  },
+  "sub": true,
+  "titulo": "2001 A Space Odyssey 1968.mp4",
+  "duracao": 8932,
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc166"
+  },
+  "tipo": "dvds",
+  "canal": "",
+  "duracao": 7323,
+  "titulo": "Training Day 2001.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc167"
+  },
+  "titulo": "Performance 1970.mp4",
+  "duracao": 6338,
+  "tipo": "dvds",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc168"
+  },
+  "titulo": "Summer of Sam 1999.mp4",
+  "tipo": "dvds",
+  "duracao": 8512,
+  "canal": ""
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc169"
+  },
+  "duracao": 6696,
+  "tipo": "dvds",
+  "canal": "",
+  "titulo": "Liquid Sky 1982.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc16a"
+  },
+  "sub": true,
+  "duracao": 7512,
+  "titulo": "Wild at Heart 1990.mp4",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc16b"
+  },
+  "tipo": "dvds",
+  "canal": "",
+  "duracao": 6398,
+  "titulo": "Dunkirk 2017.mp4"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc16c"
+  },
+  "programaDeTv": "cineCultura",
+  "order": 8,
+  "canal": "Cultura",
+  "titulo": "Ashes And Diamonds 1958.m4v",
+  "duracao": 6176,
+  "tipo": "dvds",
+  "tituloAtracao": "Cine Cultura",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc16d"
+  },
+  "canal": "",
+  "duracao": 8978,
+  "titulo": "The Dirty Dozen 1967.mp4",
+  "tipo": "dvds",
+  "programaDeTv": "",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc16e"
+  },
+  "titulo": "Collateral 2004.mkv",
+  "tipo": "dvds",
+  "duracao": 7196,
+  "canal": "Cultura",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc16f"
+  },
+  "duracao": 5769,
+  "titulo": "Crash 1996.mp4",
+  "canal": "",
+  "tipo": "dvds"
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc170"
+  },
+  "canal": "",
+  "duracao": 5830,
+  "tipo": "dvds",
+  "titulo": "Moon 2009.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc171"
+  },
+  "titulo": "Get Out 2017.mp4",
+  "tipo": "dvds",
+  "duracao": 6245,
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc172"
+  },
+  "canal": "",
+  "duracao": 9923,
+  "tipo": "dvds",
+  "titulo": "Django Unchained 2012.mp4",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc173"
+  },
+  "canal": "Cultura",
+  "titulo": "The Sacrifice 1986.mp4",
+  "programaDeTv": "cineCultura",
+  "duracao": 8912,
+  "order": 7,
+  "tituloAtracao": "Cine Cultura",
+  "tipo": "dvds",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc174"
+  },
+  "programaDeTv": "",
+  "duracao": 7330,
+  "tipo": "dvds",
+  "titulo": "No Country For Old Men 2007.mp4",
+  "canal": "Cultura",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc175"
+  },
+  "titulo": "Stop Making Sense 1984.mp4",
+  "duracao": 5267,
+  "canal": "",
+  "tipo": "dvds",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "638faf9603929e6d18dcc176"
+  },
+  "canal": "Cultura",
+  "duracao": 8484,
+  "titulo": "One Eyed Jacks 1961.mkv",
+  "tipo": "dvds",
+  "sub": true
+},{
+  "_id": {
+    "$oid": "63e31ca5c5acef511f5ee6b8"
+  },
+  "titulo": "Full Metal Jacket 1987.mp4",
+  "tipo": "dvds",
+  "duracao": 6990
+}]

@@ -1,0 +1,145 @@
+
+@mixin colorText {
+    color: #fff;
+    letter-spacing: 0px;
+    font-family: 'Teko', sans-serif;
+    font-size: 30px;
+    cursor: pointer;
+}
+.container-fluid{
+    width: 100%;
+    text-align: center;
+
+    .menu-container{
+        background-size: contain;
+        width: 100%;
+        height: 100vh;
+        display: block;
+        margin: auto;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        audio{
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .main-menu-control{            
+            margin: auto;
+            background: transparent;
+            position: relative;
+            top: 78vh;
+            left: 41.5vw;
+            text-align: left;
+            &__button{
+                margin: 10px;              
+                font-weight: bolder;        
+                user-select: none;
+                @include colorText
+            }
+        }
+    }
+}
+
+.scenes{
+    overflow-y: scroll;
+    max-height: 40vh;
+    text-align: left;
+    width: 27vw;
+    position: absolute;
+    top: 25vh;
+    left: 58.5vw;
+    .scene{
+        @include colorText;
+        line-height: 16px;
+        margin-bottom: 35px;
+        padding-bottom: 1px;
+        padding-left: 10px;
+        display: block;
+        font-size: 20px;
+        font-weight: bolder;        
+        user-select: none;
+
+    }
+}
+
+.scene-preview{
+    width: 22vw;
+    height: auto;
+    position: absolute;
+    right: 5vw;
+    top: 34vh;
+    transform: rotate(270deg);
+}
+
+.scene-menu{
+    position: absolute;
+    top: 25vh;
+    left: 58.5vw;
+
+    &__button{        
+        font-size: 35px;
+        font-weight: bolder;        
+        user-select: none;
+        @include colorText;
+        height: 35px;
+    }
+}
+
+@mixin languages-menu {
+    text-align: left;
+    position: absolute;
+    top: 35vh;
+}
+
+@mixin languages-menu-button{
+    font-size: 35px;
+    font-weight: bolder;        
+    user-select: none;
+    display: block;
+    @include colorText
+}
+
+.subtitles-menu{
+    @include languages-menu();
+    left: 54vw;
+    &__button{      
+        @include languages-menu-button()  
+    }
+}
+
+.audio-language-menu{
+    @include languages-menu();
+    left: 71vw;
+    &__button{      
+        @include languages-menu-button()  
+    }
+}
+
+.extras-menu{
+    text-align: right;
+    position: relative;
+    top: 63vh;
+    right: 15vw;
+    &__button{        
+        font-size: 35px;
+        font-weight: bolder;        
+        user-select: none;
+        display: block;
+        @include colorText
+    }
+}
+
+
+::-webkit-scrollbar{
+    width: 17px;
+    height: 17px;
+    }
+    ::-webkit-scrollbar-thumb{
+    background: #DB3738;
+    border-radius: 30px;
+    }
+    ::-webkit-scrollbar-track{
+    background: transparent;
+    border-radius: 30px;
+    }

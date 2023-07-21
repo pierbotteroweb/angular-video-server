@@ -1,0 +1,148 @@
+
+@mixin colorText {
+    color: #ffb006;
+    letter-spacing: 2px;
+    font-family: 'Anton', sans-serif;
+    font-size: 30px;
+    cursor: pointer;
+}
+.container-fluid{
+    width: 100%;
+    text-align: center;
+
+    .menu-container{
+        background-size: contain;
+        width: 100%;
+        height: 100vh;
+        display: block;
+        margin: auto;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        audio{
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .main-menu-control{            
+            margin: auto;
+            background: transparent;
+            position: relative;
+            top: 58vh;
+            left: 29vw;
+            text-align: left;
+            &__button{
+                display: block;                
+                font-weight: bolder;        
+                user-select: none;
+                @include colorText
+            }
+        }
+    }
+}
+
+.scenes{
+    width: 80vw;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    gap: 30px 20px;
+    position: absolute;
+    left: 50vw;
+    transform: translate(-51%, 78px);
+    padding: 5px;
+    height: 70vh;
+    overflow: hidden;
+    justify-content: center;
+    .scene{
+        text-align: center;
+        video{
+            
+            width: 47vh;
+            position: absolute;
+            outline: solid #fff 5px;
+            cursor: pointer;
+        }
+        &:nth-child(1){
+            video{
+                left: 71vh;
+                top: 8.5vh;
+                transform: rotate(-7deg);
+            }
+        }
+        &:nth-child(2){
+            video{
+                left: 114vh;
+                top: 8.5vh;
+                transform: rotate(-2.5deg);
+            }
+        }
+        &:nth-child(3){
+            video{
+                left: 58vh;
+                top: 37vh;
+                transform: rotate(-7deg);
+            }
+        }
+        &:nth-child(4){
+            video{
+                left: 97vh;
+                top: 37.5vh;
+                transform: rotate(-7deg);
+            }
+        }
+    }
+}
+
+.scene-pagination-wrap{
+    @include colorText;
+    display:flex;
+    position: absolute;
+    left: 155vh;
+    top: 82vh;
+    .scene-page{
+        margin: 0 10px;
+    }
+}
+
+.scene-menu{
+    position: absolute;
+    top: 63vh;
+    left: 54vh;
+
+    &__button{        
+        font-size: 35px;
+        font-weight: bolder;        
+        user-select: none;
+        @include colorText;
+        height: 35px;
+    }
+}
+
+.subtitles-menu{
+    text-align: left;
+    position: relative;
+    top: 50vh;
+    left: 22vw;
+    &__button{        
+        font-size: 35px;
+        font-weight: bolder;        
+        user-select: none;
+        display: block;
+        @include colorText
+    }
+}
+
+.extras-menu{
+    text-align: right;
+    position: relative;
+    top: 63vh;
+    right: 15vw;
+    &__button{        
+        font-size: 35px;
+        font-weight: bolder;        
+        user-select: none;
+        display: block;
+        @include colorText
+    }
+}

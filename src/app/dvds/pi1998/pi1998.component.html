@@ -1,0 +1,131 @@
+<div class="container-fluid">
+    <!-- NÃO DELETAR ESSE IFRAME. PRECISA DELE PRO AUTOPLAY DE AUDIO -->
+    <iframe src="../../../assets/silence.mp3" 
+     allow="autoplay" id="audio" style="display: none">
+    </iframe>
+  
+    
+    <div *ngIf="movieMode">
+      <app-dvd-player [chapterPoints]="chapterPoints" 
+           [data]="data" (mainMenu)="changeScreen('mainMenu',$event)" >
+      </app-dvd-player>
+    </div>
+    
+    <div *ngIf="menuMode" class="menu-container" [style]="backgroundMenu">
+    
+      <!-- <audio autoplay loop *ngIf="menuAudioUrl" >
+        <source [src]=menuAudioUrl type="audio/mpeg">
+      </audio> -->
+  
+    
+      <div *ngIf="selectedScreen == 'mainMenu'"
+           class="main-menu-control">
+        <span (click)="playMovie()" 
+          class="main-menu-control__button">MOVIE</span>
+        <span (click)="changeScreen('subtitlesMenu')"
+          class="main-menu-control__button">SUBTITLES</span>
+        <span (click)="changeScreen('scenesMenu')"
+          class="main-menu-control__button">SCENES</span>
+        <span (click)="changeScreen('bonusMenu')"
+          class="main-menu-control__button">BONUS</span>
+      </div>
+    
+      <div *ngIf="selectedScreen == 'subtitlesMenu'">
+  
+        <div class="main-menu-control">
+          <span (click)="playMovie()" 
+            class="main-menu-control__button">MOVIE</span>
+          <span (click)="changeScreen('mainMenu')"
+            class="main-menu-control__button">MAIN MENU</span>
+          <span (click)="changeScreen('scenesMenu')"
+            class="main-menu-control__button">SCENES</span>
+          <span (click)="changeScreen('bonusMenu')"
+            class="main-menu-control__button">BONUS</span>
+        </div>
+    
+        <div class="subtitles-menu">
+          <span class="subtitles-menu__button" *ngFor="let sub of subtitlesList"
+                (click)="setSubtitle(sub.idioma)" >{{sub.idioma}}</span>
+        </div>
+        
+      </div>
+    
+      <div *ngIf="selectedScreen == 'scenesMenu'">
+  
+           <div class="scenes">
+             <div class="scene" *ngFor="let scene of chapterPoints; let i = index" 
+                  (click)="goToScene(i)" >
+               <!-- <img [src]="returnSceneUrl(i)" alt=""> -->
+               <video [src]="returnSceneUrl(i)"
+                      [controls]="false"
+                      loop crossorigin="anonymous"
+                      [muted]="true" autoplay>
+               </video>
+  
+             </div>
+           </div>
+  
+           <div class="main-menu-control">
+             <span (click)="playMovie()" 
+               class="main-menu-control__button">MOVIE</span>
+             <span (click)="changeScreen('mainMenu')"
+               class="main-menu-control__button">MAIN MENU</span>
+             <span (click)="changeScreen('subtitlesMenu')"
+               class="main-menu-control__button">SUBTITLES</span>
+            <span (click)="changeScreen('bonusMenu')"
+                class="main-menu-control__button">BONUS</span>
+           </div>
+      </div>
+    
+      <div *ngIf="selectedScreen == 'bonusMenu'">
+  
+           <div class="bonus-menu">
+              <span class="bonus-menu__button"
+                    (click)="playBonus('Extra_1')" >David Cronenberg Interview</span>
+              <span class="bonus-menu__button"
+                    (click)="playBonus('Trailer')" >Trailer</span>
+              <span class="bonus-menu__button"
+                    (click)="changeScreen('bioMenu')" >Bio David Cronenberg</span>
+           </div>
+  
+           <div class="main-menu-control">
+             <span (click)="playMovie()" 
+               class="main-menu-control__button">MOVIE</span>
+             <span (click)="changeScreen('mainMenu')"
+               class="main-menu-control__button">MAIN MENU</span>
+             <span (click)="changeScreen('scenesMenu')"
+               class="main-menu-control__button">SCENES</span>
+             <span (click)="changeScreen('subtitlesMenu')"
+               class="main-menu-control__button">SUBTITLES</span>
+           </div>  
+       </div>
+    
+       <div *ngIf="selectedScreen == 'bioMenu'"
+            class="bonus-menu-control">
+   
+            <div class="bonus-text">
+                <h1 style="margin: 12px;text-align: center;">NOTAS DE PRODUÇÃO</h1>
+
+               <p>Pi, a premiada estréia na direção de Darren Aronofsky, é um thriller de ficção científica sobre uma viagem assombrosa dentro da mente genial do visionário renegado Maximillian Cohen (interpretado por Sean Gullette). A première mundial de Pi foi no Sundance Film Festival de 1998, em que Aronofsky recebeu o prêmio de Melhor Diretor na categoria Dramatic Competition. Numa tentativa que reflete o desafio de seu protagonista, Max Cohen, o roteirista e diretor, Darren Aronofsky, decidiu fazer o que parecia ser impossível: criar um thriller de ficção científica de ritmo acelerado com o orçamento e os recursos de um filme independente. Bem parecido com a maneira como Max via as infinitas possibilidades matemáticas numa xícara de café ou nas folhas de uma árvore, Aronofsky teve que visualizar suas limitações financeiras como oportunidades artísticas.</p>
+               <p>E, para isso, combinou uma variada gama de influências e idéias num todo. Natural do Brooklyn, o diretor estudou em Harvard e no American Film Institute. Com 28 anos, inspirou-se em várias influências da ficção científica, enquanto construía a história, combinando os conceitos mais progressistas do gênero com subtemas morais atemporais encontrados • na mitologia grega. Quanto às influências da vida real, Aronofsky fez uma viagem a Israel e ficou num kibutz antes de terminar o 2° Grau. Resolveu fugir dali depois de dois dias, quando se viu trabalhando numa fábrica de plástico. Enquanto perambulava por Jerusalém, encontrou uma seita hassídica, que o ensinou sobre o significado numérico da linguagem hebraica, da qual, sem sucesso, tentou torná-lo membro.</p>
+               <p>Ao retornar para os Estados Unidos, ele descobriu que grande parte de seus amigos de infância haviam tornado-se corretores de ações em Wall Street, um mundo que ele achava bastante fértil, devido às suas possibilidades de render histórias. Contudo, seu objetivo principal era o de criar um filme que questionasse o mundo em que vivemos. Um mundo onde somos constantemente forçados a reconciliar os avanços tecnológicos com os mistérios atemporais do universo. Aronofsky diz: "A começar pelo título, as pessoas perguntam: 'O que é isso?' A partir daí, o filme vai seguindo de pergunta em pergunta, do tipo daquelas que  começam com: 'Por que estamos aqui?'. A diferença é que, hoje, entramos na era digital e esse é o contexto da busca de Max". Diferente de Max, Aronofsky não decidiu realizar seu objetivo sozinho. Ao voltar para Nova York, depois de três anos no AFI, juntou-se ao produtor estreante Eric Watson para reunirem a quantia de USS 60 mil que o roteiro exigia. A solução deles foi solicitar contribuições de USS 100 aos amigos e à família.</p>
+               <p>Os realizadores prometeram aos investidores que, se o filme rendesse dinheiro, todos ganhariam US$ 150. Com relação ao elenco e à equipe, todos, desde o assistente de produção e do operador de câmera a Darren Aronofsky, trabalharam com o mesmo salário de US$ 200 por dia mais uma cota de 50 pontos na eventual renda do filme. Dessa forma, diz Aronofsky, todos os envolvidos no filme "se apaixonaram pelo projeto. Todos nós queríamos que o filme fosse ótimo". Para a locação do filme, os realizadores usaram uma sala deserta numa fábrica de luminárias em Bushwick, no Brooklyn, propriedade do pai do co•produtor. O serviço de trabalhos manuais foi fornecido pela mãe de Aronofsky, Charlotte, e por seu pai, Abraham, que também fez um dos bandidos.</p>
+               <p>Com outras pequenas partes interpretadas, em sua maioria, por amigos e membros da família, toda a produção foi, em todos os aspectos, "um caso de família". Talvez o maior desafio que os realizadores tiveram que enfrentar foram as limitações que o orçamento lhes apresentou. Eles queriam fazer mais que simplesmente um filme inteligente de orçamento apertado, mas também algo dinâmico e visualmente emocionante. Para isso, o diretor de fotografia, Matthew Libatique, usou uma película inversa de preto-e-branco que é extremamente difícil de filmar, expor e montar, mas que resulta em  contrastes dramáticos exigidos pelo contexto da historia. Aronofsky explica: "A maioria dos filmes em preto-e-branco acaba com um visual cinza; queríamos um filme branco ou preto.</p>
+               <p>E que fosse o mais ricamente estilizado em relação à fotografia". Eles também decidiram contar a história de uma maneira subjetiva, para atrair o público para dentro da mente de seu perturbado protagonista. Ik Para ajudá-los a realizar a tarefa de rodar todo o filme através da perspectiva de Max, Aronofsky e o diretor de fotografia, Matthew Libatique, inventaram um número diferente de posições de câmera, incluindo uma estrutura que foi adaptada ao corpo de Sean Gullette em algumas das cenas-chave, uma "Heat-Cam", que cria ondulações na frente das lentes, e uma "Vibrator-Cam", usada para efeitos estremecidos durante todo o filme. •Zri Essa dedicação à subjetividade permeou todos os aspectos da produção, desde a montagem até a iluminação e a trilha.</p>
+               <p>Para o personagem de Max, Aronofsky e Gullette trabalharam juntos com o roteiro durante oito meses, definindo as motivações de Max e certificando-se de que sua ascensão para o esclarecimento e sua simultânea descida para a loucura não se perdesse na complexa estrutura da trama. Para o desenho de produção, Aronofsky contou com o profissional de teatro Matthew Maraffi, cujo trabalho com "Euclid", o supercomputador de Max, refletiu seu trabalho econômico e evocativo no sucesso da Broadway, Rent. Para a construção de "Euclid", Maraffi e Gullette trabalharam a quatro mãos durante dias, montando as quase duas toneladas de peças de computador que encontraram. Maraffi viu a tarefa como um desafio de desenho de produção, Gullette, como um exercício para mais tarde interpretar seu personagem.</p>
+               <p>Para que todos esses elementos funcionassem, Aronofsky teve que tecê-los juntos, para servirem a um objetivo comum: o de expandir o gênero do thriller de ficção científica em algo que o público ainda não tivesse visto. "Acho que as pessoas já viram todo tipo de coisa explodir - espaçonaves, a Death Star, insetos gigantes, a Terra. O que as pessoas estão interessadas agora é na exploração das emoções: o que faz uma pessoa se arrepiar? O mundo interior. O espaço exterior está morto. O espaço interior é a próxima jornada", resume o diretor.</p>
+            </div>
+   
+            <div class="main-menu-control">
+              <span (click)="playMovie()" 
+                class="main-menu-control__button">MOVIE</span>
+              <span (click)="changeScreen('mainMenu')"
+                class="main-menu-control__button">MAIN MENU</span>
+              <span (click)="changeScreen('scenesMenu')"
+                class="main-menu-control__button">SCENES</span>
+              <span (click)="changeScreen('bonusMenu')"
+                class="main-menu-control__button">BONUS</span>
+            </div>
+       </div>
+  </div>
+  

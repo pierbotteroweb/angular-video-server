@@ -1,0 +1,308 @@
+.movieMode{
+    width: 100%;
+    background: transparent;
+    height: 100vh;
+    display: block;
+    margin: auto;
+
+    img{
+        height: 100%;
+        width: auto;
+    }
+}
+
+@mixin movieModeControlls{
+    color:white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    font-size: 34px;
+    display: block;
+    height: 49px;
+    position: absolute;
+    left: 50%;
+    bottom: 1%;
+    cursor: pointer;    
+}
+
+.movieMode--controls{
+    transition: all 0.5s;
+    &__main{
+        @include movieModeControlls();
+        transform: translate(400px, 0px);
+    }
+    &__fullscreen{
+        @include movieModeControlls();
+        transform: translate(320px, 0px);
+    }
+    &__previous{
+        @include movieModeControlls();
+        transform: translate(80px, 2px);
+    }
+    &__next{
+        @include movieModeControlls();
+        transform: translate(250px, 0px);
+    }
+    &__play{
+        @include movieModeControlls();
+        transform: translate(200px, 0px);
+    }
+    &__pause{
+        @include movieModeControlls();
+        transform: translate(150px, 0px);
+    }
+    &__time{
+        @include movieModeControlls();
+        font-size: 20px;
+        transform: translate(-552px, 4px);
+    }
+
+    @mixin languagesListStyle {
+        position: absolute;
+        list-style-type: none;
+        bottom: 60px;
+        font-size: 19px;
+        right: 0;
+        background: #fff;
+        color: #000;
+        box-sizing: border-box;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+    &__subs{
+        @include movieModeControlls();
+        transform: translate(510px, 5px);
+        // height: 300px;
+        &__list{
+            @include languagesListStyle();            
+        }
+    }
+
+    &__audio{
+        @include movieModeControlls();
+        transform: translate(497px, 5px);
+        // height: 300px;
+        &__list{
+            @include languagesListStyle();            
+        }
+    }
+}
+
+::cue {
+    font-weight: bold;
+    background: transparent;
+    text-shadow: 2px 2px #000;
+  }
+
+
+.videoBarWrap{
+position: absolute;
+bottom: 8%;
+width: 100vw !important;
+cursor: pointer;
+input{
+    width: 80%;
+    cursor: pointer;
+}
+input[type=range].videobar {
+    width: 100% !important;
+    margin: 3.3px 0;
+    background-color: transparent;
+    -webkit-appearance: none;
+}
+input[type=range].videobar:focus {
+    outline: none;
+}
+input[type=range].videobar::-webkit-slider-runnable-track {
+    background: #d8d8d8;
+    border: 0.2px solid #010101;
+    border-radius: 1.3px;
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+}
+input[type=range].videobar::-webkit-slider-thumb {
+    margin-top: -3.5px;
+    width: 16px;
+    height: 15px;
+    background: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 50px;
+    cursor: pointer;
+    -webkit-appearance: none;
+}
+input[type=range].videobar:focus::-webkit-slider-runnable-track {
+    background: #e5e5e5;
+}
+input[type=range].videobar::-moz-range-track {
+    background: #d8d8d8;
+    border: 0.2px solid #010101;
+    border-radius: 1.3px;
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+}
+input[type=range].videobar::-moz-range-thumb {
+    width: 16px;
+    height: 15px;
+    background: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 50px;
+    cursor: pointer;
+}
+input[type=range].videobar::-ms-track {
+    background: transparent;
+    border-color: transparent;
+    border-width: 4.3px 0;
+    color: transparent;
+    width: 100%;
+    height: 8.4px;
+    cursor: pointer;
+}
+input[type=range].videobar::-ms-fill-lower {
+    background: #cbcbcb;
+    border: 0.2px solid #010101;
+    border-radius: 2.6px;
+}
+input[type=range].videobar::-ms-fill-upper {
+    background: #d8d8d8;
+    border: 0.2px solid #010101;
+    border-radius: 2.6px;
+}
+input[type=range].videobar::-ms-thumb {
+    width: 16px;
+    height: 15px;
+    background: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 0px;
+    /*Needed to keep the Edge thumb centred*/
+}
+input[type=range].videobar:focus::-ms-fill-lower {
+    background: #d8d8d8;
+}
+input[type=range].videobar:focus::-ms-fill-upper {
+    background: #e5e5e5;
+}
+/*TODO: Use one of the selectors from https://stackoverflow.com/a/20541859/7077589 and figure out
+how to remove the virtical space around the range input in IE*/
+@supports (-ms-ime-align:auto) {
+    /* Pre-Chromium Edge only styles, selector taken from hhttps://stackoverflow.com/a/32202953/7077589 */
+    input[type=range].videobar {
+    margin: 0;
+    /*Edge starts the margin from the thumb, not the track as other browsers do*/
+    }
+}
+}
+
+.audioVolumeBarWrap{
+width: 150px;
+left: 50%;
+bottom: 1.5%;
+position: absolute;
+transform: translate(-77px, 0px);
+input[type=range].audiovolumebar {
+    width: 100%;
+    margin: 5.75px 0;
+    background-color: transparent;
+    -webkit-appearance: none;
+    }
+    input[type=range].audiovolumebar:focus {
+    outline: none;
+    }
+    input[type=range].audiovolumebar::-webkit-slider-runnable-track {
+    background: #ffffff;
+    border: 0.2px solid #010101;
+    border-radius: 1.3px;
+    width: 100%;
+    height: 4.5px;
+    cursor: pointer;
+    }
+    input[type=range].audiovolumebar::-webkit-slider-thumb {
+    margin-top: -5.95px;
+    width: 16px;
+    height: 16px;
+    background: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 50px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    }
+    input[type=range].audiovolumebar:focus::-webkit-slider-runnable-track {
+    background: #ffffff;
+    }
+    input[type=range].audiovolumebar::-moz-range-track {
+    background: #ffffff;
+    border: 0.2px solid #010101;
+    border-radius: 1.3px;
+    width: 100%;
+    height: 4.5px;
+    cursor: pointer;
+    }
+    input[type=range].audiovolumebar::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 50px;
+    cursor: pointer;
+    }
+    input[type=range].audiovolumebar::-ms-track {
+    background: transparent;
+    border-color: transparent;
+    border-width: 6.75px 0;
+    color: transparent;
+    width: 100%;
+    height: 4.5px;
+    cursor: pointer;
+    }
+    input[type=range].audiovolumebar::-ms-fill-lower {
+    background: #f2f2f2;
+    border: 0.2px solid #010101;
+    border-radius: 2.6px;
+    }
+    input[type=range].audiovolumebar::-ms-fill-upper {
+    background: #ffffff;
+    border: 0.2px solid #010101;
+    border-radius: 2.6px;
+    }
+    input[type=range].audiovolumebar::-ms-thumb {
+    width: 16px;
+    height: 16px;
+    background: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 0px;
+    /*Needed to keep the Edge thumb centred*/
+    }
+    input[type=range].audiovolumebar:focus::-ms-fill-lower {
+    background: #ffffff;
+    }
+    input[type=range].audiovolumebar:focus::-ms-fill-upper {
+    background: #ffffff;
+    }
+    /*TODO: Use one of the selectors from https://stackoverflow.com/a/20541859/7077589 and figure out
+    how to remove the virtical space around the range input in IE*/
+    @supports (-ms-ime-align:auto) {
+    /* Pre-Chromium Edge only styles, selector taken from hhttps://stackoverflow.com/a/32202953/7077589 */
+    input[type=range].audiovolumebar {
+        margin: 0;
+        /*Edge starts the margin from the thumb, not the track as other browsers do*/
+    }
+    }     
+
+}
+
+.audioVolumeIconWrap{
+cursor: pointer;
+left: 50%;
+bottom: 0%;
+position: absolute;
+transform: translate(-130px,0px);
+i-bs{
+    color: white;
+}
+
+}
