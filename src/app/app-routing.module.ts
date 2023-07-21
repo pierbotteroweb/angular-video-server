@@ -28,6 +28,7 @@ import { ProgramasComponent } from './programas/programas.component';
 import { TheAddiction1995Component } from './dvds/theaddiction1995/theaddiction1995.component';
 import { Thedayofthejackal1973Component } from './dvds/thedayofthejackal1973/thedayofthejackal1973.component';
 import { Zelig1983Component } from './dvds/zelig1983/zelig1983.component';
+import { BasicdvdComponent } from './dvds/basicdvd/basicdvd.component';
 
 const routes: Routes = [
   { path: '', component: PlaylistComponent},
@@ -57,7 +58,8 @@ const routes: Routes = [
   { path: 'themanwhowasntthere2001', component: Themanwhowasntthere2001Component},
   { path: 'nakedlunch1991', component: Nakedlunch1991Component},
   { path: 'zelig1983', component: Zelig1983Component},
-  { path: 'filmesdatia', component: TiaComponent}
+  { path: 'basicdvd', component: BasicdvdComponent},
+  { path: 'filmesdatia', component: TiaComponent},
 
 ];
 
