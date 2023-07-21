@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { CommonService } from 'src/services/common.service';
 
 @Component({
@@ -15,7 +14,6 @@ export class Lolita1962Component implements OnInit {
   baseUrl:any="http://casadopier.ddns.net:1984/api/assets/dvds/"
   elem: any;
   data:any={};
-  
 
   chapterPoints:any=[{"title":"Opening Credits","point":"00:00:00"},
                      {"title":"4 Years Earlier","point":"00:12:17"},
