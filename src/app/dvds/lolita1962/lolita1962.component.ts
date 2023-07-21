@@ -70,8 +70,7 @@ export class Lolita1962Component implements OnInit {
     this.googleFont= this.sanitizer.bypassSecurityTrustResourceUrl("https://fonts.googleapis.com/css2?family=Teko&display=swap");
     this.currentVideoTime=0
     this.scenePage=1
-    this.data.dvd="Dr Strangelove 1964"
-    this.data.nomeDublado="Dr Fantastico"
+    this.data.dvd="Lolita 1962"
     this.subtitlesList=[
       {idioma:"ENG", titulo:"english", fileName:"Sub"},
       {idioma:"OFF", titulo:"portuguese",  fileName:""}]
@@ -80,7 +79,7 @@ export class Lolita1962Component implements OnInit {
       {idioma:"PORT", titulo:"portuguese",tipo:"madrugadaFilmes"}]
     this.data.subtitlesList=this.subtitlesList
     this.data.audioList=this.audioList
-    this.data.duracaoDoFilme="1:37:27"
+    this.data.duracaoDoFilme="2:33:32"
     this.data.url=this.baseUrl+encodeURI(this.data.dvd)+".mp4#t="+this.currentVideoTime
     this.elem = document.documentElement;
     this.menuAudioUrl=this.baseUrl+encodeURI(this.data.dvd)+"/menu.mp3"
@@ -108,7 +107,7 @@ export class Lolita1962Component implements OnInit {
     if(currentTime){
       this.currentVideoTime=currentTime
     }
-    this.data.duracaoDoFilme="1:37:27"
+    this.data.duracaoDoFilme="2:33:32"
     this.scenePage=1
     this.menuMode=true
     this.movieMode=false
@@ -142,7 +141,8 @@ export class Lolita1962Component implements OnInit {
 
 
   goToScene(i){
-    this.data.url=this.baseUrl+encodeURI(this.data.dvd)+".mp4#t="+this.commonServices.toSeconds(this.chapterPoints[i]['point'])
+    this.data.url=this.baseUrl+encodeURI(this.data.dvd)+".mp4#t="+
+                  this.commonServices.toSeconds(this.chapterPoints[i]['point'])
     this.playMovie()
   }
 
@@ -160,7 +160,7 @@ export class Lolita1962Component implements OnInit {
   }
   
   playTrailer(){
-    this.data.duracaoDoFilme = "0:03:25"
+    this.data.duracaoDoFilme = "0:01:01"
     this.data.url=this.baseUrl+encodeURI(this.data.dvd)+"/Trailer.mp4"
     this.menuMode=false
     this.movieMode=true
