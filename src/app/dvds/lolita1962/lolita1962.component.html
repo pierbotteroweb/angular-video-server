@@ -50,13 +50,13 @@
           </div>
   
           <div class="subtitles-menu">
-            <span class="subtitles-menu__button">{{labels.subtitles}}</span>
+            <span class="subtitles-menu__button">SUBTITLES</span>
             <span class="subtitles-menu__button" *ngFor="let sub of subtitlesList"
                   (click)="setSubtitle(sub.idioma)" >{{sub.titulo}}</span>
           </div>
   
           <div class="audio-language-menu">
-            <span class="audio-language-menu__button">{{labels.audio}}</span>
+            <span class="audio-language-menu__button">AUDIO</span>
             <span class="audio-language-menu__button" *ngFor="let audio of audioList"
                   (click)="setAudioLanguage(audio)" >{{audio.titulo}}</span>
           </div>
@@ -70,7 +70,7 @@
                <span (click)="playMovie()" 
                  class="main-menu-control__button">movie</span>
                <span (click)="changeScreen('mainMenu')"
-                 class="main-menu-control__button">{{labels.menu}}</span>
+                 class="main-menu-control__button">menu</span>
                <span (click)="changeScreen('subtitlesMenu')"
                  class="main-menu-control__button">languages</span>
                <span (click)="playTrailer()"
