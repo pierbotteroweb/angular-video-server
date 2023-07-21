@@ -15,16 +15,6 @@ export class Lolita1962Component implements OnInit {
   baseUrl:any="http://thisisshuffletv:5091/assets/dvds/"
   elem: any;
   data:any={};
-  googleFont:any
-  labels={"movie":"Movie",
-          "menu":"Menu",
-          "scenes":"Scenes",
-          "languages":"Languages",
-          "trailer":"Trailer",
-          "subtitles":"SUBTITLES",
-          "audio":"AUDIO"}
-  textColor:"#fff"
-  textFontFamily:"'Teko', sans-serif"
   
 
   chapterPoints:any=[{"title":"Opening Credits","point":"00:00:00"},
@@ -67,7 +57,6 @@ export class Lolita1962Component implements OnInit {
 
 
   ngOnInit(): void {
-    this.googleFont= this.sanitizer.bypassSecurityTrustResourceUrl("https://fonts.googleapis.com/css2?family=Teko&display=swap");
     this.currentVideoTime=0
     this.scenePage=1
     this.data.dvd="Lolita 1962"
@@ -88,20 +77,6 @@ export class Lolita1962Component implements OnInit {
       let audio = document.getElementsByTagName('audio')[0]
       audio.volume = 0.05
     },500)
-  }
-
-  ngAfterViewChecked(){
-    console.log("ngAfterViewChecked")
-    this.setStyle()
-  }
-
-  setStyle(){
-    let classCount = document.getElementsByClassName("main-menu-control__button").length
-    console.log("classCount",classCount)
-    for (let i=0;i<classCount;i++){
-      console.log("X")
-      document.getElementsByClassName("main-menu-control__button")[i]["style"]["color"]="green"
-    }
   }
   
   changeScreen(screen,currentTime?){
