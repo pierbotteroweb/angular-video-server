@@ -54,6 +54,7 @@ import { TheAddiction1995Component } from './dvds/theaddiction1995/theaddiction1
 import { Thedayofthejackal1973Component } from './dvds/thedayofthejackal1973/thedayofthejackal1973.component';
 import { Zelig1983Component } from './dvds/zelig1983/zelig1983.component';
 import { TestesInterceptor } from './testes.interceptor';
+import { BasicdvdComponent } from './dvds/basicdvd/basicdvd.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { TestesInterceptor } from './testes.interceptor';
     NavbarComponent,
     GradeComponent,
     ProgramasComponent,
-    Zelig1983Component
+    Zelig1983Component,
+    BasicdvdComponent
   ],
   imports: [
     CommonModule,
