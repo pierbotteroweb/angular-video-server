@@ -92,15 +92,46 @@ export class BasicdvdComponent implements OnInit {
   
   ngAfterViewChecked(){
     console.log("ngAfterViewChecked")
-    this.setStyle()
+    this.setStyle("container-fluid","font-family","'Pacifico', cursive")
+
+    this.setStyle("main-menu-control","top","19vh")
+    this.setStyle("main-menu-control","left","19vw")
+
+    this.setStyle("main-menu-control__button","color","#F33320")
+    this.setStyle("main-menu-control__button","display","block")
+    this.setStyle("main-menu-control__button","margin","initial")
+
+    this.setStyle("scenes","color","#F33320")
+    this.setStyle("scenes","width","25vw")
+    this.setStyle("scenes","top","53vh")
+    this.setStyle("scenes","left","19vw")
+
+    this.setStyle("languages-menu","top","62vh")
+    this.setStyle("languages-menu","left","19vw")
+    
+    this.setStyle("subtitles-menu","color","#F33320")
+    this.setStyle("subtitles-menu","top","62vh")
+    this.setStyle("subtitles-menu","left","19vw")
+    
+    this.setStyle("audio-language-menu","color","#F33320")
+    this.setStyle("audio-language-menu","top","62vh")
+    this.setStyle("audio-language-menu","left","36vw")
+    
   }
-  setStyle(){
-    let classCount = document.getElementsByClassName("main-menu-control__button").length
+
+  setStyle(className,styleProperty:string,value:string){
+    let classCount = document.getElementsByClassName(className).length
     console.log("classCount",classCount)
     for (let i=0;i<classCount;i++){
       console.log("X")
-      document.getElementsByClassName("main-menu-control__button")[i]["style"]["color"]="green"
+      document.getElementsByClassName(className)[i]["style"][styleProperty]=value
     }
+    var styleElement = document.createElement("style");
+    styleElement.appendChild(document.createTextNode(`div 
+      ::-webkit-scrollbar{width: 17px;height:17px;}
+      ::-webkit-scrollbar-thumb{background: #F33320;border-radius: 30px;}
+      ::-webkit-scrollbar-track{background: transparent;border-radius: 30px;}`))
+    document.getElementsByTagName("head")[0].appendChild(styleElement);
   }
   
   changeScreen(screen,currentTime?){

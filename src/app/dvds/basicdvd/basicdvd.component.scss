@@ -2,7 +2,7 @@
 @mixin colorText {
     // color: #F33320;
     letter-spacing: 2px;
-    font-family: 'Pacifico', cursive;
+    // font-family: 'Pacifico', cursive;
     font-size: 30px;
     cursor: pointer;
 }
@@ -28,11 +28,11 @@
             margin: auto;
             background: transparent;
             position: relative;
-            top: 19vh;
-            left: 19vw;
+            // top: 19vh;
+            // left: 19vw;
             text-align: left;
             &__button{
-                display: block;                
+                // display: block;                
                 font-weight: bolder;        
                 user-select: none;
                 @include colorText
@@ -45,10 +45,10 @@
     overflow-y: scroll;
     max-height: 40vh;
     text-align: left;
-    width: 25vw;
+    // width: 25vw;
     position: absolute;
-    top: 53vh;
-    left: 19vw;
+    // top: 53vh;
+    // left: 19vw;
     .scene{
         @include colorText;
         line-height: 16px;
@@ -86,11 +86,11 @@
     }
 }
 
-@mixin languages-menu {
-    text-align: left;
-    position: absolute;
-    top: 62vh;
-}
+// @mixin languages-menu {
+//     text-align: left;
+//     position: absolute;
+//     top: 62vh;
+// }
 
 @mixin languages-menu-button{
     font-size: 35px;
@@ -101,16 +101,24 @@
 }
 
 .subtitles-menu{
-    @include languages-menu();
-    left: 19vw;
+    // @include languages-menu();
+    text-align: left;
+    position: absolute;
+    // top: 62vh;
+    text-align: left;
+    // left: 19vw;
     &__button{      
         @include languages-menu-button()  
     }
 }
 
 .audio-language-menu{
-    @include languages-menu();
-    left: 36vw;
+    // @include languages-menu();
+    text-align: left;
+    position: absolute;
+    // top: 62vh;
+    text-align: left;
+    // left: 36vw;
     &__button{      
         @include languages-menu-button()  
     }
@@ -131,15 +139,15 @@
 }
 
 
-::-webkit-scrollbar{
-    width: 17px;
-    height: 17px;
-    }
-    ::-webkit-scrollbar-thumb{
-    background: #F33320;
-    border-radius: 30px;
-    }
-    ::-webkit-scrollbar-track{
-    background: transparent;
-    border-radius: 30px;
-    }
+// ::-webkit-scrollbar{
+//     width: 17px;
+//     height: 17px;
+//     }
+//     ::-webkit-scrollbar-thumb{
+//     background: #F33320;
+//     border-radius: 30px;
+//     }
+//     ::-webkit-scrollbar-track{
+//     background: transparent;
+//     border-radius: 30px;
+//     }
