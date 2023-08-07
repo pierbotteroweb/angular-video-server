@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MongodbService } from 'src/app/services/mongodb.service';
 import { CommonService } from 'src/services/common.service';
 
 @Component({
@@ -11,6 +12,7 @@ export class BasicdvdComponent implements OnInit {
 
   constructor(
     private commonServices: CommonService,
+    private mongodbService: MongodbService,
     private sanitizer: DomSanitizer
     ) { }
   baseUrl:any="http://casadopier.ddns.net:1984/api/assets/dvds/"
@@ -27,23 +29,7 @@ export class BasicdvdComponent implements OnInit {
   textColor:"#fff"
   textFontFamily:"'Teko', sans-serif";
 
-  chapterPoints:any=[{"title":"Opening Credits","point":"00:00:00"},
-                     {"title":"4 Years Earlier","point":"00:12:17"},
-                     {"title":"The Summer Dance","point":"00:20:05"},
-                     {"title":"A Cozy Little Dinner","point":"00:28:52"},
-                     {"title":"Dreamy Childishness","point":"00:36:44"},
-                     {"title":"A Father to My Little Girl","point":"00:48:47"},
-                     {"title":"The Perfect Murder","point":"00:57:36"},
-                     {"title":"Perfectly Decent","point":"01:06:38"},
-                     {"title":"Two Normal Guys","point":"01:18:19"},
-                     {"title":"Hey, Let's Tell Mother","point":"01:28:10"},
-                     {"title":"Six Months Have Passed","point":"01:38:30"},
-                     {"title":"Tremble Not, Little Nymph","point":"01:50:50"},
-                     {"title":"A Strange Car Following Us","point":"02:00:30"},
-                     {"title":"A White, Widowed Male","point":"02:11:12"},
-                     {"title":"Ironing Day","point":"02:17:34"},
-                     {"title":"We'll Start Afresh","point":"02:28:53"},
-                     {"title":"Quilty!","point":"02:32:11"}]
+  chapterPoints:any=[]
 
   url:string
   backgroundMenuUrl:any
@@ -64,30 +50,44 @@ export class BasicdvdComponent implements OnInit {
   urlBioPic:string
   scenePage:number
   currentVideoTime:any
+  dataFromDvdApi:any
 
 
   ngOnInit(): void {
-    this.googleFont= this.sanitizer.bypassSecurityTrustResourceUrl("https://fonts.googleapis.com/css2?family=Teko&display=swap");
-    this.currentVideoTime=0
-    this.scenePage=1
-    this.data.dvd="Lolita 1962"
-    this.subtitlesList=[
-      {idioma:"ENG", titulo:"english", fileName:"Sub"},
-      {idioma:"OFF", titulo:"portuguese",  fileName:""}]
-    this.audioList=[
-      {idioma:"ORG", titulo:"original"},
-      {idioma:"PORT", titulo:"portuguese",tipo:"madrugadaFilmes"}]
-    this.data.subtitlesList=this.subtitlesList
-    this.data.audioList=this.audioList
-    this.data.duracaoDoFilme="2:33:32"
-    this.data.url=this.baseUrl+encodeURI(this.data.dvd)+".mp4#t="+this.currentVideoTime
-    this.elem = document.documentElement;
-    this.menuAudioUrl=this.baseUrl+encodeURI(this.data.dvd)+"/menu.mp3"
-    this.setBackgroundImage("mainMenu")
-    setTimeout(()=>{
-      let audio = document.getElementsByTagName('audio')[0]
-      audio.volume = 0.05
-    },500)
+
+    // this.mongodbService.getDvdsById("64bf09e75178a53070997653")
+    // .subscribe((data:any)=>{
+    //   console.log("DVd data",data)
+    // })
+
+    this.mongodbService.getDvds()
+    .subscribe((data:any)=>{      
+      let dvd = data.find(id=>id._id=="64bf09e75178a53070997653")
+      this.data.dvd=dvd.name
+      console.log(dvd)
+      this.dataFromDvdApi=dvd
+      this.googleFont= this.sanitizer.bypassSecurityTrustResourceUrl(dvd.Text_Font);
+      this.chapterPoints=dvd.chapters
+      this.currentVideoTime=0
+      this.scenePage=1
+      this.subtitlesList=[
+        {idioma:"ENG", titulo:"english", fileName:"Sub"},
+        {idioma:"OFF", titulo:"portuguese",  fileName:""}]
+      this.audioList=[
+        {idioma:"ORG", titulo:"original"},
+        {idioma:"PORT", titulo:"portuguese",tipo:"madrugadaFilmes"}]
+      this.data.subtitlesList=this.subtitlesList
+      this.data.audioList=this.audioList
+      this.data.duracaoDoFilme="2:33:32"
+      this.data.url=this.baseUrl+encodeURI(this.data.dvd)+".mp4#t="+this.currentVideoTime
+      this.elem = document.documentElement;
+      this.menuAudioUrl=this.baseUrl+encodeURI(this.data.dvd)+"/menu.mp3"
+      this.setBackgroundImage("mainMenu")
+      setTimeout(()=>{
+        let audio = document.getElementsByTagName('audio')[0]
+        audio.volume = 0.05
+      },500)
+    })
   }
   
   ngAfterViewChecked(){
@@ -121,9 +121,7 @@ export class BasicdvdComponent implements OnInit {
 
   setStyle(className,styleProperty:string,value:string){
     let classCount = document.getElementsByClassName(className).length
-    console.log("classCount",classCount)
     for (let i=0;i<classCount;i++){
-      console.log("X")
       document.getElementsByClassName(className)[i]["style"][styleProperty]=value
     }
     var styleElement = document.createElement("style");

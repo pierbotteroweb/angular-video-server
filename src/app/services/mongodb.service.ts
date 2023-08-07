@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { map } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +24,16 @@ export class MongodbService {
     return this.http.post('http://casadopier.ddns.net:9000/api/findProgramaById', {'id': id})
   }
 
+  getDvdsById(id){
+    return this.http.post('http://casadopier.ddns.net:7000/api/findDvdsById', {'id': id})
+  }
+
   getFromVideoCollection(videoCollection){
     return this.http.get('http://casadopier.ddns.net:9000/api/'+videoCollection)
+  }
+
+  getDvds(){
+    return this.http.get('http://localhost:1337/dvds')
   }
 
   deleteFromVideoCollection(videoCollection,videoId){

@@ -21,78 +21,66 @@
           <source [src]=menuAudioUrl type="audio/mpeg">
         </audio> -->
         
-        <div *ngIf="selectedScreen == 'mainMenu'">
+        <div>
   
-          <div class="main-menu-control">
+          <div class="main-menu-control" *ngIf="selectedScreen == 'mainMenu'">
             <span (click)="playMovie()" 
               class="main-menu-control__button">{{labels.movie}}</span>
-            <span (click)="changeScreen('scenesMenu')"
+            <span (click)="changeScreen('mainMenu')" *ngIf="selectedScreen != 'mainMenu'"
+              class="main-menu-control__button">{{labels.menu}}</span>
+            <span (click)="changeScreen('scenesMenu')" *ngIf="selectedScreen != 'scenesMenu'"
               class="main-menu-control__button">{{labels.scenes}}</span>
-            <span (click)="changeScreen('subtitlesMenu')"
+            <span (click)="changeScreen('subtitlesMenu')" *ngIf="selectedScreen != 'subtitlesMenu'"
               class="main-menu-control__button">{{labels.languages}}</span>
             <span (click)="playTrailer()"
               class="main-menu-control__button">{{labels.trailer}}</span>
           </div>
   
-        </div>  
-      
-        <div *ngIf="selectedScreen == 'subtitlesMenu'">
-  
-          <div class="main-menu-control">
-            <span (click)="playMovie()" 
-              class="main-menu-control__button">{{labels.movie}}</span>
-            <span (click)="changeScreen('mainMenu')"
-              class="main-menu-control__button">{{labels.menu}}</span>
-            <span (click)="changeScreen('scenesMenu')"
-              class="main-menu-control__button">{{labels.scenes}}</span>
-              <span (click)="playTrailer()"
-              class="main-menu-control__button">{{labels.trailer}}</span>
-          </div>
-  
-          <div class="subtitles-menu">
+          <div class="subtitles-menu" *ngIf="selectedScreen == 'subtitlesMenu'">
             <span class="subtitles-menu__button">{{labels.subtitles}}</span>
             <span class="subtitles-menu__button" *ngFor="let sub of subtitlesList"
                   (click)="setSubtitle(sub.idioma)" >{{sub.titulo}}</span>
           </div>
   
-          <div class="audio-language-menu">
+          <div class="audio-language-menu" *ngIf="selectedScreen == 'subtitlesMenu'">
             <span class="audio-language-menu__button">{{labels.audio}}</span>
             <span class="audio-language-menu__button" *ngFor="let audio of audioList"
                   (click)="setAudioLanguage(audio)" >{{audio.titulo}}</span>
           </div>
+          
   
-        </div>
+          <div class="main-menu-control" *ngIf="selectedScreen == 'scenesMenu'">
+            <span (click)="playMovie()" 
+              class="main-menu-control__button">{{labels.movie}}</span>
+            <span (click)="changeScreen('mainMenu')"
+              class="main-menu-control__button">{{labels.menu}}</span>
+            <span (click)="changeScreen('subtitlesMenu')"
+              class="main-menu-control__button">{{labels.languages}}</span>
+            <span (click)="playTrailer()"
+              class="main-menu-control__button">{{labels.trailer}}</span>
+          </div>
+ 
+          <div class="scenes"  *ngIf="selectedScreen == 'scenesMenu'">
+            <div class="scene" *ngFor="let scene of chapterPoints; let i = index" 
+                 (click)="goToScene(i)" (mouseenter)="hoverScene(i)" >
+               <span class="scene-title">
+                   {{scene.title}}
+               </span>
+            </div>
+          </div>
+          
+          <video *ngIf="selectedScreen == 'scenesMenu' && exibeScenePreview" class="scene-preview"
+            [controls]="false"
+            loop crossorigin="anonymous"
+            [muted]="true" autoplay>
+            <source [src]="scenePreviewUrl" type="video/mp4" />
+          </video>
+  
+        </div> 
     
-        <div *ngIf="selectedScreen == 'scenesMenu'"
+        <!-- <div *ngIf="selectedScreen == 'scenesMenu'"
              class="scene-selection-menu-control">
-  
-             <div class="main-menu-control">
-               <span (click)="playMovie()" 
-                 class="main-menu-control__button">{{labels.movie}}</span>
-               <span (click)="changeScreen('mainMenu')"
-                 class="main-menu-control__button">{{labels.menu}}</span>
-               <span (click)="changeScreen('subtitlesMenu')"
-                 class="main-menu-control__button">{{labels.languages}}</span>
-               <span (click)="playTrailer()"
-                 class="main-menu-control__button">{{labels.trailer}}</span>
-             </div>
-    
-             <div class="scenes">
-               <div class="scene" *ngFor="let scene of chapterPoints; let i = index" 
-                    (click)="goToScene(i)" (mouseenter)="hoverScene(i)" >
-                  <span class="scene-title">
-                      {{scene.title}}
-                  </span>
-               </div>
-             </div>
-             
-             <video *ngIf="exibeScenePreview" class="scene-preview"
-               [controls]="false"
-               loop crossorigin="anonymous"
-               [muted]="true" autoplay>
-               <source [src]="scenePreviewUrl" type="video/mp4" />
-             </video>
-        </div>
+        </div> -->
         
     
       </div>
