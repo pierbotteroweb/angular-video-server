@@ -264,6 +264,8 @@ export class GradeComponent implements OnInit {
     })
   }
 
+  
+
   organizaPrePos(){
     
     let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaSemana[this.selectedDiaDaSemana]
