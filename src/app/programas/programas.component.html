@@ -14,40 +14,40 @@
                 <div class="container-fluid"  [formGroup]="selectVideoForm">
  
                    <div class="row" >
-                     <div class="col-2">
+                     <!-- <div class="col-2">
                         <button style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setButtonMode('get')" >Get</button>
                         <button style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setButtonMode('set')" >Set</button>
                         <button style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setButtonMode('prepos')" >Prepos</button>
                         <button style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setButtonMode('select')" >Select</button>
-                     </div>
-                      <div class="col-4">
+                     </div> -->
+                      <div class="col-5">
                          <!-- <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="getList('canal')" >Get Canal</button> -->
                          <!-- <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="getListMovies()" >Get Movies</button> -->
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="getVideosFromSelectedProgramaDeTv()" >Get Prog</button>
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="retreiveFromMongoDB()" >Get all</button>
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="createVideo()" >Create Video</button>
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="getVideosFromSelectedProgramaDeTv()" >Get Prog</button>
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="retreiveFromMongoDB()" >Get all</button>
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="createVideo()" >Create Video</button>
                          <!-- <button *ngIf="buttonMode=='set'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="atualizaListaLocal()" >Update Local</button> -->
                          
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setCanal()" >Set Canal</button>     
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setProgramaDeTvOnMongoDB()" >Set Prog de Tv</button>  
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setCanal()" >Set Canal</button>     
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setProgramaDeTvOnMongoDB()" >Set Prog de Tv</button>  
                          
                          <!-- <button style="margin: 0.3em 1em;" class="btn btn-primary" (click)="addParaTia()" >Add Tia</button>   -->
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="clearSelect()" >Clear</button>
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="selectAll()" >All</button>
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setRandom()" >Set Random</button>   
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setOrder()" >Set Order</button>     
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setSub()" >Set Sub</button>     
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="resetAdded()" >Reset Added</button>  
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setAdded()" >Set Added</button>     
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setTitulodaAtracao()" >Set Titulo</button>     
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="clearSelect()" >Clear</button>
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="selectAll()" >All</button>
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setRandom()" >Set Random</button>   
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setOrder()" >Set Order</button>     
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setSub()" >Set Sub</button>     
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="resetAdded()" >Reset Added</button>  
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setAdded()" >Set Added</button>     
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setTitulodaAtracao()" >Set Titulo</button>     
                          <!-- <button style="margin: 0.3em 1em;" class="btn btn-primary" (click)="newInt()" >New Int</button>  
                          <button style="margin: 0.3em 1em;" class="btn btn-primary" (click)="newPrepos()" >New PrePos</button>      -->
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="clearOrder()" >Clear Order</button> 
+                         <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="clearOrder()" >Clear Order</button> 
                          <!-- <button style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setPrePos()" >Set PrePos</button>     
                          <button style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setInt()" >Set Int</button>     -->
-                         <!-- <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setTipo()" >Set Tipo</button>    -->
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-success botao--vermelho" (click)="clearProgFromSelected()" >Clear Prog</button>
-                         <button *ngIf="buttonMode=='get'" style="margin: 0.3em 1em;" class="btn btn-success botao--vermelho" (click)="deleteSelected()" >Delete</button>
+                         <!-- <button  style="margin: 0.3em 1em;" class="btn btn-primary" (click)="setTipo()" >Set Tipo</button>    -->
+                         <button  style="margin: 0.3em 1em;" class="btn btn-success botao--vermelho" (click)="clearProgFromSelected()" >Clear Prog</button>
+                         <button  style="margin: 0.3em 1em;" class="btn btn-success botao--vermelho" (click)="deleteSelected()" >Delete</button>
                          
                       </div>
  
@@ -74,22 +74,8 @@
                                 <span>{{programa.titulo}}</span>
                                </option>
                             </select>
-                            <select class="select form-control" 
-                                    formControlName="subProgramaDeTvFormControl" >
-                              <option value="">Sub Prog de TV </option>
-                              <option *ngFor="let programa of programaDeTvFiltered" [value]='programa.value'>
-                                <span>{{programa.titulo}}</span>
-                               </option>
-                            </select>
-                            <select  class="select form-control" 
-                                    formControlName="prePosProgramaDeTvFormControl" >
-                              <option value="">Pre Pos Prog de TV </option>
-                              <option *ngFor="let programa of programaDeTvPrePosFiltered" [value]='programa.value'>
-                                <span>{{programa.titulo}}</span>
-                               </option>
-                            </select>
                          </div>
-                         <div  *ngIf="buttonMode=='get'" class="p-input-icon-left p-ml-auto" style="display: flex;">
+                         <div   class="p-input-icon-left p-ml-auto" style="display: flex;">
                                 <i class="pi pi-search"></i>
                                 <input pInputText type="text" 
                                        formControlName="filtroDeBuscaFormControl"
@@ -99,11 +85,14 @@
                          </div>
                          <div  style="margin-top: 10px; display: flex; gap: 10px 20px;">
                             <button class="btn btn-primary" (click)="criarProgramaOnMongoDb()" >
-                                    Criar</button>
-                            <input [formControl]="novoPrograma" type="text" placeholder="Nome do Programa" class="form-control">
+                                    Criar Programa</button>
+                            <input style="width: 74%;" [formControl]="novoPrograma" type="text" placeholder="Nome do Programa" class="form-control">
                          </div>
+                      </div>
+ 
+                      <div class="col-3">
                          <div class="row">
-                           <button style="margin: 0 1em 0 2em;" class="btn btn-success" (click)="uploadUsingMongoDb(0)" >Upload</button>
+                           <button style="margin: 0 1em 0 2em;height: 90%;" class="btn btn-success" (click)="uploadUsingMongoDb(0)" >Upload</button>
                            <div class="upload-block">
                               <div class="custom-file">
                                   <input type="file" class="custom-file-input" id="customFile" (change)="onUploadEventChange($event)" multiple />
