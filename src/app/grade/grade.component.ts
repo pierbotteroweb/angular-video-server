@@ -457,8 +457,14 @@ export class GradeComponent implements OnInit {
           .sort(this.commonServices.sortPor("order"))
           
           if(listaFiltrada.length>0){
-                    if(!this.prePosAvailable) 
-                    this.checkPrePosAvailable(this.selectedProgramaDeTv)
+
+                    let prog:any = this.programaDeTv.filter(prog=>prog.value==this.selectedProgramaDeTv)[0]
+                    
+                    if(!this.prePosAvailable&&prog.anexos&&prog.anexos.prePos){
+                      this.prePosAvailable=true
+                      this.prePosCount=2
+                    }
+
 
                     videoAdicionado = listaFiltrada[0]
                       let newProg:Object ={}
@@ -636,16 +642,16 @@ export class GradeComponent implements OnInit {
 
   // }
 
-  checkPrePosAvailable(prog){
-    let prePosProgName = "prePos"+this.commonServices.toTitleCase(prog).slice(0, -1)
-    let prePosProgToBeFound = 
-    this.programaDeTvFiltered.find(prog=>prog.value.includes(prePosProgName))
+  // checkPrePosAvailable(prog){
+  //   let prePosProgName = "prePos"+this.commonServices.toTitleCase(prog).slice(0, -1)
+  //   let prePosProgToBeFound = 
+  //   this.programaDeTvFiltered.find(prog=>prog.value.includes(prePosProgName))
 
-    if(prePosProgToBeFound&&!this.prePosAvailable){
-      this.prePosAvailable=true
-      this.prePosCount=2
-    }
-  }
+  //   if(prePosProgToBeFound&&!this.prePosAvailable){
+  //     this.prePosAvailable=true
+  //     this.prePosCount=2
+  //   }
+  // }
 
   replicaNext(){
     this.programaSelectionado=""
