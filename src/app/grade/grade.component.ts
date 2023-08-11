@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-// import { FirebaseService } from '../services/firebase.service';
-import { map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { CommonService } from 'src/services/common.service';
-import { UploadVideoService } from '../services/upload-video.service';
-import { ThisReceiver } from '@angular/compiler';
 import { Subject } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 
@@ -61,7 +56,6 @@ export class GradeComponent implements OnInit {
 
 
   constructor(private commonServices: CommonService,
-              // private firebaseService: FirebaseService,
               private mongodbService: MongodbService,
               private formBuilder: FormBuilder) { 
                 this.selectVideoForm = this.formBuilder.group({
@@ -109,7 +103,6 @@ export class GradeComponent implements OnInit {
 
 
     this.getListaDeProgramasDeTvFromMongodb()
-    // this.getCanaisFromFirestore()
     this.getCanaisFromMongoDB()
     
     this.selectVideoForm.get('semanaDestinoFormControl')
@@ -157,19 +150,6 @@ export class GradeComponent implements OnInit {
       unsubscribe.unsubscribe()
     })
 
-  }
-
-  addTituloDeProgramas(){
-    this.canais.map((canal,canalIndex)=>{
-      if(canal.canal==5){
-        this.semana.map((diaDaSemana:any)=>{
-          this.canais[canalIndex][diaDaSemana].map((prog,progIndex)=>{
-            this.canais[canalIndex][diaDaSemana][progIndex].tituloAtracao =
-            this.programaDeTv.find(programa=>programa.value==prog.atracao).titulo
-          })
-        })
-      }
-    })
   }
   
   removePrograma(){
@@ -307,15 +287,11 @@ export class GradeComponent implements OnInit {
   
       if(this.selectedProgramaDeTv.value.slice(0,3).includes("int")){
         intervaloApi = this.selectedProgramaDeTv.value
-      } else {
-        intervaloApi = "int"+this.commonServices.toTitleCase(this.selectedProgramaDeTv.value)
+      } else if(this.selectedProgramaDeTv.anexos&&this.selectedProgramaDeTv.anexos.intervalo){
+        intervaloApi = this.selectedProgramaDeTv.anexos.intervalo
       }
   
-      if(intervaloApi.includes("Sessao")){    
-        intervaloApi=intervaloApi.replace(/[0-9]/g, '')
-      } 
-  
-      if(this.intervalosCount&&this.programaDeTvFiltered.find(prog=>prog.value == intervaloApi)){
+      if(this.intervalosCount){
         let data = {}
         data['intAmount'] = this.intervalosCount
         data['intervaloApi'] = intervaloApi
@@ -382,6 +358,7 @@ export class GradeComponent implements OnInit {
   adicionarPrograma(): void {
     // CHECK IF DIA DA SEMANA AND PROGRAMA DE TV ARE SELECTED
     if(this.selectedDiaDaSemana&&this.selectedProgramaDeTv){
+    // GET UNSUBSCRIBABLE LIST OF PROGRAMS ACCORDING TO SELECTED PROGRAMA DE TV
     
     let unsubscribe=
     this.mongodbService.getProgramasDeTv(this.selectedProgramaDeTv.tipo,this.selectedProgramaDeTv.value)
@@ -390,8 +367,11 @@ export class GradeComponent implements OnInit {
 
       let listaDeProgramas = data
 
+ //GET EACH REF ON THE LISTA DE PROGRAMAS AND CREATE A NEW LIST WITH THE PROGRAMAS DATA
+      
       const montaLista = ()=>{
-        
+
+        //FILTER 
         let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
           .sort(this.commonServices.sortPor("order"))
           
@@ -708,14 +688,11 @@ export class GradeComponent implements OnInit {
                                  .filter(prog=>prog.slice(0,6)!="prePos"))]
     this.listaOrigemReduzida.reverse()
     this.programasReplicadosCount = this.listaOrigemReduzida.length-1
-    // listaOrigemReduzida.map(programa=>{
     this.selectVideoForm.get('programaDeTvFormControl').setValue(this.listaOrigemReduzida[this.programasReplicadosCount])
     this.adicionarPrograma()
-    // })
   }
 
   gerarListasDeBlocos(){
-    // this.canais.map((canal:any,indCanal)=>{
       let canal = this.canais.filter(canal=>canal.emissora==this.selectedCanal)[0]
       let indCanal = this.canais.indexOf(canal)
 
