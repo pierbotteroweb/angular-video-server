@@ -27,8 +27,7 @@ export class GradeComponent implements OnInit {
                           canal?: string; 
                           value?: string; }[];
 
-  selectedProgramaDeTv: string;
-  tipoDeProgramaDeTvSelecionado: string;
+  selectedProgramaDeTv: any;
   selectedCanal: string = "Globo";
   selectedDiaDaSemana:string;
   selectedDiaDestinoDaSemana:string;
@@ -137,9 +136,8 @@ export class GradeComponent implements OnInit {
     .valueChanges.subscribe(value=>{
       console.log("yyyy: ",value)
       console.log("xxxx: ",this.programaDeTv.filter(prog=>prog.value==value))
-      this.tipoDeProgramaDeTvSelecionado = this.programaDeTv.filter(prog=>prog.value==value)[0]["tipo"]
       this.alerta=""
-      this.selectedProgramaDeTv=value
+      this.selectedProgramaDeTv=this.programaDeTv.filter(prog=>prog.value==value)[0]
     })
 
     for(let hora=6;hora<24;hora++){
@@ -270,7 +268,7 @@ export class GradeComponent implements OnInit {
     
     let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaSemana[this.selectedDiaDaSemana]
 
-    let prePosSelecionado = this.selectedProgramaDeTv.replace("prePos","").slice(1)
+    let prePosSelecionado = this.selectedProgramaDeTv.value.replace("prePos","").slice(1)
 
     let listaAdicionados = listaParaORganizar.filter(prog=>prog.atracao.includes(prePosSelecionado))
 
@@ -325,10 +323,10 @@ export class GradeComponent implements OnInit {
     
       let intervaloApi
   
-      if(this.selectedProgramaDeTv.slice(0,3).includes("int")){
-        intervaloApi = this.selectedProgramaDeTv
+      if(this.selectedProgramaDeTv.value.slice(0,3).includes("int")){
+        intervaloApi = this.selectedProgramaDeTv.value
       } else {
-        intervaloApi = "int"+this.commonServices.toTitleCase(this.selectedProgramaDeTv)
+        intervaloApi = "int"+this.commonServices.toTitleCase(this.selectedProgramaDeTv.value)
       }
   
       if(intervaloApi.includes("Sessao")){    
@@ -348,8 +346,8 @@ export class GradeComponent implements OnInit {
         if(this.prePosCount>0){
           let data = {}
           data['intAmount'] = this.prePosCount
-          data['prePosApi'] = this.selectedProgramaDeTv.includes("prePos")?
-                              this.selectedProgramaDeTv:
+          data['prePosApi'] = this.selectedProgramaDeTv.value.includes("prePos")?
+                              this.selectedProgramaDeTv.value:
                               intervaloApi.replace("int","prePos")
           this.spyListaAdicionada.next(data)
         } else {
@@ -425,7 +423,7 @@ export class GradeComponent implements OnInit {
     // )
     
     let unsubscribe=
-    this.mongodbService.getProgramasDeTv(this.tipoDeProgramaDeTvSelecionado,this.selectedProgramaDeTv)
+    this.mongodbService.getProgramasDeTv(this.selectedProgramaDeTv.tipo,this.selectedProgramaDeTv.value)
     .subscribe((data:any ) => {
       let videoAdicionado
 
@@ -458,7 +456,7 @@ export class GradeComponent implements OnInit {
           
           if(listaFiltrada.length>0){
 
-                    let prog:any = this.programaDeTv.filter(prog=>prog.value==this.selectedProgramaDeTv)[0]
+                    let prog:any = this.selectedProgramaDeTv
                     
                     if(!this.prePosAvailable&&prog.anexos&&prog.anexos.prePos){
                       this.prePosAvailable=true
@@ -474,7 +472,7 @@ export class GradeComponent implements OnInit {
                         let cortes = videoAdicionado.cortesParaIntervalo
                         this.intervalosCount = this.qtdeIntervalos = cortes.length
                         let progModel = {
-                          "atracao":this.selectedProgramaDeTv,
+                          "atracao":this.selectedProgramaDeTv.value,
                           "tituloAtracao":videoAdicionado.tituloAtracao,
                           "titulo":videoAdicionado.titulo,
                           "volume":videoAdicionado.volume?videoAdicionado.volume:1,
@@ -497,7 +495,7 @@ export class GradeComponent implements OnInit {
 
                         cortes.map((corte,index)=>{
                           let prog =  {
-                            "atracao":this.selectedProgramaDeTv,
+                            "atracao":this.selectedProgramaDeTv.value,
                             "tituloAtracao":videoAdicionado.tituloAtracao,
                             "titulo":videoAdicionado.titulo,
                             "volume":videoAdicionado.volume?videoAdicionado.volume:1,
@@ -521,7 +519,7 @@ export class GradeComponent implements OnInit {
                         })
                       } else {
                         newProg = {
-                          "atracao":this.selectedProgramaDeTv,
+                          "atracao":this.selectedProgramaDeTv.value,
                           "tituloAtracao":videoAdicionado.tituloAtracao,
                           "titulo":videoAdicionado.titulo,
                           "volume":videoAdicionado.volume?videoAdicionado.volume:1,
