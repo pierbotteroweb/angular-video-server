@@ -159,24 +159,6 @@ export class GradeComponent implements OnInit {
 
   }
 
-  // getCanaisFromFirestore(){
-
-  //   let unsubscribe=
-  //   this.firebaseService.getListFromfirestore("","canais").snapshotChanges().pipe(
-  //     map(changes =>
-  //       changes.map(c =>
-  //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //       )
-  //     )
-  //   ).subscribe((data:any ) => {
-  //     this.canais=data.sort(this.commonServices.sortPor("canal"))
-  //     // this.addTituloDeProgramas()
-  //     this.gerarListasDeBlocos()
-  //     unsubscribe.unsubscribe()
-  //   });
-
-  // }  
-
   addTituloDeProgramas(){
     this.canais.map((canal,canalIndex)=>{
       if(canal.canal==5){
@@ -372,20 +354,10 @@ export class GradeComponent implements OnInit {
     });
     
   }
-  
-  // update(tipo, id,media,url?): void {
-  //   this.firebaseService.update(tipo,id, media).then((data) => {
-  //     this.alerta="'Item updated successfully!'"
-  //     setTimeout(()=>{
-  //       this.alerta=""
-  //     },3000)
-  //   });
-  // }
 
   addIntervalo(intAmount,intApi){
     let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
                      this.listaSemana[this.selectedDiaDaSemana]
-    // let index = listaAtual.length-intAmount
     let info = listaAtual[this.indexToAdd]
     this.getInfoAtracao(info,this.selectedDiaDaSemana,this.indexToAdd)
     this.selectVideoForm.get('programaDeTvFormControl').setValue(intApi)
@@ -410,17 +382,6 @@ export class GradeComponent implements OnInit {
   adicionarPrograma(): void {
     // CHECK IF DIA DA SEMANA AND PROGRAMA DE TV ARE SELECTED
     if(this.selectedDiaDaSemana&&this.selectedProgramaDeTv){
-
-    // GET UNSUBSCRIBABLE LIST OF PROGRAMS ACCORDING TO SELECTED PROGRAMA DE TV
-    // let unsubscribe=
-    // this.firebaseService.getListFromfirestore("","programa",this.selectedProgramaDeTv)
-    // .snapshotChanges().pipe(
-    //   map(changes =>
-    //     changes.map(c =>
-    //       ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-    //     )
-    //   )
-    // )
     
     let unsubscribe=
     this.mongodbService.getProgramasDeTv(this.selectedProgramaDeTv.tipo,this.selectedProgramaDeTv.value)
@@ -428,29 +389,9 @@ export class GradeComponent implements OnInit {
       let videoAdicionado
 
       let listaDeProgramas = data
-      // let dataLength = data.filter(prog=>prog.ref!='Teste').length
-      
-      //GET EACH REF ON THE LISTA DE PROGRAMAS AND CREATE A NEW LIST WITH THE PROGRAMAS DATA
-      // data.map((registro, registroIndex)=>{
-        
-      //   if(registro.ref!="Teste"){
-      //     registro.ref.get()
-      //     .then((res)=>{
-      //       if(res.data()){
-      //         let obj = res.data()
-      //         obj.id = registro.ref.id
-      //         listaDeProgramas.push(obj)
-      //       }
-      //       if((dataLength-1)==registroIndex){
-      //         montaLista()
-      //       }
-      //     })
-      //   }
-      // })
 
       const montaLista = ()=>{
-
-        //FILTER 
+        
         let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
           .sort(this.commonServices.sortPor("order"))
           
@@ -560,9 +501,6 @@ export class GradeComponent implements OnInit {
                       }
                       unsubscribe.unsubscribe()
                       this.recalculaHorariosDeExibicao(newList)
-            // setTimeout(()=>{
-            //   unsubscribe.unsubscribe()
-            // },1000)
           } else {
             this.resetAddedLista(listaDeProgramas, "A")
             unsubscribe.unsubscribe()
@@ -578,78 +516,6 @@ export class GradeComponent implements OnInit {
       this.alerta="Selecione programa a ser deletado"
     }
   }
-
-  // adicionaIntervalos(): void {
-  //   let intervaloApi = "int"+this.commonServices.toTitleCase(this.selectedProgramaDeTv)
-
-  //   if(intervaloApi.includes("Sessao")){    
-  //     intervaloApi=intervaloApi.replace(/[0-9]/g, '')
-  //   } 
-
-  //   // GET UNSUBSCRIBABLE LIST OF PROGRAMS ACCORDING TO SELECTED PROGRAMA DE TV
-  //   let unsubscribe=
-  //   this.firebaseService.getListFromfirestore("","programa",intervaloApi)
-  //   .snapshotChanges().pipe(
-  //     map(changes =>
-  //       changes.map(c =>
-  //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //       )
-  //     )
-  //   ).subscribe((data:any)=>{
-  //     let listaDeIntervalos = []
-
-  //     data.map((registro,registroIndex)=>{
-  //       if(registro.ref!="Teste"){
-  //         registro.ref.get()
-  //         .then((res)=>{
-  //           if(res.data()){
-  //             let obj = res.data()
-  //             obj.id = registro.ref.id
-  //             listaDeIntervalos.push(obj)
-  //           }
-  //           if((data.length-1)==registroIndex){
-  //             let listaDeIntervalosSelecionados = listaDeIntervalos.filter(video=>video.order&&!video.added)
-  //             .sort(this.commonServices.sortPor("order"))
-
-  //             if(!listaDeIntervalosSelecionados){
-  //               unsubscribe.unsubscribe()
-  //               this.resetAddedLista(listaDeIntervalos,"C")
-  //             } else {
-  //               do{
-  //                 listaDeIntervalosSelecionados.find((intervalo,index)=>{
-  //                   if(!intervalo.added){
-  //                     intervalo.added=true
-  //                     this.updateOnMongoDB(intervalo,"intervalo 2")
-
-  //                     this.listaDeIntervalosAdicionados.push(intervalo)
-  //                     this.intervalosCount--
-  //                     return intervalo
-  //                   }
-  //                 })
-  //               } while (this.intervalosCount>0)
-  //               if(this.intervalosCount==0){                  
-  //                   unsubscribe.unsubscribe()
-  //               }
-
-  //             }
-  //           }
-  //         })
-  //       }
-  //     })
-  //   })
-
-  // }
-
-  // checkPrePosAvailable(prog){
-  //   let prePosProgName = "prePos"+this.commonServices.toTitleCase(prog).slice(0, -1)
-  //   let prePosProgToBeFound = 
-  //   this.programaDeTvFiltered.find(prog=>prog.value.includes(prePosProgName))
-
-  //   if(prePosProgToBeFound&&!this.prePosAvailable){
-  //     this.prePosAvailable=true
-  //     this.prePosCount=2
-  //   }
-  // }
 
   replicaNext(){
     this.programaSelectionado=""
@@ -700,28 +566,14 @@ export class GradeComponent implements OnInit {
     this.updateCanaisOnMongoDB(canal)
     this.semana.map((dia:any)=>{
       if(this.listaSemana[dia]){
-        // let listaOrdenada = [...this.listaSemana[dia]]
-        // let canal =  this.canais.filter(canal=>canal.emissora==this.selectedCanal)[0]
-        // this.updateCanaisOnMongoDB(canal)
       }
     })
   }
 
   getLista(){
-
-    // let unsubscribe=
-    // this.firebaseService.getListFromfirestore("","canais").snapshotChanges().pipe(
-    //   map(changes =>
-    //     changes.map(c =>
-    //       ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-    //     )
-    //   )
-    // ).subscribe((data:any ) => {
       this.listaSemana = this.canais.filter(canal=>canal.emissora==this.selectedCanal)[0]
       if(this.selectedDiaDaSemana&&!this.listaSemana[this.selectedDiaDaSemana]) this.addDiasDeSemanaNoCanal()
       this.getListaDeProgramasDeTvFromMongodb()
-    //   unsubscribe.unsubscribe()
-    // });
   }
 
   addDiasDeSemanaNoCanal(){
@@ -741,24 +593,6 @@ export class GradeComponent implements OnInit {
 
     })
   }
-
-  // getListaDeProgramasDeTv(){
-  //   let unsubscribe=
-  //   this.firebaseService.getAll("programasDeTv").snapshotChanges()
-  //   .pipe(
-  //     map(changes =>
-  //       changes.map(c =>
-  //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //       )
-  //     )
-  //   ).subscribe(data=>{
-  //     if(this.selectedCanal){            
-  //      data = [...data.filter(prog=>{ return prog.canal==this.selectedCanal})]
-  //     }
-  //     this.programaDeTvFiltered=this.programaDeTv=data.sort(this.commonServices.sortPorTitulo())
-  //     unsubscribe.unsubscribe()
-  //   })
-  // }
 
   filterProgramaDeTV(canal){
       this.programaDeTvFiltered=this.programaDeTv.filter(prog=> prog.canal== canal)
@@ -817,20 +651,9 @@ export class GradeComponent implements OnInit {
   }
 
   getInfoAtracaoFromBloco (info,dia,index){
+
     this.getInfoFromBlocoClicado=true
     this.programaSelectionado = info
-
-    // this.alerta=""
-    // this.programaBlocoSelectionado=""
-    // if(this.programaSelectionado==info){
-    //   this.programaSelectionado=""
-    // }else{
-    //   info.indice=index
-    //   info.dia=dia
-    //   this.programaSelectionado = info
-    //   this.selectVideoForm.get('semanaFormControl').setValue(dia)
-    //   this.selectedDiaDaSemana = dia
-    // }
 
   }
 
@@ -934,9 +757,7 @@ export class GradeComponent implements OnInit {
         this.listaSemana=this.canais[indCanal]
         let semanaBloco = this.semana.map(dia=>dia+"Bloco")
         this.semana = [...this.semana,...semanaBloco]
-        // this.subirLista()
       }
-    // })
   }
 
   
