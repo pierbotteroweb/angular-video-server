@@ -206,7 +206,7 @@ export class GradeComponent implements OnInit {
     let diiferenca = lengthListaParaOrganizar-qtdeAdicionada
     let listaInicial = listaParaORganizar.slice(0,diiferenca)
     let listaAdicionados = listaParaORganizar.slice(diiferenca,lengthListaParaOrganizar)
-    let listaAadicionadosPrograma = listaAdicionados.filter(prog=>prog.atracao.slice(0,3)!=="int")
+    let listaAadicionadosPrograma = listaAdicionados.filter(prog=>prog.tipo!=="intervalos")
     let listaAadicionadosIntervalos = listaAdicionados.filter(prog=>prog.atracao.slice(0,3)=="int")
     let listaOrdenada = []
     listaAadicionadosPrograma.map((prog,index)=>{
@@ -214,7 +214,7 @@ export class GradeComponent implements OnInit {
           listaOrdenada.push(listaAadicionadosPrograma[index])
           listaOrdenada.push(listaAadicionadosIntervalos[index])
       }else {
-        listaOrdenada.push(listaAadicionadosPrograma[index])        
+        listaOrdenada.push(listaAadicionadosPrograma[index])
       }
       let listaFinal = [...listaInicial,...listaOrdenada] 
       this.qtdeIntervalos=0
@@ -230,13 +230,13 @@ export class GradeComponent implements OnInit {
     
     let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaSemana[this.selectedDiaDaSemana]
 
-    let prePosSelecionado = this.selectedProgramaDeTv.value.replace("prePos","").slice(1)
+    let programaSendoAdicionado = this.selectedProgramaDeTv.value.replace("prePos","").slice(1)
 
-    let listaAdicionados = listaParaORganizar.filter(prog=>prog.atracao.includes(prePosSelecionado))
+    let listaAdicionados = listaParaORganizar.filter(prog=>prog.atracao.includes(programaSendoAdicionado))
 
     let listaAdicionadosLength = listaAdicionados.length
 
-    let indexToCut = listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.atracao.includes(prePosSelecionado)))
+    let indexToCut = listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.atracao.includes(programaSendoAdicionado)))
 
     let listaPre = [...listaParaORganizar].splice(0,indexToCut)
 
@@ -346,8 +346,8 @@ export class GradeComponent implements OnInit {
 
     let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
                      this.listaSemana[this.selectedDiaDaSemana]
-    let prePosSelecionado = prePosApi.replace("prePos","").slice(1)
-    let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.atracao.includes(prePosSelecionado)))
+    let programaSendoAdicionado = prePosApi.replace("prePos","").slice(1)
+    let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.atracao.includes(programaSendoAdicionado)))
     let info = listaAtual[indexToSelect]
     this.getInfoAtracao(info,this.selectedDiaDaSemana,indexToSelect)
     this.selectVideoForm.get('programaDeTvFormControl').setValue(prePosApi)
