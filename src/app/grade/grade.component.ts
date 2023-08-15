@@ -256,7 +256,7 @@ export class GradeComponent implements OnInit {
         
     let listaAdicionados = listaParaORganizar.filter(prog=>prog.idProgTotal==this.idProgTotal)
 
-    let indexFinalAdicionados=ind56666666666666666666666666exInicioAdicionados+listaAdicionados.length-2
+    let indexFinalAdicionados=indexInicioAdicionados+listaAdicionados.length-2
     let listaPreAdicionados = listaParaORganizar.slice(0,indexInicioAdicionados)
     
     let listaAadicionadosPrograma = listaAdicionados.filter(prog=>!prog.atracao.includes("prePos"))
