@@ -23,6 +23,7 @@ export class GradeComponent implements OnInit {
                           value?: string; }[];
 
   selectedProgramaDeTv: any;
+  selectedProgramaDeTvBlocos: any;
   selectedCanal: string = "Globo";
   selectedDiaDaSemana:string;
   selectedDiaDestinoDaSemana:string;
@@ -49,6 +50,7 @@ export class GradeComponent implements OnInit {
   lengthListaFinal:number;
 
   listaBlocos:Array<any>=[];
+  listaProgramasBlocos:Array<any>=[];
   blocosAmount:number;
   programasBlocosCount:number;
   programasPorBloco:Object;
@@ -93,8 +95,6 @@ export class GradeComponent implements OnInit {
     this.spyListaAdicionada.subscribe((info)=>{
       if(this.intervalosCount){
         this.addIntervalo((info.intAmount+2),info.intervaloApi)
-      } else if(this.programasBlocosCount){
-        this.addBlocos(info.blocoApi)
       } else if(this.prePosCount){
         this.addPrePos(info.prePosApi)
       }
@@ -272,7 +272,6 @@ export class GradeComponent implements OnInit {
     this.prePosCount=0
     this.prePosAvailable=false
     this.programaClicado=""
-    console.log("listaFinal 2 415",listaFinal)
 
       this.recalculaHorariosDeExibicao(listaFinal) 
   }
@@ -280,23 +279,48 @@ export class GradeComponent implements OnInit {
   organizaProgramasBlocos(){
     let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaSemana[this.selectedDiaDaSemana]
     
-    let indexToAdd=listaParaORganizar.find(prog=>prog.idProgTotal==this.idProgTotal).indice
+        console.log("listaParaORganizar",listaParaORganizar)
+        console.log("this.idProgTotal",this.idProgTotal) 
+    let indexAdicionadosInicio = listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgTotal==this.idProgTotal))
 
-    let listaSemAdicionados=listaParaORganizar.filter(prog=>prog.idProgTotal!=this.idProgTotal)
+    let listaPreAdicionados = listaParaORganizar.slice(0,indexAdicionadosInicio)
+    console.log("listaPreAdicionados",listaPreAdicionados)
     let listaAdicionados=listaParaORganizar.filter(prog=>prog.idProgTotal==this.idProgTotal)
-    let listaPre=listaSemAdicionados.slice(0,indexToAdd)
-    let listaPos=listaSemAdicionados.slice(indexToAdd,listaSemAdicionados.length)
-    console.log("listaParaORganizar",listaParaORganizar)
-    console.log("listaPre",listaPre)
-    console.log("listaAdicionados",listaAdicionados)
-    console.log("listaPos",listaPos)
-    console.log("programasPorBloco",this.programasPorBloco)
-    console.log("blocosAmount",this.blocosAmount)
-    let listaFinal=[...listaPre,...listaAdicionados,...listaPos]
-    console.log("listaFinal",listaFinal)
-    this.listaBlocos=[]
+    console.log("listaAdicionados.length",listaAdicionados.length)
+    
+    let listaPosAdicionados = listaParaORganizar.slice(indexAdicionadosInicio+listaAdicionados.length,listaParaORganizar.length)
+    console.log("listaPosAdicionados",listaPosAdicionados)
 
+    let indexIntervaloPrimeiroBloco=listaAdicionados.indexOf(listaAdicionados.find(prog=>prog.atracao==this.selectedProgramaDeTvBlocos.anexos.intervalo))
+    let indexIntervaloSegundoBloco=indexIntervaloPrimeiroBloco+2
+
+    let listaBlocoPreAdicionados = listaAdicionados.slice(0,indexIntervaloPrimeiroBloco)
+    console.log("listaBlocoPreAdicionados",listaBlocoPreAdicionados)
+    let listaBlocoIntermediariosAdicionados = listaAdicionados.slice(indexIntervaloPrimeiroBloco,indexIntervaloSegundoBloco)
+    console.log("listaBlocoIntermediariosAdicionados",listaBlocoIntermediariosAdicionados)
+    let listaBlocoPosAdicionados = listaAdicionados.slice(indexIntervaloSegundoBloco,listaAdicionados.length)
+    console.log("listaBlocoPosAdicionados",listaBlocoPosAdicionados)
+
+    
+    console.log("this.selectedProgramaDeTvBlocos",this.selectedProgramaDeTvBlocos)
+    console.log("this.listaProgramasBlocos",this.listaProgramasBlocos)
+
+    setTimeout(()=>{
+      let listaPrimeiroBloco = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco1.includes(bloco.atracao))
+      console.log("listaPrimeiroBloco",listaPrimeiroBloco)
+
+      let listaSegundoBloco = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco2.includes(bloco.atracao))
+      console.log("listaSegundoBloco",listaSegundoBloco)
+      let listaFinalAdicionados = [...listaBlocoPreAdicionados,...listaPrimeiroBloco,
+                                   ...listaBlocoIntermediariosAdicionados,...listaSegundoBloco,
+                                   ...listaBlocoPosAdicionados]
+                                   
+      console.log("listaFinalAdicionados",listaFinalAdicionados)
+                                   
+      let listaFinal=[...listaPreAdicionados,...listaFinalAdicionados,...listaPosAdicionados]
+      console.log("listaFinal",listaFinal)
       this.recalculaHorariosDeExibicao(listaFinal) 
+    },1000)
   }
 
   recalculaHorariosDeExibicao(newList){
@@ -342,12 +366,6 @@ export class GradeComponent implements OnInit {
       } else if(this.qtdeIntervalos){
         this.lengthListaFinal = newList.length
         this.organizaIntervalos()
-      } else if(this.programasBlocosCount){
-          let blocoInfo={}
-          blocoInfo['blocoApi']=this.listaBlocos[this.programasBlocosCount-1]
-          this.spyListaAdicionada.next(blocoInfo)
-      } else if(!this.programasBlocosCount&&this.listaBlocos.length>0){
-        this.organizaProgramasBlocos()
       } else if(newList.length==this.lengthListaFinal&&this.prePosAvailable){
         if(this.prePosCount>0){
           let prePosInfo = {}
@@ -357,6 +375,8 @@ export class GradeComponent implements OnInit {
         } else {
           this.organizaPrePos()
         }
+      } else if(!this.intervalosCount&&!this.prePosCount&&this.programasBlocosCount){
+        this.addBlocosFromMongoDB()
       }
 
     }
@@ -399,17 +419,19 @@ export class GradeComponent implements OnInit {
     this.prePosCount--
   }
 
-  addBlocos(blocosInfo){
-    this.lengthListaFinal++
-    let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
-                     this.listaSemana[this.selectedDiaDaSemana]
-    let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.idProgTotal==this.idProgTotal))
-    let info = listaAtual[indexToSelect]
-    this.clickAtracao(info,this.selectedDiaDaSemana,indexToSelect)
-    this.selectVideoForm.get('programaDeTvFormControl').setValue(blocosInfo)
-    this.adicionarPrograma()
-    this.programasBlocosCount--
-  }
+  // addBlocos(blocosInfo){
+    
+  //   console.log("addBlocos")
+  //   this.lengthListaFinal++
+  //   let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
+  //                    this.listaSemana[this.selectedDiaDaSemana]
+  //   let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.idProgTotal==this.idProgTotal))
+  //   let info = listaAtual[indexToSelect]
+  //   this.clickAtracao(info,this.selectedDiaDaSemana,indexToSelect)
+  //   this.selectVideoForm.get('programaDeTvFormControl').setValue(blocosInfo)
+  //   this.adicionarPrograma()
+  //   this.programasBlocosCount--
+  // }
 
   adicionarPrograma(): void {
     // CHECK IF DIA DA SEMANA AND PROGRAMA DE TV ARE SELECTED
@@ -420,6 +442,7 @@ export class GradeComponent implements OnInit {
       &&this.listaBlocos.length==0){
       this.programasPorBloco={}
       this.blocosAmount=this.selectedProgramaDeTv.anexos.blocosAmount
+      this.selectedProgramaDeTvBlocos=this.selectedProgramaDeTv
       for(let i=0;i<this.blocosAmount;i++){
         this.selectedProgramaDeTv.anexos["bloco"+(i+1)].map((prog,index)=>{
           this.listaBlocos.push(prog)
@@ -560,7 +583,7 @@ export class GradeComponent implements OnInit {
                       unsubscribe.unsubscribe()
                       this.recalculaHorariosDeExibicao(newList)
           } else {
-            this.resetAddedLista(listaDeProgramas, "A")
+            this.resetAddedLista(listaDeProgramas, "programa")
             unsubscribe.unsubscribe()
           }
 
@@ -573,6 +596,78 @@ export class GradeComponent implements OnInit {
     } else if(!this.programaClicado){
       this.alerta="Selecione programa a ser deletado"
     }
+  }
+
+  adicionarProgramaBloco(bloco): void {
+    
+    let unsubscribe=
+    this.mongodbService.getProgramasDeTv("dublado",bloco)
+    .subscribe((data:any ) => {
+      let videoAdicionado
+
+      let listaDeProgramas = data
+
+      //GET EACH REF ON THE LISTA DE PROGRAMAS AND CREATE A NEW LIST WITH THE PROGRAMAS DATA
+
+      const montaLista = ()=>{
+
+        //FILTER 
+        let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
+          .sort(this.commonServices.sortPor("order"))
+          // console.log("listaDeProgramas",listaDeProgramas)
+          // console.log("listaFiltrada",listaFiltrada)
+          // console.log("listaDeProgramas.splice(1,listaDeProgramas.length",listaDeProgramas.splice(1,listaDeProgramas.length))
+          
+          // if(listaFiltrada.length>0){
+                    if(listaFiltrada.length>0){
+                      videoAdicionado = listaFiltrada[0]
+                    } else{
+                      videoAdicionado = listaDeProgramas[0]
+                      if(listaDeProgramas.length>1){
+                        // console.log("if(listaDeProgramas.length>1)",listaDeProgramas)
+                        // console.log("listaDeProgramas.splice(1,listaDeProgramas.length",listaDeProgramas.splice(1,listaDeProgramas.length))
+
+                        console.log("XXXXXXXXXXXXXXXXXXX")
+                        this.resetAddedLista(listaDeProgramas.splice(1,listaDeProgramas.length),"blocos")                      
+                      }
+                    }
+
+                      let newProg:Object ={}
+
+                        newProg = {
+                          "atracao":bloco,
+                          "tituloAtracao":videoAdicionado.tituloAtracao,
+                          "titulo":videoAdicionado.titulo,
+                          "volume":videoAdicionado.volume?videoAdicionado.volume:1,
+                          "horarioDeExibicao":"",
+                          "duracaoTotalDaAtracaoEmSegundos": videoAdicionado.duracao,
+                          "id":videoAdicionado._id,
+                          "idProgTotal":this.idProgTotal,
+                          "tipo":videoAdicionado.tipo
+                        }
+
+                        if(videoAdicionado.corteFinal){
+                          let corteFinal = videoAdicionado.corteFinal
+                          newProg['corteFinal']=corteFinal
+                          newProg['duracaoTotalDaAtracaoEmSegundos']=corteFinal
+                        }
+  
+                        if(videoAdicionado.corteInicio){
+                          let corteInicio = videoAdicionado.corteInicio
+                          let duracao = videoAdicionado.corteInicio
+                          newProg['corteInicio']=duracao-corteInicio
+                        }
+                      videoAdicionado.added=true
+                      this.updateOnMongoDB(videoAdicionado,"videoAdicionado")
+                      unsubscribe.unsubscribe()
+                      this.listaProgramasBlocos.push(newProg)
+          // } else {
+            unsubscribe.unsubscribe()
+          // }
+
+      }
+      montaLista()
+    });
   }
 
   replicaNext(){
@@ -596,6 +691,9 @@ export class GradeComponent implements OnInit {
   }
 
   resetAddedLista(lista,type){
+    // console.log("Lista resetAddedLista",lista)
+    // console.log("type resetAddedLista",type)
+    console.log("YYYYYYYYYYYYYYYYY")
     const functionThatReturnsAPromise = video => { //a function that returns a promise
       
       video.added=false
@@ -612,7 +710,31 @@ export class GradeComponent implements OnInit {
     }
     
     setAllAddedFalse().then(data => {
+      if(type=="programa"){
         this.adicionarPrograma()
+      }
+    }) 
+  }
+
+  addBlocosFromMongoDB(){this.listaProgramasBlocos=[]
+    const callAdicionarProgramaBloco = bloco => { 
+      this.adicionarProgramaBloco(bloco)
+      return Promise.resolve('ok')
+    }
+    
+    const asyncFunctionThatCallsFunction = async bloco => {
+      return callAdicionarProgramaBloco(bloco)
+    }
+    
+    const getAllBlocos = async () => {
+      return Promise.all(this.listaBlocos.map(bloco => asyncFunctionThatCallsFunction(bloco)))
+    }
+    
+    getAllBlocos().then(data => {
+        // this.adicionarPrograma()
+        this.programasBlocosCount=0
+        this.listaBlocos=[]
+        this.organizaProgramasBlocos()
     }) 
   }
 
