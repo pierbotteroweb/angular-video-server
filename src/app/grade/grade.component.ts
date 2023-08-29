@@ -277,48 +277,44 @@ export class GradeComponent implements OnInit {
   }
 
   organizaProgramasBlocos(){
+
     let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaSemana[this.selectedDiaDaSemana]
-    
-        console.log("listaParaORganizar",listaParaORganizar)
-        console.log("this.idProgTotal",this.idProgTotal) 
+
     let indexAdicionadosInicio = listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgTotal==this.idProgTotal))
 
     let listaPreAdicionados = listaParaORganizar.slice(0,indexAdicionadosInicio)
-    console.log("listaPreAdicionados",listaPreAdicionados)
+
     let listaAdicionados=listaParaORganizar.filter(prog=>prog.idProgTotal==this.idProgTotal)
-    console.log("listaAdicionados.length",listaAdicionados.length)
-    
+
     let listaPosAdicionados = listaParaORganizar.slice(indexAdicionadosInicio+listaAdicionados.length,listaParaORganizar.length)
-    console.log("listaPosAdicionados",listaPosAdicionados)
 
     let indexIntervaloPrimeiroBloco=listaAdicionados.indexOf(listaAdicionados.find(prog=>prog.atracao==this.selectedProgramaDeTvBlocos.anexos.intervalo))
+
     let indexIntervaloSegundoBloco=indexIntervaloPrimeiroBloco+2
 
     let listaBlocoPreAdicionados = listaAdicionados.slice(0,indexIntervaloPrimeiroBloco)
-    console.log("listaBlocoPreAdicionados",listaBlocoPreAdicionados)
-    let listaBlocoIntermediariosAdicionados = listaAdicionados.slice(indexIntervaloPrimeiroBloco,indexIntervaloSegundoBloco)
-    console.log("listaBlocoIntermediariosAdicionados",listaBlocoIntermediariosAdicionados)
-    let listaBlocoPosAdicionados = listaAdicionados.slice(indexIntervaloSegundoBloco,listaAdicionados.length)
-    console.log("listaBlocoPosAdicionados",listaBlocoPosAdicionados)
-
     
-    console.log("this.selectedProgramaDeTvBlocos",this.selectedProgramaDeTvBlocos)
-    console.log("this.listaProgramasBlocos",this.listaProgramasBlocos)
+    let listaBlocoIntermediariosAdicionados = []
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco2){
+      listaBlocoIntermediariosAdicionados = listaAdicionados.slice(indexIntervaloPrimeiroBloco,indexIntervaloSegundoBloco)
+    }
+
+    let indexInicioBlocoPosAdicionado = this.selectedProgramaDeTvBlocos.anexos.bloco2 ? indexIntervaloSegundoBloco : indexIntervaloPrimeiroBloco
+
+    let listaBlocoPosAdicionados = listaAdicionados.slice(indexInicioBlocoPosAdicionado,listaAdicionados.length)
 
     setTimeout(()=>{
       let listaPrimeiroBloco = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco1.includes(bloco.atracao))
-      console.log("listaPrimeiroBloco",listaPrimeiroBloco)
+      
+      let listaSegundoBloco = []
+      if(this.selectedProgramaDeTvBlocos.anexos.bloco2){
+        listaSegundoBloco = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco2.includes(bloco.atracao))
+      }
 
-      let listaSegundoBloco = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco2.includes(bloco.atracao))
-      console.log("listaSegundoBloco",listaSegundoBloco)
       let listaFinalAdicionados = [...listaBlocoPreAdicionados,...listaPrimeiroBloco,
                                    ...listaBlocoIntermediariosAdicionados,...listaSegundoBloco,
                                    ...listaBlocoPosAdicionados]
-                                   
-      console.log("listaFinalAdicionados",listaFinalAdicionados)
-                                   
       let listaFinal=[...listaPreAdicionados,...listaFinalAdicionados,...listaPosAdicionados]
-      console.log("listaFinal",listaFinal)
       this.recalculaHorariosDeExibicao(listaFinal) 
     },1000)
   }
