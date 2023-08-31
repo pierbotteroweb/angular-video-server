@@ -185,14 +185,12 @@ export class GradeComponent implements OnInit {
       })
       
       let newList = this.listaSemana[this.selectedDiaDaSemana]
-                    .filter(prog=>!prog.tituloAtracao
-                    .includes(this.programaBlocoSelectionado.tituloAtracao))
+                    .filter(prog=>prog.idProgTotal!==this.programaBlocoSelectionado.blocos[0].idProgTotal)
 
       this.recalculaHorariosDeExibicao(newList)
 
       let newListBloco = this.listaSemana[this.selectedDiaDaSemana+'Bloco']
-                    .filter(prog=>!prog.tituloAtracao
-                    .includes(this.programaBlocoSelectionado.tituloAtracao))
+                    .filter(prog=>prog.idProgTotal!==this.programaBlocoSelectionado.blocos[0].idProgTotal)
       
       this.listaSemana[this.selectedDiaDaSemana+'Bloco'] = newListBloco
 
@@ -288,31 +286,82 @@ export class GradeComponent implements OnInit {
 
     let listaPosAdicionados = listaParaORganizar.slice(indexAdicionadosInicio+listaAdicionados.length,listaParaORganizar.length)
 
-    let indexIntervaloPrimeiroBloco=listaAdicionados.indexOf(listaAdicionados.find(prog=>prog.atracao==this.selectedProgramaDeTvBlocos.anexos.intervalo))
+    let indexIntervaloBloco1=listaAdicionados.indexOf(listaAdicionados.find(prog=>prog.atracao==this.selectedProgramaDeTvBlocos.anexos.intervalo))
 
-    let indexIntervaloSegundoBloco=indexIntervaloPrimeiroBloco+2
+    let indexIntervaloBloco2=indexIntervaloBloco1+2
+    let indexIntervaloBloco3=indexIntervaloBloco2+2
+    let indexIntervaloBloco4=indexIntervaloBloco3+2
+    let indexIntervaloBloco5=indexIntervaloBloco4+2
+    let indexIntervaloBloco6=indexIntervaloBloco5+2
 
-    let listaBlocoPreAdicionados = listaAdicionados.slice(0,indexIntervaloPrimeiroBloco)
+    let listaBlocoPreAdicionados = listaAdicionados.slice(0,indexIntervaloBloco1)
     
-    let listaBlocoIntermediariosAdicionados = []
+    let listaBlocoIntermediariosAdicionados1 = []
     if(this.selectedProgramaDeTvBlocos.anexos.bloco2){
-      listaBlocoIntermediariosAdicionados = listaAdicionados.slice(indexIntervaloPrimeiroBloco,indexIntervaloSegundoBloco)
+      listaBlocoIntermediariosAdicionados1 = listaAdicionados.slice(indexIntervaloBloco1,indexIntervaloBloco2)
+    }
+    let listaBlocoIntermediariosAdicionados2 = []
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco3){
+      listaBlocoIntermediariosAdicionados2 = listaAdicionados.slice(indexIntervaloBloco2,indexIntervaloBloco3)
+    }
+    let listaBlocoIntermediariosAdicionados3 = []
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco4){
+      listaBlocoIntermediariosAdicionados3 = listaAdicionados.slice(indexIntervaloBloco3,indexIntervaloBloco4)
+    }
+    let listaBlocoIntermediariosAdicionados4 = []
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco5){
+      listaBlocoIntermediariosAdicionados4 = listaAdicionados.slice(indexIntervaloBloco4,indexIntervaloBloco5)
+    }
+    let listaBlocoIntermediariosAdicionados5 = []
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco6){
+      listaBlocoIntermediariosAdicionados5 = listaAdicionados.slice(indexIntervaloBloco5,indexIntervaloBloco6)
     }
 
-    let indexInicioBlocoPosAdicionado = this.selectedProgramaDeTvBlocos.anexos.bloco2 ? indexIntervaloSegundoBloco : indexIntervaloPrimeiroBloco
+    let indexInicioBlocoPosAdicionado = indexIntervaloBloco1
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco2) indexInicioBlocoPosAdicionado = indexIntervaloBloco2
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco3) indexInicioBlocoPosAdicionado = indexIntervaloBloco3
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco4) indexInicioBlocoPosAdicionado = indexIntervaloBloco4
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco5) indexInicioBlocoPosAdicionado = indexIntervaloBloco5
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco6) indexInicioBlocoPosAdicionado = indexIntervaloBloco6
+     
+
 
     let listaBlocoPosAdicionados = listaAdicionados.slice(indexInicioBlocoPosAdicionado,listaAdicionados.length)
 
     setTimeout(()=>{
-      let listaPrimeiroBloco = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco1.includes(bloco.atracao))
+      let listaBloco1 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco1.includes(bloco.atracao))
       
-      let listaSegundoBloco = []
+      let listaBloco2 = []
       if(this.selectedProgramaDeTvBlocos.anexos.bloco2){
-        listaSegundoBloco = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco2.includes(bloco.atracao))
+        listaBloco2 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco2.includes(bloco.atracao))
+      }
+      
+      let listaBloco3 = []
+      if(this.selectedProgramaDeTvBlocos.anexos.bloco3){
+        listaBloco3 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco3.includes(bloco.atracao))
+      }
+      
+      let listaBloco4 = []
+      if(this.selectedProgramaDeTvBlocos.anexos.bloco4){
+        listaBloco4 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco4.includes(bloco.atracao))
+      }
+      
+      let listaBloco5 = []
+      if(this.selectedProgramaDeTvBlocos.anexos.bloco5){
+        listaBloco5 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco5.includes(bloco.atracao))
+      }
+      
+      let listaBloco6 = []
+      if(this.selectedProgramaDeTvBlocos.anexos.bloco6){
+        listaBloco6 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco6.includes(bloco.atracao))
       }
 
-      let listaFinalAdicionados = [...listaBlocoPreAdicionados,...listaPrimeiroBloco,
-                                   ...listaBlocoIntermediariosAdicionados,...listaSegundoBloco,
+      let listaFinalAdicionados = [...listaBlocoPreAdicionados,
+                                   ...listaBloco1,...listaBlocoIntermediariosAdicionados1,
+                                   ...listaBloco2,...listaBlocoIntermediariosAdicionados2,
+                                   ...listaBloco3,...listaBlocoIntermediariosAdicionados3,
+                                   ...listaBloco4,...listaBlocoIntermediariosAdicionados4,
+                                   ...listaBloco5,...listaBlocoIntermediariosAdicionados5,
                                    ...listaBlocoPosAdicionados]
       let listaFinal=[...listaPreAdicionados,...listaFinalAdicionados,...listaPosAdicionados]
       this.recalculaHorariosDeExibicao(listaFinal) 
@@ -457,6 +506,7 @@ export class GradeComponent implements OnInit {
     let unsubscribe=
     this.mongodbService.getProgramasDeTv(this.selectedProgramaDeTv.tipo,this.selectedProgramaDeTv.value)
     .subscribe((data:any ) => {
+      console.log("Programa Sendo Adicionado data",this.selectedProgramaDeTv)
       let videoAdicionado
 
       let listaDeProgramas = data
@@ -579,6 +629,7 @@ export class GradeComponent implements OnInit {
                       unsubscribe.unsubscribe()
                       this.recalculaHorariosDeExibicao(newList)
           } else {
+            console.log("DDDDDDDDDDD")
             this.resetAddedLista(listaDeProgramas, "programa")
             unsubscribe.unsubscribe()
           }
@@ -687,8 +738,8 @@ export class GradeComponent implements OnInit {
   }
 
   resetAddedLista(lista,type){
-    // console.log("Lista resetAddedLista",lista)
-    // console.log("type resetAddedLista",type)
+    console.log("Lista resetAddedLista",lista)
+    console.log("type resetAddedLista",type)
     console.log("YYYYYYYYYYYYYYYYY")
     const functionThatReturnsAPromise = video => { //a function that returns a promise
       
@@ -891,6 +942,7 @@ export class GradeComponent implements OnInit {
           let progInfo = listaOriginal.find(prog=>prog.idProgTotal==progId&&prog.tipo!=="intervalos")
           if(progInfo&&progInfo.atracao){
             obj.atracao = progInfo.atracao
+            obj.idProgTotal = progInfo.idProgTotal
           } else {
             console.log("dia",dia)
             console.log("listaOriginal",listaOriginal)
