@@ -29,12 +29,14 @@ import { TheAddiction1995Component } from './dvds/theaddiction1995/theaddiction1
 import { Thedayofthejackal1973Component } from './dvds/thedayofthejackal1973/thedayofthejackal1973.component';
 import { Zelig1983Component } from './dvds/zelig1983/zelig1983.component';
 import { BasicdvdComponent } from './dvds/basicdvd/basicdvd.component';
+import { ArquivosComponent } from './arquivos/arquivos.component';
 
 const routes: Routes = [
   { path: '', component: PlaylistComponent},
   { path: 'dvd', component: Alphaville1965Component},
   { path: 'grade', component: GradeComponent},
   { path: 'programas', component: ProgramasComponent},
+  { path: 'arquivos', component: ArquivosComponent},
   { path: 'alphaville1965', component: Alphaville1965Component},
   { path: 'shivers1975', component: Shivers1975Component},
   { path: 'crash1996', component: Crash1996Component},
