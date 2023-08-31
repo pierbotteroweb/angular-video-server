@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-// import { FirebaseService } from '../services/firebase.service';
-import { map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { CommonService } from 'src/services/common.service';
-import { UploadVideoService } from '../services/upload-video.service';
-import { ThisReceiver } from '@angular/compiler';
 import { Subject } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 
@@ -27,8 +22,8 @@ export class GradeComponent implements OnInit {
                           canal?: string; 
                           value?: string; }[];
 
-  selectedProgramaDeTv: string;
-  tipoDeProgramaDeTvSelecionado: string;
+  selectedProgramaDeTv: any;
+  selectedProgramaDeTvBlocos: any;
   selectedCanal: string = "Globo";
   selectedDiaDaSemana:string;
   selectedDiaDestinoDaSemana:string;
@@ -38,7 +33,7 @@ export class GradeComponent implements OnInit {
   listaOrigemReduzida: Array<any>;
   listaParaUpdate: Array<any>;
   listaDeIntervalosAdicionados: Array<any>;
-  listaDeBlocos: Object;
+  idProgTotal: any;
 
   alerta:String;
   exibeSemanaDestino:boolean;
@@ -46,12 +41,19 @@ export class GradeComponent implements OnInit {
 
   intervalosCount:number;
   prePosCount:number;
+  prePosApi:string;
   prePosAvailable:boolean;
   programasReplicadosCount:number;
 
   qtdeIntervalos:number;
   indexToAdd:number;
   lengthListaFinal:number;
+
+  listaBlocos:Array<any>=[];
+  listaProgramasBlocos:Array<any>=[];
+  blocosAmount:number;
+  programasBlocosCount:number;
+  programasPorBloco:Object;
 
   spyListaAdicionada: Subject<any>;
   spyListaReplicada: Subject<any>;
@@ -62,7 +64,6 @@ export class GradeComponent implements OnInit {
 
 
   constructor(private commonServices: CommonService,
-              // private firebaseService: FirebaseService,
               private mongodbService: MongodbService,
               private formBuilder: FormBuilder) { 
                 this.selectVideoForm = this.formBuilder.group({
@@ -73,7 +74,7 @@ export class GradeComponent implements OnInit {
                   programaDeTvFormControl:[""]
                 })
                }
-  programaSelectionado:any;
+  programaClicado:any;
   programaBlocoSelectionado:any;
   selectVideoForm :any
   novoPrograma:FormControl
@@ -91,11 +92,11 @@ export class GradeComponent implements OnInit {
 
     this.exibeSemanaDestino=false
     this.spyListaAdicionada = new Subject()
-    this.spyListaAdicionada.subscribe((data)=>{
+    this.spyListaAdicionada.subscribe((info)=>{
       if(this.intervalosCount){
-        this.addIntervalo((data.intAmount+2),data.intervaloApi)
+        this.addIntervalo((info.intAmount+2),info.intervaloApi)
       } else if(this.prePosCount){
-        this.addPrePos(data.prePosApi)
+        this.addPrePos(info.prePosApi)
       }
     })
 
@@ -110,7 +111,6 @@ export class GradeComponent implements OnInit {
 
 
     this.getListaDeProgramasDeTvFromMongodb()
-    // this.getCanaisFromFirestore()
     this.getCanaisFromMongoDB()
     
     this.selectVideoForm.get('semanaDestinoFormControl')
@@ -135,11 +135,8 @@ export class GradeComponent implements OnInit {
 
     this.selectVideoForm.get('programaDeTvFormControl')
     .valueChanges.subscribe(value=>{
-      console.log("yyyy: ",value)
-      console.log("xxxx: ",this.programaDeTv.filter(prog=>prog.value==value))
-      this.tipoDeProgramaDeTvSelecionado = this.programaDeTv.filter(prog=>prog.value==value)[0]["tipo"]
       this.alerta=""
-      this.selectedProgramaDeTv=value
+      this.selectedProgramaDeTv=this.programaDeTv.filter(prog=>prog.value==value)[0]
     })
 
     for(let hora=6;hora<24;hora++){
@@ -155,47 +152,18 @@ export class GradeComponent implements OnInit {
     let unsubscribe=
     this.mongodbService.getCanais().subscribe((data:any )=>{ 
       this.canais=data.sort(this.commonServices.sortPor("canal"))
-      this.gerarListasDeBlocos()
+      this.canais.map(canal=>{
+        this.gerarListasDeBlocos(canal.emissora)
+      })
       unsubscribe.unsubscribe()
     })
 
   }
-
-  // getCanaisFromFirestore(){
-
-  //   let unsubscribe=
-  //   this.firebaseService.getListFromfirestore("","canais").snapshotChanges().pipe(
-  //     map(changes =>
-  //       changes.map(c =>
-  //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //       )
-  //     )
-  //   ).subscribe((data:any ) => {
-  //     this.canais=data.sort(this.commonServices.sortPor("canal"))
-  //     // this.addTituloDeProgramas()
-  //     this.gerarListasDeBlocos()
-  //     unsubscribe.unsubscribe()
-  //   });
-
-  // }  
-
-  addTituloDeProgramas(){
-    this.canais.map((canal,canalIndex)=>{
-      if(canal.canal==5){
-        this.semana.map((diaDaSemana:any)=>{
-          this.canais[canalIndex][diaDaSemana].map((prog,progIndex)=>{
-            this.canais[canalIndex][diaDaSemana][progIndex].tituloAtracao =
-            this.programaDeTv.find(programa=>programa.value==prog.atracao).titulo
-          })
-        })
-      }
-    })
-  }
   
   removePrograma(){
-    if(this.selectedDiaDaSemana&&this.programaSelectionado){
-      let indexToRemove = this.programaSelectionado.indice+1
-      let itemRemoved = this.listaSemana[this.selectedDiaDaSemana][this.programaSelectionado.indice]
+    if(this.selectedDiaDaSemana&&this.programaClicado){
+      let indexToRemove = this.programaClicado.indice+1
+      let itemRemoved = this.listaSemana[this.selectedDiaDaSemana][this.programaClicado.indice]
       this.alerta="Item Removido"
       setTimeout(()=>{this.alerta=""},1000)
       itemRemoved.added=false
@@ -217,46 +185,55 @@ export class GradeComponent implements OnInit {
       })
       
       let newList = this.listaSemana[this.selectedDiaDaSemana]
-                    .filter(prog=>!prog.tituloAtracao
-                    .includes(this.programaBlocoSelectionado.tituloAtracao))
+                    .filter(prog=>prog.idProgTotal!==this.programaBlocoSelectionado.blocos[0].idProgTotal)
 
       this.recalculaHorariosDeExibicao(newList)
 
       let newListBloco = this.listaSemana[this.selectedDiaDaSemana+'Bloco']
-                    .filter(prog=>!prog.tituloAtracao
-                    .includes(this.programaBlocoSelectionado.tituloAtracao))
+                    .filter(prog=>prog.idProgTotal!==this.programaBlocoSelectionado.blocos[0].idProgTotal)
       
       this.listaSemana[this.selectedDiaDaSemana+'Bloco'] = newListBloco
 
 
-    } else if(!this.programaSelectionado){
+    } else if(!this.programaClicado){
       this.alerta="Selecione programa a ser deletado"
     } else if(!this.selectedDiaDaSemana){
       this.alerta="Informe o dia da semana"
-    } else if(!this.programaSelectionado){
+    } else if(!this.programaClicado){
       this.alerta="Selecione programa a ser deletado"
     }
   }
 
   organizaIntervalos(){
     let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaSemana[this.selectedDiaDaSemana]
-    
-    let qtdeAdicionada = (this.qtdeIntervalos*2)+1
     let lengthListaParaOrganizar = listaParaORganizar.length
-    let diiferenca = lengthListaParaOrganizar-qtdeAdicionada
-    let listaInicial = listaParaORganizar.slice(0,diiferenca)
-    let listaAdicionados = listaParaORganizar.slice(diiferenca,lengthListaParaOrganizar)
-    let listaAadicionadosPrograma = listaAdicionados.filter(prog=>prog.atracao.slice(0,3)!=="int")
-    let listaAadicionadosIntervalos = listaAdicionados.filter(prog=>prog.atracao.slice(0,3)=="int")
+    
+    let indexInicioAdicionados=listaParaORganizar.find(prog=>prog.idProgTotal==this.idProgTotal).indice
+
+    let indexFinalAdicionados=listaParaORganizar.reverse().find(prog=>prog.idProgTotal==this.idProgTotal).indice
+
+    listaParaORganizar.reverse()
+
+    let listaPreAdicionados = listaParaORganizar.slice(0,indexInicioAdicionados)
+    
+    
+    let listaAdicionados = listaParaORganizar.slice(indexInicioAdicionados,indexFinalAdicionados+2)
+    
+    let listaAadicionadosPrograma = listaAdicionados.filter(prog=>prog.tipo!=="intervalos")
+    
+    let listaAadicionadosIntervalos = listaAdicionados.filter(prog=>prog.tipo=="intervalos")
+    
+    let listaPosAdicionados = listaParaORganizar.slice(indexFinalAdicionados+2,lengthListaParaOrganizar)
+    
     let listaOrdenada = []
     listaAadicionadosPrograma.map((prog,index)=>{
       if(index<listaAadicionadosIntervalos.length){
           listaOrdenada.push(listaAadicionadosPrograma[index])
           listaOrdenada.push(listaAadicionadosIntervalos[index])
       }else {
-        listaOrdenada.push(listaAadicionadosPrograma[index])        
+        listaOrdenada.push(listaAadicionadosPrograma[index])
       }
-      let listaFinal = [...listaInicial,...listaOrdenada] 
+      let listaFinal = [...listaPreAdicionados,...listaOrdenada,...listaPosAdicionados] 
       this.qtdeIntervalos=0
       this.intervalosCount=0
 
@@ -264,35 +241,131 @@ export class GradeComponent implements OnInit {
     })
   }
 
+  
+
   organizaPrePos(){
-    
     let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaSemana[this.selectedDiaDaSemana]
+    let lengthListaParaOrganizar = listaParaORganizar.length
+    
+    let indexInicioAdicionados=listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgTotal==this.idProgTotal))
 
-    let prePosSelecionado = this.selectedProgramaDeTv.replace("prePos","").slice(1)
+    // listaParaORganizar.reverse()
 
-    let listaAdicionados = listaParaORganizar.filter(prog=>prog.atracao.includes(prePosSelecionado))
+        
+    let listaAdicionados = listaParaORganizar.filter(prog=>prog.idProgTotal==this.idProgTotal)
 
-    let listaAdicionadosLength = listaAdicionados.length
+    let indexFinalAdicionados=indexInicioAdicionados+listaAdicionados.length-2
+    let listaPreAdicionados = listaParaORganizar.slice(0,indexInicioAdicionados)
+    
+    let listaAadicionadosPrograma = listaAdicionados.filter(prog=>!prog.atracao.includes("prePos"))
+    let listaAadicionadosPrepos = listaAdicionados.filter(prog=>prog.atracao.includes("prePos"))
+    let listaPosAdicionados = listaParaORganizar.slice(indexFinalAdicionados+1,lengthListaParaOrganizar).filter(prog=>prog.idProgTotal!=this.idProgTotal)
 
-    let indexToCut = listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.atracao.includes(prePosSelecionado)))
-
-    let listaPre = [...listaParaORganizar].splice(0,indexToCut)
-
-    let listaPos = [...listaParaORganizar].splice(indexToCut+listaAdicionadosLength)
-
-    let listaAadicionadosPrograma = listaAdicionados.filter(prog=>prog.atracao.slice(0,6)!=="prePos")
-    let listaAadicionadosPrepos = listaAdicionados.filter(prog=>prog.atracao.slice(0,6)=="prePos")
-    let listaFinal = [...listaPre,
-                     [...listaAadicionadosPrepos].filter(prog=>prog.titulo.includes("Abertura"))[0],
+    let listaFinal = [...listaPreAdicionados,
+                     listaAadicionadosPrepos[0],
                       ...listaAadicionadosPrograma,
-                     [...listaAadicionadosPrepos].filter(prog=>prog.titulo.includes("Encerramento"))[0],
-                      ...listaPos]
+                      listaAadicionadosPrepos[1],
+                      ...listaPosAdicionados]
                       
     this.prePosCount=0
     this.prePosAvailable=false
-    this.programaSelectionado=""
+    this.programaClicado=""
 
       this.recalculaHorariosDeExibicao(listaFinal) 
+  }
+
+  organizaProgramasBlocos(){
+
+    let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaSemana[this.selectedDiaDaSemana]
+
+    let indexAdicionadosInicio = listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgTotal==this.idProgTotal))
+
+    let listaPreAdicionados = listaParaORganizar.slice(0,indexAdicionadosInicio)
+
+    let listaAdicionados=listaParaORganizar.filter(prog=>prog.idProgTotal==this.idProgTotal)
+
+    let listaPosAdicionados = listaParaORganizar.slice(indexAdicionadosInicio+listaAdicionados.length,listaParaORganizar.length)
+
+    let indexIntervaloBloco1=listaAdicionados.indexOf(listaAdicionados.find(prog=>prog.atracao==this.selectedProgramaDeTvBlocos.anexos.intervalo))
+
+    let indexIntervaloBloco2=indexIntervaloBloco1+2
+    let indexIntervaloBloco3=indexIntervaloBloco2+2
+    let indexIntervaloBloco4=indexIntervaloBloco3+2
+    let indexIntervaloBloco5=indexIntervaloBloco4+2
+    let indexIntervaloBloco6=indexIntervaloBloco5+2
+
+    let listaBlocoPreAdicionados = listaAdicionados.slice(0,indexIntervaloBloco1)
+    
+    let listaBlocoIntermediariosAdicionados1 = []
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco2){
+      listaBlocoIntermediariosAdicionados1 = listaAdicionados.slice(indexIntervaloBloco1,indexIntervaloBloco2)
+    }
+    let listaBlocoIntermediariosAdicionados2 = []
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco3){
+      listaBlocoIntermediariosAdicionados2 = listaAdicionados.slice(indexIntervaloBloco2,indexIntervaloBloco3)
+    }
+    let listaBlocoIntermediariosAdicionados3 = []
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco4){
+      listaBlocoIntermediariosAdicionados3 = listaAdicionados.slice(indexIntervaloBloco3,indexIntervaloBloco4)
+    }
+    let listaBlocoIntermediariosAdicionados4 = []
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco5){
+      listaBlocoIntermediariosAdicionados4 = listaAdicionados.slice(indexIntervaloBloco4,indexIntervaloBloco5)
+    }
+    let listaBlocoIntermediariosAdicionados5 = []
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco6){
+      listaBlocoIntermediariosAdicionados5 = listaAdicionados.slice(indexIntervaloBloco5,indexIntervaloBloco6)
+    }
+
+    let indexInicioBlocoPosAdicionado = indexIntervaloBloco1
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco2) indexInicioBlocoPosAdicionado = indexIntervaloBloco2
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco3) indexInicioBlocoPosAdicionado = indexIntervaloBloco3
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco4) indexInicioBlocoPosAdicionado = indexIntervaloBloco4
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco5) indexInicioBlocoPosAdicionado = indexIntervaloBloco5
+    if(this.selectedProgramaDeTvBlocos.anexos.bloco6) indexInicioBlocoPosAdicionado = indexIntervaloBloco6
+     
+
+
+    let listaBlocoPosAdicionados = listaAdicionados.slice(indexInicioBlocoPosAdicionado,listaAdicionados.length)
+
+    setTimeout(()=>{
+      let listaBloco1 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco1.includes(bloco.atracao))
+      
+      let listaBloco2 = []
+      if(this.selectedProgramaDeTvBlocos.anexos.bloco2){
+        listaBloco2 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco2.includes(bloco.atracao))
+      }
+      
+      let listaBloco3 = []
+      if(this.selectedProgramaDeTvBlocos.anexos.bloco3){
+        listaBloco3 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco3.includes(bloco.atracao))
+      }
+      
+      let listaBloco4 = []
+      if(this.selectedProgramaDeTvBlocos.anexos.bloco4){
+        listaBloco4 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco4.includes(bloco.atracao))
+      }
+      
+      let listaBloco5 = []
+      if(this.selectedProgramaDeTvBlocos.anexos.bloco5){
+        listaBloco5 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco5.includes(bloco.atracao))
+      }
+      
+      let listaBloco6 = []
+      if(this.selectedProgramaDeTvBlocos.anexos.bloco6){
+        listaBloco6 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco6.includes(bloco.atracao))
+      }
+
+      let listaFinalAdicionados = [...listaBlocoPreAdicionados,
+                                   ...listaBloco1,...listaBlocoIntermediariosAdicionados1,
+                                   ...listaBloco2,...listaBlocoIntermediariosAdicionados2,
+                                   ...listaBloco3,...listaBlocoIntermediariosAdicionados3,
+                                   ...listaBloco4,...listaBlocoIntermediariosAdicionados4,
+                                   ...listaBloco5,...listaBlocoIntermediariosAdicionados5,
+                                   ...listaBlocoPosAdicionados]
+      let listaFinal=[...listaPreAdicionados,...listaFinalAdicionados,...listaPosAdicionados]
+      this.recalculaHorariosDeExibicao(listaFinal) 
+    },1000)
   }
 
   recalculaHorariosDeExibicao(newList){
@@ -323,36 +396,32 @@ export class GradeComponent implements OnInit {
     
       let intervaloApi
   
-      if(this.selectedProgramaDeTv.slice(0,3).includes("int")){
-        intervaloApi = this.selectedProgramaDeTv
-      } else {
-        intervaloApi = "int"+this.commonServices.toTitleCase(this.selectedProgramaDeTv)
+      if(this.selectedProgramaDeTv.tipo=="intervalos"&&this.selectedProgramaDeTv.prePos==false){
+        intervaloApi = this.selectedProgramaDeTv.value
+      } else if(this.selectedProgramaDeTv.anexos&&this.selectedProgramaDeTv.anexos.intervalo){
+        intervaloApi = this.selectedProgramaDeTv.anexos.intervalo
       }
   
-      if(intervaloApi.includes("Sessao")){    
-        intervaloApi=intervaloApi.replace(/[0-9]/g, '')
-      } 
+      if(this.intervalosCount){
+        let intInfo = {}
+        intInfo['intAmount'] = this.intervalosCount
+        intInfo['intervaloApi'] = intervaloApi
   
-      if(this.intervalosCount&&this.programaDeTvFiltered.find(prog=>prog.value == intervaloApi)){
-        let data = {}
-        data['intAmount'] = this.intervalosCount
-        data['intervaloApi'] = intervaloApi
-  
-        this.spyListaAdicionada.next(data)
+        this.spyListaAdicionada.next(intInfo)
       } else if(this.qtdeIntervalos){
         this.lengthListaFinal = newList.length
         this.organizaIntervalos()
       } else if(newList.length==this.lengthListaFinal&&this.prePosAvailable){
         if(this.prePosCount>0){
-          let data = {}
-          data['intAmount'] = this.prePosCount
-          data['prePosApi'] = this.selectedProgramaDeTv.includes("prePos")?
-                              this.selectedProgramaDeTv:
-                              intervaloApi.replace("int","prePos")
-          this.spyListaAdicionada.next(data)
+          let prePosInfo = {}
+          prePosInfo['intAmount'] = this.prePosCount
+          prePosInfo['prePosApi'] = this.prePosApi
+          this.spyListaAdicionada.next(prePosInfo)
         } else {
           this.organizaPrePos()
         }
+      } else if(!this.intervalosCount&&!this.prePosCount&&this.programasBlocosCount){
+        this.addBlocosFromMongoDB()
       }
 
     }
@@ -372,81 +441,77 @@ export class GradeComponent implements OnInit {
     });
     
   }
-  
-  // update(tipo, id,media,url?): void {
-  //   this.firebaseService.update(tipo,id, media).then((data) => {
-  //     this.alerta="'Item updated successfully!'"
-  //     setTimeout(()=>{
-  //       this.alerta=""
-  //     },3000)
-  //   });
-  // }
 
   addIntervalo(intAmount,intApi){
     let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
                      this.listaSemana[this.selectedDiaDaSemana]
-    // let index = listaAtual.length-intAmount
     let info = listaAtual[this.indexToAdd]
-    this.getInfoAtracao(info,this.selectedDiaDaSemana,this.indexToAdd)
+    this.clickAtracao(info,this.selectedDiaDaSemana,this.indexToAdd)
     this.selectVideoForm.get('programaDeTvFormControl').setValue(intApi)
     this.adicionarPrograma()
     this.intervalosCount--
   }
-
   addPrePos(prePosApi){
     this.lengthListaFinal++
 
     let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
                      this.listaSemana[this.selectedDiaDaSemana]
-    let prePosSelecionado = prePosApi.replace("prePos","").slice(1)
-    let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.atracao.includes(prePosSelecionado)))
+    let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.idProgTotal==this.idProgTotal))
     let info = listaAtual[indexToSelect]
-    this.getInfoAtracao(info,this.selectedDiaDaSemana,indexToSelect)
+    this.clickAtracao(info,this.selectedDiaDaSemana,indexToSelect)
     this.selectVideoForm.get('programaDeTvFormControl').setValue(prePosApi)
     this.adicionarPrograma()
     this.prePosCount--
   }
 
+  // addBlocos(blocosInfo){
+    
+  //   console.log("addBlocos")
+  //   this.lengthListaFinal++
+  //   let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
+  //                    this.listaSemana[this.selectedDiaDaSemana]
+  //   let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.idProgTotal==this.idProgTotal))
+  //   let info = listaAtual[indexToSelect]
+  //   this.clickAtracao(info,this.selectedDiaDaSemana,indexToSelect)
+  //   this.selectVideoForm.get('programaDeTvFormControl').setValue(blocosInfo)
+  //   this.adicionarPrograma()
+  //   this.programasBlocosCount--
+  // }
+
   adicionarPrograma(): void {
     // CHECK IF DIA DA SEMANA AND PROGRAMA DE TV ARE SELECTED
     if(this.selectedDiaDaSemana&&this.selectedProgramaDeTv){
-
     // GET UNSUBSCRIBABLE LIST OF PROGRAMS ACCORDING TO SELECTED PROGRAMA DE TV
-    // let unsubscribe=
-    // this.firebaseService.getListFromfirestore("","programa",this.selectedProgramaDeTv)
-    // .snapshotChanges().pipe(
-    //   map(changes =>
-    //     changes.map(c =>
-    //       ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-    //     )
-    //   )
-    // )
+
+    if(this.selectedProgramaDeTv.anexos&&this.selectedProgramaDeTv.anexos.blocosAmount
+      &&this.listaBlocos.length==0){
+      this.programasPorBloco={}
+      this.blocosAmount=this.selectedProgramaDeTv.anexos.blocosAmount
+      this.selectedProgramaDeTvBlocos=this.selectedProgramaDeTv
+      for(let i=0;i<this.blocosAmount;i++){
+        this.selectedProgramaDeTv.anexos["bloco"+(i+1)].map((prog,index)=>{
+          this.listaBlocos.push(prog)
+          this.programasPorBloco["bloco"+(i+1)]=index+1
+        })
+      }
+      this.programasBlocosCount=this.listaBlocos.length
+    }
+
+    if(this.selectedProgramaDeTv.tipo!=="intervalos"
+     &&!this.listaBlocos.includes(this.selectedProgramaDeTv.value)){
+      this.idProgTotal =  this.selectedProgramaDeTv.value+new Date().valueOf()
+    }
+
     
     let unsubscribe=
-    this.mongodbService.getProgramasDeTv(this.tipoDeProgramaDeTvSelecionado,this.selectedProgramaDeTv)
+    this.mongodbService.getProgramasDeTv(this.selectedProgramaDeTv.tipo,this.selectedProgramaDeTv.value)
     .subscribe((data:any ) => {
+      console.log("Programa Sendo Adicionado data",this.selectedProgramaDeTv)
       let videoAdicionado
 
       let listaDeProgramas = data
-      // let dataLength = data.filter(prog=>prog.ref!='Teste').length
-      
+
       //GET EACH REF ON THE LISTA DE PROGRAMAS AND CREATE A NEW LIST WITH THE PROGRAMAS DATA
-      // data.map((registro, registroIndex)=>{
-        
-      //   if(registro.ref!="Teste"){
-      //     registro.ref.get()
-      //     .then((res)=>{
-      //       if(res.data()){
-      //         let obj = res.data()
-      //         obj.id = registro.ref.id
-      //         listaDeProgramas.push(obj)
-      //       }
-      //       if((dataLength-1)==registroIndex){
-      //         montaLista()
-      //       }
-      //     })
-      //   }
-      // })
 
       const montaLista = ()=>{
 
@@ -455,8 +520,14 @@ export class GradeComponent implements OnInit {
           .sort(this.commonServices.sortPor("order"))
           
           if(listaFiltrada.length>0){
-                    if(!this.prePosAvailable) 
-                    this.checkPrePosAvailable(this.selectedProgramaDeTv)
+
+                    let prog:any = this.selectedProgramaDeTv
+                    
+                    if(!this.prePosAvailable&&prog.anexos&&prog.anexos.prePos){
+                      this.prePosApi=prog.anexos.prePos
+                      this.prePosAvailable=true
+                      this.prePosCount=2
+                    }
 
                     videoAdicionado = listaFiltrada[0]
                       let newProg:Object ={}
@@ -466,12 +537,13 @@ export class GradeComponent implements OnInit {
                         let cortes = videoAdicionado.cortesParaIntervalo
                         this.intervalosCount = this.qtdeIntervalos = cortes.length
                         let progModel = {
-                          "atracao":this.selectedProgramaDeTv,
+                          "atracao":this.selectedProgramaDeTv.value,
                           "tituloAtracao":videoAdicionado.tituloAtracao,
                           "titulo":videoAdicionado.titulo,
                           "volume":videoAdicionado.volume?videoAdicionado.volume:1,
                           "horarioDeExibicao":"",
                           "id":videoAdicionado._id,
+                          "idProgTotal":this.idProgTotal,
                           "tipo":videoAdicionado.tipo
                         }
 
@@ -489,12 +561,13 @@ export class GradeComponent implements OnInit {
 
                         cortes.map((corte,index)=>{
                           let prog =  {
-                            "atracao":this.selectedProgramaDeTv,
+                            "atracao":this.selectedProgramaDeTv.value,
                             "tituloAtracao":videoAdicionado.tituloAtracao,
                             "titulo":videoAdicionado.titulo,
                             "volume":videoAdicionado.volume?videoAdicionado.volume:1,
                             "horarioDeExibicao":"",
                             "id":videoAdicionado._id,
+                            "idProgTotal":this.idProgTotal,
                             "tipo":videoAdicionado.tipo
                           }
                           
@@ -513,13 +586,14 @@ export class GradeComponent implements OnInit {
                         })
                       } else {
                         newProg = {
-                          "atracao":this.selectedProgramaDeTv,
+                          "atracao":this.selectedProgramaDeTv.value,
                           "tituloAtracao":videoAdicionado.tituloAtracao,
                           "titulo":videoAdicionado.titulo,
                           "volume":videoAdicionado.volume?videoAdicionado.volume:1,
                           "horarioDeExibicao":"",
                           "duracaoTotalDaAtracaoEmSegundos": videoAdicionado.duracao,
                           "id":videoAdicionado._id,
+                          "idProgTotal":this.idProgTotal,
                           "tipo":videoAdicionado.tipo
                         }
 
@@ -540,7 +614,7 @@ export class GradeComponent implements OnInit {
                       videoAdicionado.added=true
                       this.updateOnMongoDB(videoAdicionado,"videoAdicionado")        
 
-                      this.indexToAdd = this.programaSelectionado ? this.programaSelectionado.indice+1 : listInProcess.length
+                      this.indexToAdd = this.programaClicado ? this.programaClicado.indice+1 : listInProcess.length
                       let newList
                       if(newProgList.length>0){
                         newList = [...listInProcess.slice(0,this.indexToAdd),
@@ -554,11 +628,9 @@ export class GradeComponent implements OnInit {
                       }
                       unsubscribe.unsubscribe()
                       this.recalculaHorariosDeExibicao(newList)
-            // setTimeout(()=>{
-            //   unsubscribe.unsubscribe()
-            // },1000)
           } else {
-            this.resetAddedLista(listaDeProgramas, "A")
+            console.log("DDDDDDDDDDD")
+            this.resetAddedLista(listaDeProgramas, "programa")
             unsubscribe.unsubscribe()
           }
 
@@ -568,85 +640,85 @@ export class GradeComponent implements OnInit {
 
     } else if(!this.selectedDiaDaSemana){
       this.alerta="Informe o dia da semana"
-    } else if(!this.programaSelectionado){
+    } else if(!this.programaClicado){
       this.alerta="Selecione programa a ser deletado"
     }
   }
 
-  // adicionaIntervalos(): void {
-  //   let intervaloApi = "int"+this.commonServices.toTitleCase(this.selectedProgramaDeTv)
+  adicionarProgramaBloco(bloco): void {
+    
+    let unsubscribe=
+    this.mongodbService.getProgramasDeTv("dublado",bloco)
+    .subscribe((data:any ) => {
+      let videoAdicionado
 
-  //   if(intervaloApi.includes("Sessao")){    
-  //     intervaloApi=intervaloApi.replace(/[0-9]/g, '')
-  //   } 
+      let listaDeProgramas = data
 
-  //   // GET UNSUBSCRIBABLE LIST OF PROGRAMS ACCORDING TO SELECTED PROGRAMA DE TV
-  //   let unsubscribe=
-  //   this.firebaseService.getListFromfirestore("","programa",intervaloApi)
-  //   .snapshotChanges().pipe(
-  //     map(changes =>
-  //       changes.map(c =>
-  //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //       )
-  //     )
-  //   ).subscribe((data:any)=>{
-  //     let listaDeIntervalos = []
+      //GET EACH REF ON THE LISTA DE PROGRAMAS AND CREATE A NEW LIST WITH THE PROGRAMAS DATA
 
-  //     data.map((registro,registroIndex)=>{
-  //       if(registro.ref!="Teste"){
-  //         registro.ref.get()
-  //         .then((res)=>{
-  //           if(res.data()){
-  //             let obj = res.data()
-  //             obj.id = registro.ref.id
-  //             listaDeIntervalos.push(obj)
-  //           }
-  //           if((data.length-1)==registroIndex){
-  //             let listaDeIntervalosSelecionados = listaDeIntervalos.filter(video=>video.order&&!video.added)
-  //             .sort(this.commonServices.sortPor("order"))
+      const montaLista = ()=>{
 
-  //             if(!listaDeIntervalosSelecionados){
-  //               unsubscribe.unsubscribe()
-  //               this.resetAddedLista(listaDeIntervalos,"C")
-  //             } else {
-  //               do{
-  //                 listaDeIntervalosSelecionados.find((intervalo,index)=>{
-  //                   if(!intervalo.added){
-  //                     intervalo.added=true
-  //                     this.updateOnMongoDB(intervalo,"intervalo 2")
+        //FILTER 
+        let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
+          .sort(this.commonServices.sortPor("order"))
+          // console.log("listaDeProgramas",listaDeProgramas)
+          // console.log("listaFiltrada",listaFiltrada)
+          // console.log("listaDeProgramas.splice(1,listaDeProgramas.length",listaDeProgramas.splice(1,listaDeProgramas.length))
+          
+          // if(listaFiltrada.length>0){
+                    if(listaFiltrada.length>0){
+                      videoAdicionado = listaFiltrada[0]
+                    } else{
+                      videoAdicionado = listaDeProgramas[0]
+                      if(listaDeProgramas.length>1){
+                        // console.log("if(listaDeProgramas.length>1)",listaDeProgramas)
+                        // console.log("listaDeProgramas.splice(1,listaDeProgramas.length",listaDeProgramas.splice(1,listaDeProgramas.length))
 
-  //                     this.listaDeIntervalosAdicionados.push(intervalo)
-  //                     this.intervalosCount--
-  //                     return intervalo
-  //                   }
-  //                 })
-  //               } while (this.intervalosCount>0)
-  //               if(this.intervalosCount==0){                  
-  //                   unsubscribe.unsubscribe()
-  //               }
+                        console.log("XXXXXXXXXXXXXXXXXXX")
+                        this.resetAddedLista(listaDeProgramas.splice(1,listaDeProgramas.length),"blocos")                      
+                      }
+                    }
 
-  //             }
-  //           }
-  //         })
-  //       }
-  //     })
-  //   })
+                      let newProg:Object ={}
 
-  // }
+                        newProg = {
+                          "atracao":bloco,
+                          "tituloAtracao":videoAdicionado.tituloAtracao,
+                          "titulo":videoAdicionado.titulo,
+                          "volume":videoAdicionado.volume?videoAdicionado.volume:1,
+                          "horarioDeExibicao":"",
+                          "duracaoTotalDaAtracaoEmSegundos": videoAdicionado.duracao,
+                          "id":videoAdicionado._id,
+                          "idProgTotal":this.idProgTotal,
+                          "tipo":videoAdicionado.tipo
+                        }
 
-  checkPrePosAvailable(prog){
-    let prePosProgName = "prePos"+this.commonServices.toTitleCase(prog).slice(0, -1)
-    let prePosProgToBeFound = 
-    this.programaDeTvFiltered.find(prog=>prog.value.includes(prePosProgName))
+                        if(videoAdicionado.corteFinal){
+                          let corteFinal = videoAdicionado.corteFinal
+                          newProg['corteFinal']=corteFinal
+                          newProg['duracaoTotalDaAtracaoEmSegundos']=corteFinal
+                        }
+  
+                        if(videoAdicionado.corteInicio){
+                          let corteInicio = videoAdicionado.corteInicio
+                          let duracao = videoAdicionado.corteInicio
+                          newProg['corteInicio']=duracao-corteInicio
+                        }
+                      videoAdicionado.added=true
+                      this.updateOnMongoDB(videoAdicionado,"videoAdicionado")
+                      unsubscribe.unsubscribe()
+                      this.listaProgramasBlocos.push(newProg)
+          // } else {
+            unsubscribe.unsubscribe()
+          // }
 
-    if(prePosProgToBeFound&&!this.prePosAvailable){
-      this.prePosAvailable=true
-      this.prePosCount=2
-    }
+      }
+      montaLista()
+    });
   }
 
   replicaNext(){
-    this.programaSelectionado=""
+    this.programaClicado=""
 
     if(this.programasReplicadosCount==0&&this.emProcessoDeUpdate){
       
@@ -656,18 +728,19 @@ export class GradeComponent implements OnInit {
     } else {
 
       this.programasReplicadosCount--
-      let programaParaReplicar = this.listaOrigemReduzida[this.programasReplicadosCount]
-      if(programaParaReplicar.includes("oaventura")&&
-         programaParaReplicar.includes("ocomedia")){
-             programaParaReplicar=programaParaReplicar.slice(0,-1)+
-             this.semana.indexOf(this.selectedDiaDaSemana)+1
-      } 
+      let programaParaReplicar = this.listaSemana[this.selectedDiaDaSemana]
+                            .find(prog=>prog.idProgTotal==
+                            this.listaOrigemReduzida[this.programasReplicadosCount]&&
+                            prog.tipo!=="intervalos").atracao
   
       this.spyListaReplicada.next(programaParaReplicar)
     }
   }
 
   resetAddedLista(lista,type){
+    console.log("Lista resetAddedLista",lista)
+    console.log("type resetAddedLista",type)
+    console.log("YYYYYYYYYYYYYYYYY")
     const functionThatReturnsAPromise = video => { //a function that returns a promise
       
       video.added=false
@@ -684,7 +757,31 @@ export class GradeComponent implements OnInit {
     }
     
     setAllAddedFalse().then(data => {
+      if(type=="programa"){
         this.adicionarPrograma()
+      }
+    }) 
+  }
+
+  addBlocosFromMongoDB(){this.listaProgramasBlocos=[]
+    const callAdicionarProgramaBloco = bloco => { 
+      this.adicionarProgramaBloco(bloco)
+      return Promise.resolve('ok')
+    }
+    
+    const asyncFunctionThatCallsFunction = async bloco => {
+      return callAdicionarProgramaBloco(bloco)
+    }
+    
+    const getAllBlocos = async () => {
+      return Promise.all(this.listaBlocos.map(bloco => asyncFunctionThatCallsFunction(bloco)))
+    }
+    
+    getAllBlocos().then(data => {
+        // this.adicionarPrograma()
+        this.programasBlocosCount=0
+        this.listaBlocos=[]
+        this.organizaProgramasBlocos()
     }) 
   }
 
@@ -694,28 +791,14 @@ export class GradeComponent implements OnInit {
     this.updateCanaisOnMongoDB(canal)
     this.semana.map((dia:any)=>{
       if(this.listaSemana[dia]){
-        // let listaOrdenada = [...this.listaSemana[dia]]
-        // let canal =  this.canais.filter(canal=>canal.emissora==this.selectedCanal)[0]
-        // this.updateCanaisOnMongoDB(canal)
       }
     })
   }
 
   getLista(){
-
-    // let unsubscribe=
-    // this.firebaseService.getListFromfirestore("","canais").snapshotChanges().pipe(
-    //   map(changes =>
-    //     changes.map(c =>
-    //       ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-    //     )
-    //   )
-    // ).subscribe((data:any ) => {
       this.listaSemana = this.canais.filter(canal=>canal.emissora==this.selectedCanal)[0]
       if(this.selectedDiaDaSemana&&!this.listaSemana[this.selectedDiaDaSemana]) this.addDiasDeSemanaNoCanal()
       this.getListaDeProgramasDeTvFromMongodb()
-    //   unsubscribe.unsubscribe()
-    // });
   }
 
   addDiasDeSemanaNoCanal(){
@@ -736,30 +819,12 @@ export class GradeComponent implements OnInit {
     })
   }
 
-  // getListaDeProgramasDeTv(){
-  //   let unsubscribe=
-  //   this.firebaseService.getAll("programasDeTv").snapshotChanges()
-  //   .pipe(
-  //     map(changes =>
-  //       changes.map(c =>
-  //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //       )
-  //     )
-  //   ).subscribe(data=>{
-  //     if(this.selectedCanal){            
-  //      data = [...data.filter(prog=>{ return prog.canal==this.selectedCanal})]
-  //     }
-  //     this.programaDeTvFiltered=this.programaDeTv=data.sort(this.commonServices.sortPorTitulo())
-  //     unsubscribe.unsubscribe()
-  //   })
-  // }
-
   filterProgramaDeTV(canal){
       this.programaDeTvFiltered=this.programaDeTv.filter(prog=> prog.canal== canal)
   }
 
   getStyle(width,dia,index?){
-    if(this.programaSelectionado&&(this.programaSelectionado.indice==index)&&(this.programaSelectionado.dia==dia)){
+    if(this.programaClicado&&(this.programaClicado.indice==index)&&(this.programaClicado.dia==dia)){
       return `width:${width/10}px;background:blue`
     } else {      
       return `width:${width/10}px`
@@ -782,7 +847,7 @@ export class GradeComponent implements OnInit {
     this.getInfoBlocoClicado=true
     this.getInfoFromBlocoClicado=false
     this.alerta=""
-    this.programaSelectionado=""
+    this.programaClicado=""
     if(this.programaBlocoSelectionado==info){
       this.programaBlocoSelectionado=""
     }else{
@@ -793,43 +858,32 @@ export class GradeComponent implements OnInit {
     }
   }
 
-  getInfoAtracao(info,dia,index){
+  clickAtracao(info,dia,index){
     this.getInfoClicado=true
     this.getInfoBlocoClicado=false
     this.getInfoFromBlocoClicado=false
     this.alerta=""
     this.programaBlocoSelectionado=""
-    if(this.programaSelectionado==info){
-      this.programaSelectionado=""
+    if(this.programaClicado==info){
+      this.programaClicado=""
     }else{
       info.indice=index
       info.dia=dia
-      this.programaSelectionado = info
+      this.programaClicado = info
       this.selectVideoForm.get('semanaFormControl').setValue(dia)
       this.selectedDiaDaSemana = dia
     }
   }
 
-  getInfoAtracaoFromBloco (info,dia,index){
-    this.getInfoFromBlocoClicado=true
-    this.programaSelectionado = info
+  clickAtracaoFromBloco (info,dia,index){
 
-    // this.alerta=""
-    // this.programaBlocoSelectionado=""
-    // if(this.programaSelectionado==info){
-    //   this.programaSelectionado=""
-    // }else{
-    //   info.indice=index
-    //   info.dia=dia
-    //   this.programaSelectionado = info
-    //   this.selectVideoForm.get('semanaFormControl').setValue(dia)
-    //   this.selectedDiaDaSemana = dia
-    // }
+    this.getInfoFromBlocoClicado=true
+    this.programaClicado = info
 
   }
 
   clearInfoAtracao(){
-      this.programaSelectionado=""
+      this.programaClicado=""
   }
 
   toggleSemanaDestino(){
@@ -840,82 +894,68 @@ export class GradeComponent implements OnInit {
   }
 
   replicaListaDaSemana(){
-    this.programaSelectionado=""
+    this.programaClicado=""
     if(this.selectedDiaDestinoDaSemana){
       this.listaSemana[this.selectedDiaDestinoDaSemana]=[]
       let listaOrigem = this.listaSemana[this.selectedDiaDaSemana] 
-      let listaCorujao = listaOrigem.filter(prog=>prog.atracao=="corujao"&&prog.inicio<60).map(prog=>prog.atracao)
-      this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.atracao)
-                                 .filter(prog=>prog.slice(0,3)!="int")
-                                 .filter(prog=>prog.slice(0,6)!="prePos"))]
+      this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.idProgTotal))]
       this.listaOrigemReduzida.reverse()
       this.selectVideoForm.get('semanaFormControl').setValue(this.selectedDiaDestinoDaSemana)
       this.programasReplicadosCount = this.listaOrigemReduzida.length-1
-      let sessaoDia = this.semana.indexOf(this.selectedDiaDestinoDaSemana)+1
-      this.listaOrigemReduzida.map((prog,index)=>{
-        if(prog.includes("sessaoAventura")||prog.includes("sessaoComedia")){
-          this.listaOrigemReduzida[index]=prog.slice(0,-1)+sessaoDia
-        }
-      })
-      if(listaCorujao){
-        let IndexOfCorujao = this.listaOrigemReduzida.indexOf("corujao")
-        let listaReduzidaPreCorujao = [...this.listaOrigemReduzida.splice(0,IndexOfCorujao)]
-        let listaReduzidaPosCorujao = [...this.listaOrigemReduzida.splice(IndexOfCorujao)]
-        this.listaOrigemReduzida=[]
-        this.listaOrigemReduzida=[...listaReduzidaPreCorujao,...listaCorujao,...listaReduzidaPosCorujao]
-      }
-      this.selectVideoForm.get('programaDeTvFormControl').setValue(this.listaOrigemReduzida[this.programasReplicadosCount])
+      let programToSelect = listaOrigem
+                            .find(prog=>prog.idProgTotal==
+                            this.listaOrigemReduzida[this.programasReplicadosCount]&&
+                            prog.tipo!=="intervalos").atracao
+      this.selectVideoForm.get('programaDeTvFormControl').setValue(programToSelect)
       this.adicionarPrograma()
     }
   }
  
   updateListaDaSemana(){
     this.emProcessoDeUpdate=true
-    this.programaSelectionado=""
+    this.programaClicado=""
     this.listaParaUpdate=[]
     let listaOrigem = this.listaSemana[this.selectedDiaDaSemana] 
-    this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.atracao)
-                                 .filter(prog=>prog.slice(0,3)!="int")
-                                 .filter(prog=>prog.slice(0,6)!="prePos"))]
+    this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.idProgTotal))]
     this.listaOrigemReduzida.reverse()
     this.programasReplicadosCount = this.listaOrigemReduzida.length-1
-    // listaOrigemReduzida.map(programa=>{
-    this.selectVideoForm.get('programaDeTvFormControl').setValue(this.listaOrigemReduzida[this.programasReplicadosCount])
+    let programToSelect = listaOrigem
+                          .find(prog=>prog.idProgTotal==
+                          this.listaOrigemReduzida[this.programasReplicadosCount]&&
+                          prog.tipo!=="intervalos").atracao
+    this.selectVideoForm.get('programaDeTvFormControl').setValue(programToSelect)
     this.adicionarPrograma()
-    // })
   }
 
-  gerarListasDeBlocos(){
-    // this.canais.map((canal:any,indCanal)=>{
-      let canal = this.canais.filter(canal=>canal.emissora==this.selectedCanal)[0]
+  gerarListasDeBlocos(emissora){
+      let canal = this.canais.filter(canal=>canal.emissora==emissora)[0]
       let indCanal = this.canais.indexOf(canal)
+
 
       this.semana.map((dia:any)=>{
         let listaOriginal = canal[dia]
         if(listaOriginal){
-        let listaDiaReduzida = [...new Set(listaOriginal.map(prog=>prog.atracao)
-          .filter(prog=>prog.slice(0,3)!="int")
-          .filter(prog=>prog.slice(0,6)!="prePos"))]
+        let listaDiaReduzida = [...new Set(listaOriginal.map(prog=>prog.idProgTotal))]
 
-        let listaBlocos = listaDiaReduzida.map((prog:any)=>{
+        let listaBlocos = listaDiaReduzida.map((progId:any)=>{
           let obj:any = {}
-          obj.atracao = prog
-          let blocos = listaOriginal.filter(prog2=>{
-            let includeTerm = prog.slice(1)
-            
-            if(includeTerm.includes("essao")){    
-              includeTerm=includeTerm.replace(/[0-9]/g, '')
-            }
-            
-
-            return prog2.atracao.includes(includeTerm)
-          })
+          let progInfo = listaOriginal.find(prog=>prog.idProgTotal==progId&&prog.tipo!=="intervalos")
+          if(progInfo&&progInfo.atracao){
+            obj.atracao = progInfo.atracao
+            obj.idProgTotal = progInfo.idProgTotal
+          } else {
+            console.log("dia",dia)
+            console.log("listaOriginal",listaOriginal)
+            console.log("progId",progId)
+            console.log("progInfo",progInfo)
+          }
+          let blocos = listaOriginal.filter(prog2=>prog2.idProgTotal==progId)
           
           obj.horarioDeExibicao = blocos[0].horarioDeExibicao
           obj.blocos = blocos
           if(blocos.filter(lista=>lista.tipo!="intervalos").length>0){
-            obj.arquivo = blocos.filter(lista=>lista.tipo!="intervalos")[0].titulo
-            obj.tituloAtracao = blocos.filter(lista=>lista.tipo!="intervalos")[0].tituloAtracao
+            obj.arquivo = progInfo.titulo
+            obj.tituloAtracao = progInfo.tituloAtracao
           }
           obj.tempoTotalEmSegundos = blocos.map(lista=>lista.duracaoTotalDaAtracaoEmSegundos).reduce((a,b)=>{return a+b})
           obj.tempoTotal = this.commonServices.toTime(obj.tempoTotalEmSegundos)
@@ -924,13 +964,9 @@ export class GradeComponent implements OnInit {
         this.canais[indCanal][dia+"Bloco"]=listaBlocos}
       })
 
-      if(canal.emissora=="Globo"){
         this.listaSemana=this.canais[indCanal]
         let semanaBloco = this.semana.map(dia=>dia+"Bloco")
         this.semana = [...this.semana,...semanaBloco]
-        // this.subirLista()
-      }
-    // })
   }
 
   

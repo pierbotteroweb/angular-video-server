@@ -778,11 +778,13 @@ export class ProgramasComponent implements OnInit {
 
   criarProgramaOnMongoDb(){
     if(this.selectedCanal,this.novoPrograma.value){
+      console.log("this.novoPrograma.value",this.novoPrograma.value)
       let newProg={
         titulo:this.novoPrograma.value,
         tipo:this.selectedTipoDeVideo,
         value:this.commonServices.camelize(this.novoPrograma.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "")),
-        canal:this.selectedCanal
+        canal:this.selectedCanal,
+        prePos:this.novoPrograma.value.includes("Pre")?true:false
       }
       this.mongodbService.createProgramaDeTv(newProg).subscribe((prog)=>{ 
         this.getListaDeProgramasDeTvFromMongoDB()
