@@ -158,40 +158,74 @@ export class PlaylistComponent {
 
     this.document.addEventListener('keydown',event=>{
       switch (event.code){
-      case "Numpad1":
-        this.selectCanal(event.code,"Gazeta")
-        this.changeChannel(1)
-        this.numCanal=11
-          break
-      case "Numpad2":
-        this.selectCanal(event.code,"Cultura")
-        this.changeChannel(2)
-          break
-      case "Numpad3":
-        this.selectCanal(event.code,"Bandeirantes")
-        this.changeChannel(3)
-        this.numCanal=13
-          break
-      case "Numpad4":
-        this.selectCanal(event.code,"Sbt")
-        this.changeChannel(4)
-          break
-      case "Numpad5":
-        this.selectCanal(event.code,"Globo")
-        this.changeChannel(5)
-          break
-      case "Numpad6":
-        this.selectCanal(event.code,"Mtv")
-        this.changeChannel(6)
-          break
-      case "Numpad7":
-        this.selectCanal(event.code,"Record")
-        this.changeChannel(7)
-          break
-      case "Numpad9":
-        this.selectCanal(event.code,"Manchete")
-        this.changeChannel(9)
-          break
+        case "Numpad1":
+          this.selectCanal(event.code,"Gazeta")
+          this.changeChannel(1)
+          this.numCanal=11
+            break
+        case "Numpad2":
+          this.selectCanal(event.code,"Cultura")
+          this.changeChannel(2)
+            break
+        case "Numpad3":
+          this.selectCanal(event.code,"Bandeirantes")
+          this.changeChannel(3)
+          this.numCanal=13
+            break
+        case "Numpad4":
+          this.selectCanal(event.code,"Sbt")
+          this.changeChannel(4)
+            break
+        case "Numpad5":
+          this.selectCanal(event.code,"Globo")
+          this.changeChannel(5)
+            break
+        case "Numpad6":
+          this.selectCanal(event.code,"Mtv")
+          this.changeChannel(6)
+            break
+        case "Numpad7":
+          this.selectCanal(event.code,"Record")
+          this.changeChannel(7)
+            break
+        case "Numpad9":
+          this.selectCanal(event.code,"Manchete")
+          this.changeChannel(9)
+            break
+        case "Digit1":
+          this.selectCanal(event.code,"Gazeta")
+          this.changeChannel(1)
+          this.numCanal=11
+            break
+        case "Digit2":
+          this.selectCanal(event.code,"Cultura")
+          this.changeChannel(2)
+            break
+        case "Digit3":
+          this.selectCanal(event.code,"Bandeirantes")
+          this.changeChannel(3)
+          this.numCanal=13
+            break
+        case "Digit4":
+          this.selectCanal(event.code,"Sbt")
+          this.changeChannel(4)
+            break
+        case "Digit5":
+          this.selectCanal(event.code,"Globo")
+          this.changeChannel(5)
+            break
+        case "Digit6":
+          this.selectCanal(event.code,"Mtv")
+          this.changeChannel(6)
+            break
+        case "Digit7":
+          this.selectCanal(event.code,"Record")
+          this.changeChannel(7)
+            break
+        case "Digit9":
+          this.selectCanal(event.code,"Manchete")
+          this.changeChannel(9)
+            break
       }
     }) 
 
@@ -205,7 +239,7 @@ export class PlaylistComponent {
       this.unsubscribe=
       this.mongodbService.getCanais().subscribe((data:any ) => {
           this.tempPlaylist=data
-          localStorage.setItem('data',JSON.stringify(data))
+          // localStorage.setItem('data',JSON.stringify(data))
           // this.selectCanal("5","Globo")
       },err=>{
           console.log("Error ========",err)
@@ -297,7 +331,7 @@ export class PlaylistComponent {
   }
 
   selectCanal(text,canal){
-    this.numCanal=text.replace("Numpad","")
+    this.numCanal=text.replace("Numpad","").replace("Digit","")
     this.exibeNumCanal=true
     this.hideNumCanal()
     this.spySelectedCanal.next(canal)
