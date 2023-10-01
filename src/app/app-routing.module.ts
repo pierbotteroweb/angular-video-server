@@ -21,7 +21,6 @@ import { Pi1998Component } from './dvds/pi1998/pi1998.component';
 import { Drstrangelove1964Component } from './dvds/drstrangelove1964/drstrangelove1964.component';
 import { Rosemarysbaby1968Component } from './dvds/rosemarysbaby1968/rosemarysbaby1968.component';
 import { Themanwhowasntthere2001Component } from './dvds/themanwhowasntthere2001/themanwhowasntthere2001.component';
-import { TiaComponent } from './tia/tia.component';
 import { Nakedlunch1991Component } from './dvds/nakedlunch1991/nakedlunch1991.component';
 import { GradeComponent } from './grade/grade.component';
 import { ProgramasComponent } from './programas/programas.component';
@@ -60,8 +59,7 @@ const routes: Routes = [
   { path: 'themanwhowasntthere2001', component: Themanwhowasntthere2001Component},
   { path: 'nakedlunch1991', component: Nakedlunch1991Component},
   { path: 'zelig1983', component: Zelig1983Component},
-  { path: 'basicdvd', component: BasicdvdComponent},
-  { path: 'filmesdatia', component: TiaComponent},
+  { path: 'basicdvd', component: BasicdvdComponent}
 
 ];
 

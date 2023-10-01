@@ -47,7 +47,6 @@ import { Drstrangelove1964Component } from './dvds/drstrangelove1964/drstrangelo
 import { Rosemarysbaby1968Component } from './dvds/rosemarysbaby1968/rosemarysbaby1968.component';
 import { Themanwhowasntthere2001Component } from './dvds/themanwhowasntthere2001/themanwhowasntthere2001.component';
 import { Pi1998Component } from './dvds/pi1998/pi1998.component';
-import { TiaComponent } from './tia/tia.component';
 import { Nakedlunch1991Component } from './dvds/nakedlunch1991/nakedlunch1991.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { TheAddiction1995Component } from './dvds/theaddiction1995/theaddiction1995.component';
@@ -83,7 +82,6 @@ import { ArquivosComponent } from './arquivos/arquivos.component';
     Themanwhowasntthere2001Component,
     Pi1998Component,
     Thedayofthejackal1973Component,
-    TiaComponent,
     Nakedlunch1991Component,
     NavbarComponent,
     GradeComponent,
