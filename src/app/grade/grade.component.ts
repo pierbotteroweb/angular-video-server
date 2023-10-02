@@ -3,6 +3,7 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { CommonService } from 'src/services/common.service';
 import { Subject } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
+import { FirebaseService } from '../services/firebase.service';
 
 @Component({
   selector: 'app-grade',
@@ -64,6 +65,7 @@ export class GradeComponent implements OnInit {
 
 
   constructor(private commonServices: CommonService,
+              private firebaseService: FirebaseService,
               private mongodbService: MongodbService,
               private formBuilder: FormBuilder) { 
                 this.selectVideoForm = this.formBuilder.group({
@@ -87,8 +89,6 @@ export class GradeComponent implements OnInit {
   canais: Array<any>
 
   ngOnInit(): void {
-
-    
 
     this.exibeSemanaDestino=false
     this.spyListaAdicionada = new Subject()
@@ -152,6 +152,8 @@ export class GradeComponent implements OnInit {
     let unsubscribe=
     this.mongodbService.getCanais().subscribe((data:any )=>{ 
       this.canais=data.sort(this.commonServices.sortPor("canal"))
+
+      this.getSelectedChanelFromFirebase()  
       this.canais.map(canal=>{
         this.gerarListasDeBlocos(canal.emissora)
       })
@@ -506,7 +508,6 @@ export class GradeComponent implements OnInit {
     let unsubscribe=
     this.mongodbService.getProgramasDeTv(this.selectedProgramaDeTv.tipo,this.selectedProgramaDeTv.value)
     .subscribe((data:any ) => {
-      console.log("Programa Sendo Adicionado data",this.selectedProgramaDeTv)
       let videoAdicionado
 
       let listaDeProgramas = data
@@ -629,7 +630,6 @@ export class GradeComponent implements OnInit {
                       unsubscribe.unsubscribe()
                       this.recalculaHorariosDeExibicao(newList)
           } else {
-            console.log("DDDDDDDDDDD")
             this.resetAddedLista(listaDeProgramas, "programa")
             unsubscribe.unsubscribe()
           }
@@ -738,9 +738,6 @@ export class GradeComponent implements OnInit {
   }
 
   resetAddedLista(lista,type){
-    console.log("Lista resetAddedLista",lista)
-    console.log("type resetAddedLista",type)
-    console.log("YYYYYYYYYYYYYYYYY")
     const functionThatReturnsAPromise = video => { //a function that returns a promise
       
       video.added=false
@@ -944,10 +941,10 @@ export class GradeComponent implements OnInit {
             obj.atracao = progInfo.atracao
             obj.idProgTotal = progInfo.idProgTotal
           } else {
-            console.log("dia",dia)
-            console.log("listaOriginal",listaOriginal)
-            console.log("progId",progId)
-            console.log("progInfo",progInfo)
+            // console.log("dia",dia)
+            // console.log("listaOriginal",listaOriginal)
+            // console.log("progId",progId)
+            // console.log("progInfo",progInfo)
           }
           let blocos = listaOriginal.filter(prog2=>prog2.idProgTotal==progId)
           
@@ -967,6 +964,47 @@ export class GradeComponent implements OnInit {
         this.listaSemana=this.canais[indCanal]
         let semanaBloco = this.semana.map(dia=>dia+"Bloco")
         this.semana = [...this.semana,...semanaBloco]
+  }
+
+  
+
+  getSelectedChanelFromFirebase(){
+    this.firebaseService.getSeletorDeCanal()
+    .snapshotChanges()
+    .subscribe(change=>{
+        let canal =  change[0].payload._delegate.doc._document.data.value.mapValue.fields.canal.integerValue   
+        canal = canal.toString()
+        let selectedCanalId = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0]._id
+        this.selectVideoForm.get('canaisFormControl').setValue(selectedCanalId)
+        const d = new Date();
+        let day = d.getDay()
+        let hour = d.getHours();
+        console.log(hour)
+        let diaDaSemanaValue
+        if(day==0){
+          diaDaSemanaValue = this.semana[6]
+        } else {
+          diaDaSemanaValue = this.semana[day-1]
+        }
+        this.selectVideoForm.get('semanaFormControl').setValue(diaDaSemanaValue)
+                     
+        let listaSemanaBloco = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0][diaDaSemanaValue+"Bloco"]
+        console.log("listaSemanaBloco",listaSemanaBloco)
+        var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+        let currentHour = new Date().getHours()
+        setTimeout(()=>{
+          document.getElementsByClassName("col-11")[0].scrollLeft = 180+(360*(currentHour-7))
+        },100)
+
+        let currentBloco = listaSemanaBloco.find((bloco,index)=>{ 
+           return (this.commonServices.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos)>
+          this.commonServices.toSeconds(time)
+        })
+        this.getInfoBlocoAtracao(currentBloco,diaDaSemanaValue,listaSemanaBloco.indexOf(currentBloco))
+
+    },err=>{
+      console.log("ERR",err)
+    })
   }
 
   
