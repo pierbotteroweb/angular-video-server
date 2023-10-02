@@ -466,20 +466,6 @@ export class GradeComponent implements OnInit {
     this.prePosCount--
   }
 
-  // addBlocos(blocosInfo){
-    
-  //   console.log("addBlocos")
-  //   this.lengthListaFinal++
-  //   let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
-  //                    this.listaSemana[this.selectedDiaDaSemana]
-  //   let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.idProgTotal==this.idProgTotal))
-  //   let info = listaAtual[indexToSelect]
-  //   this.clickAtracao(info,this.selectedDiaDaSemana,indexToSelect)
-  //   this.selectVideoForm.get('programaDeTvFormControl').setValue(blocosInfo)
-  //   this.adicionarPrograma()
-  //   this.programasBlocosCount--
-  // }
-
   adicionarPrograma(): void {
     // CHECK IF DIA DA SEMANA AND PROGRAMA DE TV ARE SELECTED
     if(this.selectedDiaDaSemana&&this.selectedProgramaDeTv){
@@ -661,20 +647,11 @@ export class GradeComponent implements OnInit {
         //FILTER 
         let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
           .sort(this.commonServices.sortPor("order"))
-          // console.log("listaDeProgramas",listaDeProgramas)
-          // console.log("listaFiltrada",listaFiltrada)
-          // console.log("listaDeProgramas.splice(1,listaDeProgramas.length",listaDeProgramas.splice(1,listaDeProgramas.length))
-          
-          // if(listaFiltrada.length>0){
                     if(listaFiltrada.length>0){
                       videoAdicionado = listaFiltrada[0]
                     } else{
                       videoAdicionado = listaDeProgramas[0]
                       if(listaDeProgramas.length>1){
-                        // console.log("if(listaDeProgramas.length>1)",listaDeProgramas)
-                        // console.log("listaDeProgramas.splice(1,listaDeProgramas.length",listaDeProgramas.splice(1,listaDeProgramas.length))
-
-                        console.log("XXXXXXXXXXXXXXXXXXX")
                         this.resetAddedLista(listaDeProgramas.splice(1,listaDeProgramas.length),"blocos")                      
                       }
                     }
@@ -708,10 +685,7 @@ export class GradeComponent implements OnInit {
                       this.updateOnMongoDB(videoAdicionado,"videoAdicionado")
                       unsubscribe.unsubscribe()
                       this.listaProgramasBlocos.push(newProg)
-          // } else {
             unsubscribe.unsubscribe()
-          // }
-
       }
       montaLista()
     });
@@ -940,11 +914,6 @@ export class GradeComponent implements OnInit {
           if(progInfo&&progInfo.atracao){
             obj.atracao = progInfo.atracao
             obj.idProgTotal = progInfo.idProgTotal
-          } else {
-            // console.log("dia",dia)
-            // console.log("listaOriginal",listaOriginal)
-            // console.log("progId",progId)
-            // console.log("progInfo",progInfo)
           }
           let blocos = listaOriginal.filter(prog2=>prog2.idProgTotal==progId)
           
@@ -979,7 +948,6 @@ export class GradeComponent implements OnInit {
         const d = new Date();
         let day = d.getDay()
         let hour = d.getHours();
-        console.log(hour)
         let diaDaSemanaValue
         if(day==0){
           diaDaSemanaValue = this.semana[6]
@@ -989,7 +957,6 @@ export class GradeComponent implements OnInit {
         this.selectVideoForm.get('semanaFormControl').setValue(diaDaSemanaValue)
                      
         let listaSemanaBloco = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0][diaDaSemanaValue+"Bloco"]
-        console.log("listaSemanaBloco",listaSemanaBloco)
         var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
         let currentHour = new Date().getHours()
         setTimeout(()=>{
