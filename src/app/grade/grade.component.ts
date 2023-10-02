@@ -1008,7 +1008,6 @@ export class GradeComponent implements OnInit {
         this.selectVideoForm.get('semanaFormControl').setValue(diaDaSemanaValue)
                      
         let listaSemanaBloco = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0][diaDaSemanaValue+"Bloco"]
-        console.log("listaSemanaBloco",listaSemanaBloco)
         var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
         let currentHour = new Date().getHours()
         setTimeout(()=>{
