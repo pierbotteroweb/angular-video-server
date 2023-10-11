@@ -862,7 +862,7 @@ export class OndemandComponent implements OnInit {
       setTimeout(()=>{
         console.log("Heat 1995")
   
-        this.audioBoost(10)
+        // this.audioBoost(10)
       },3000)
     }
     
@@ -871,7 +871,7 @@ export class OndemandComponent implements OnInit {
       setTimeout(()=>{
         console.log("Heat 1995")
   
-        this.audioBoost(10)
+        // this.audioBoost(10)
       },3000)
     }
     

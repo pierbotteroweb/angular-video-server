@@ -426,13 +426,23 @@ export class GradeComponent implements OnInit {
         this.addBlocosFromMongoDB()
       }
 
+    } else {
+      console.log("The End")
     }
 
   }
 
   updateOnMongoDB(video,type):void {
+
+    if(video.programaDeTv=="intCorujaoDois"){
+      // console.log("updateOnMongoDB ",video)
+      // console.log("updateOnMongoDB ",video.titulo)
+      // console.log("updateOnMongoDB ",video.added)
+      // console.log("updateOnMongoDB ",video.order)
+    }
+    // console.log("Running updateOnMongoDB ",video)
     this.mongodbService.updateVideo(video._id,video).subscribe(() => {
-      console.log('Video updated successfully!');
+      // console.log('Video updated successfully!');
     });
     
   }
@@ -506,6 +516,8 @@ export class GradeComponent implements OnInit {
         let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
           .sort(this.commonServices.sortPor("order"))
           
+          
+          
           if(listaFiltrada.length>0){
 
                     let prog:any = this.selectedProgramaDeTv
@@ -517,6 +529,15 @@ export class GradeComponent implements OnInit {
                     }
 
                     videoAdicionado = listaFiltrada[0]
+
+                    if(videoAdicionado.tipo=="intervalos"&&videoAdicionado.titulo.includes("Int")){
+                      // console.log("videoAdicionado ",videoAdicionado)
+                      // console.log("titulo ",videoAdicionado.titulo)
+                      // console.log("added ",videoAdicionado.added)
+                      // console.log("order ",videoAdicionado.order)
+
+                    } 
+
                       let newProg:Object ={}
                       let newProgList: Array<any> =[]
 
@@ -654,7 +675,9 @@ export class GradeComponent implements OnInit {
                       if(listaDeProgramas.length>1){
                         this.resetAddedLista(listaDeProgramas.splice(1,listaDeProgramas.length),"blocos")                      
                       }
-                    }
+                    }console.log("videoAdicionado ",videoAdicionado)
+
+                    if(videoAdicionado.tipo=="intervalos") console.log("videoAdicionado ",videoAdicionado)
 
                       let newProg:Object ={}
 
