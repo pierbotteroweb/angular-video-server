@@ -429,7 +429,7 @@ export class PlaylistComponent {
       setTimeout(()=>{
         console.log("Heat 1995")
   
-        this.audioBoost(10)
+        // this.audioBoost(10)
       },3000)
     }
     
