@@ -532,9 +532,13 @@ export class GradeComponent implements OnInit {
 
                     videoAdicionado = listaFiltrada[0]
 
-                    // if(videoAdicionado.tipo!="intervalos"&&!videoAdicionado.titulo.includes("Int")){
-                    //   this.previousAddedOrderIndex=99999       
-                    // } 
+                    if(videoAdicionado.tipo=="intervalos"&&videoAdicionado.titulo.includes("Int")){
+                      // console.log("videoAdicionado ",videoAdicionado)
+                      // console.log("titulo ",videoAdicionado.titulo)
+                      // console.log("added ",videoAdicionado.added)
+                      // console.log("order ",videoAdicionado.order)
+
+                    } 
 
                       let newProg:Object ={}
                       let newProgList: Array<any> =[]
