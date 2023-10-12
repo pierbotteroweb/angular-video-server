@@ -412,7 +412,7 @@ export class PlaylistComponent {
       },1000)
     }
 
-    this.url= `http://casadopier.ddns.net:5000/assets/${this.videoRodando['tipo']}/${encodeURI(this.videoRodando['titulo'])}#t=${inicio}`
+    this.url= `http://shuffletv.ddns.net:5000/assets/${this.videoRodando['tipo']}/${encodeURI(this.videoRodando['titulo'])}#t=${inicio}`
 
     setTimeout(()=>{
       this.updateAVElements()

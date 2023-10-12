@@ -14,7 +14,7 @@ export class Diehardwithavengeance1995Component {
     private commonServices: CommonService,
     private http: HttpClient
     ) { }
-  baseUrl:any="http://casadopier.ddns.net:1984/api/assets/dvds/"
+  baseUrl:any="http://shuffletv.ddns.net:1984/api/assets/dvds/"
   filmesDvds:any
   subList:Array<string>
   audioList:Array<string>
@@ -58,7 +58,7 @@ export class Diehardwithavengeance1995Component {
 
   ngOnInit(): void {
 
-    this.http.get("http://casadopier.ddns.net:1984/api/listaDvds")
+    this.http.get("http://shuffletv.ddns.net:1984/api/listaDvds")
     .subscribe(response=>{
 
       let listaDvds:any= response

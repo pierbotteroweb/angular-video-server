@@ -12,7 +12,7 @@ export class Nakedlunch1991Component implements OnInit {
   constructor(
     private commonServices: CommonService
     ) { }
-  baseUrl:any="http://casadopier.ddns.net:1984/api/assets/dvds/"
+  baseUrl:any="http://shuffletv.ddns.net:1984/api/assets/dvds/"
   elem: any;
   data:any={};
 
