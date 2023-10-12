@@ -44,8 +44,8 @@ export class StreamingComponent {
                 })
                }
 
-  baseUrl:string="http://casadopier.ddns.net:1984/api/assets/"
-  baseRequestUrl:string="http://casadopier.ddns.net:1984/api/"
+  baseUrl:string="http://shuffletv.ddns.net:1984/api/assets/"
+  baseRequestUrl:string="http://shuffletv.ddns.net:1984/api/"
 
   title = 'angular-video-server';
 
@@ -571,7 +571,7 @@ export class StreamingComponent {
       }
     })
     // let lista = this["video"+[this.horario]]
-    // let url = "http://casadopier.ddns.net:1984/api/"+request+"UpdateList"
+    // let url = "http://shuffletv.ddns.net:1984/api/"+request+"UpdateList"
 
     // this.firebaseService.update(this.horario,id, media).then(() => {
     //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)
@@ -596,7 +596,7 @@ export class StreamingComponent {
       }
     })
     let lista = this["video"+[this.horario]]
-    let url = "http://casadopier.ddns.net:1984/api/"+request+"UpdateList"
+    let url = "http://shuffletv.ddns.net:1984/api/"+request+"UpdateList"
 
     // this.firebaseService.update(this.horario,id, media).then(() => {
     //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)
