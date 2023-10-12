@@ -28,8 +28,8 @@ export class TiaComponent{
                 })
                }
 
-  baseUrl:string="http://casadopier.ddns.net:1984/api/assets/"
-  baseRequestUrl:string="http://casadopier.ddns.net:1984/api/"
+  baseUrl:string="http://shuffletv.ddns.net:1984/api/assets/"
+  baseRequestUrl:string="http://shuffletv.ddns.net:1984/api/"
 
   title = 'angular-video-server';
 
