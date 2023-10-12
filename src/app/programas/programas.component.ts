@@ -226,7 +226,7 @@ export class ProgramasComponent implements OnInit {
   // upload(index){
 
   //   if(index<this.videosToUpload.length){
-  //     let url = "http://casadopier.ddns.net:1984/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
+  //     let url = "http://shuffletv.ddns.net:1984/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
 
   //     let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
   //     .pipe(
@@ -279,7 +279,7 @@ export class ProgramasComponent implements OnInit {
   uploadUsingMongoDb(index){
 
     if(index<this.videosToUpload.length){
-      let url = "http://casadopier.ddns.net:1984/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
+      let url = "http://shuffletv.ddns.net:1984/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
 
       let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
       .pipe(
@@ -933,7 +933,7 @@ export class ProgramasComponent implements OnInit {
   //       )
   //     ).subscribe((data:any)=>{
   //       this.listaParaAtualizar=data
-  //       let url = "http://casadopier.ddns.net:1984/api/"+
+  //       let url = "http://shuffletv.ddns.net:1984/api/"+
   //       this.selectVideoForm.get('tipoDeVideoFormControl').value+"UpdateList"
   //       this.uploadVideoService.listUpdate(this.listaParaAtualizar,url)
   //       .subscribe(res=>{
