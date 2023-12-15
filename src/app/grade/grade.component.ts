@@ -96,7 +96,7 @@ export class GradeComponent implements OnInit {
       if(this.intervalosCount){
         setTimeout(()=>{
           this.addIntervalo((info.intAmount+2),info.intervaloApi)
-        },100)
+        },500)
       } else if(this.prePosCount){
         this.addPrePos(info.prePosApi)
       }
