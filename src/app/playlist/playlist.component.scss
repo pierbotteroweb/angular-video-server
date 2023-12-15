@@ -69,7 +69,7 @@ video{
     margin: auto;
 }
 
-.dir{
+.esq{
     width: 14%;
     position: fixed;
     height: 100%;
@@ -78,13 +78,26 @@ video{
     left: 0;
 }
 
-.esq{
+.dir{
     width: 14%;
     position: fixed;
     height: 100%;
     background: black;
     top: 0;
     right: 0;
+}
+
+.arrowWrap{
+    outline: solid red 1px;
+    position: absolute;
+    left: 50%;
+    top: 10vw;
+    color: #fff;
+    .arrowUp,
+    .arrowDown{
+        cursor: pointer;
+        font-size: 1vh;
+    }
 }
 
 .numCanal{
