@@ -7,8 +7,8 @@ import { take } from "rxjs/operators";
 })
 export class PontoDePartidaService {
 
-  // private readonly API:any= 'http://casadopier.ddns.net:2099/data'
-  private readonly API:any= 'http://casadopier.ddns.net:9000/api'
+  // private readonly API:any= 'http://shuffletv.ddns.net:2099/data'
+  private readonly API:any= 'http://shuffletv.ddns.net:9000/api'
 
   constructor(private http: HttpClient) { }
 
