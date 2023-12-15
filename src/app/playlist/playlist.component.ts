@@ -94,7 +94,6 @@ export class PlaylistComponent {
     this.spySelectedCanal.subscribe((canal)=>{
         this.getLista(canal)
     })
-    this.getSelectedChanelFromFirebase()
     this.keyboardSetup()
 }
 
@@ -239,6 +238,7 @@ export class PlaylistComponent {
       this.unsubscribe=
       this.mongodbService.getCanais().subscribe((data:any ) => {
           this.tempPlaylist=data
+          this.getSelectedChanelFromFirebase()
           // localStorage.setItem('data',JSON.stringify(data))
           // this.selectCanal("5","Globo")
       },err=>{
