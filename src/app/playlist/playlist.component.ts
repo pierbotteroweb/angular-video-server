@@ -511,4 +511,8 @@ export class PlaylistComponent {
     }
   }
 
+  zapchannel(direction){
+    
+  }
+
 }
