@@ -57,5 +57,13 @@ export class CommonService {
     }), {})
   }
 
+  removeFromString = (list,text:any)=>{
+    let newText = text
+    list.map(item=>{
+        newText = newText.replace(item,"")
+    })
+    return newText
+  }
+
 }
 

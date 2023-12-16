@@ -60,7 +60,7 @@ export class PlaylistComponent {
 
   mouseMoving:boolean
   pause:boolean=false
-  selectedCanal:string
+  selectedCanal:any
   spySelectedCanal:Subject<string>
   innerWidth:number
   textLogoVisible:boolean=false
@@ -118,6 +118,7 @@ export class PlaylistComponent {
     .subscribe(change=>{ 
         let canal =  change[0].payload._delegate.doc._document.data.value.mapValue.fields.canal.integerValue   
         canal = canal.toString()
+        this.selectedCanal = canal
         switch (canal){
           case "1":  
             this.selectCanal(canal.toString(),"Gazeta")
@@ -156,77 +157,52 @@ export class PlaylistComponent {
   keyboardSetup(){
 
     this.document.addEventListener('keydown',event=>{
-      switch (event.code){
-        case "Numpad1":
-          this.selectCanal(event.code,"Gazeta")
-          this.changeChannel(1)
-          this.numCanal=11
-            break
-        case "Numpad2":
-          this.selectCanal(event.code,"Cultura")
-          this.changeChannel(2)
-            break
-        case "Numpad3":
-          this.selectCanal(event.code,"Bandeirantes")
-          this.changeChannel(3)
-          this.numCanal=13
-            break
-        case "Numpad4":
-          this.selectCanal(event.code,"Sbt")
-          this.changeChannel(4)
-            break
-        case "Numpad5":
-          this.selectCanal(event.code,"Globo")
-          this.changeChannel(5)
-            break
-        case "Numpad6":
-          this.selectCanal(event.code,"Mtv")
-          this.changeChannel(6)
-            break
-        case "Numpad7":
-          this.selectCanal(event.code,"Record")
-          this.changeChannel(7)
-            break
-        case "Numpad9":
-          this.selectCanal(event.code,"Manchete")
-          this.changeChannel(9)
-            break
-        case "Digit1":
-          this.selectCanal(event.code,"Gazeta")
-          this.changeChannel(1)
-          this.numCanal=11
-            break
-        case "Digit2":
-          this.selectCanal(event.code,"Cultura")
-          this.changeChannel(2)
-            break
-        case "Digit3":
-          this.selectCanal(event.code,"Bandeirantes")
-          this.changeChannel(3)
-          this.numCanal=13
-            break
-        case "Digit4":
-          this.selectCanal(event.code,"Sbt")
-          this.changeChannel(4)
-            break
-        case "Digit5":
-          this.selectCanal(event.code,"Globo")
-          this.changeChannel(5)
-            break
-        case "Digit6":
-          this.selectCanal(event.code,"Mtv")
-          this.changeChannel(6)
-            break
-        case "Digit7":
-          this.selectCanal(event.code,"Record")
-          this.changeChannel(7)
-            break
-        case "Digit9":
-          this.selectCanal(event.code,"Manchete")
-          this.changeChannel(9)
-            break
+      let stringsToRemove = ["Arrow","Page","Digit","Numpad"]
+      if(stringsToRemove.find(i=>event.code.includes(i))){
+        this.zapchannel(this.commonServices.removeFromString(stringsToRemove,event.code).toLowerCase())
+        this.switchEventChannel(event.code)
       }
     }) 
+  }
+
+  switchEventChannel(eventCode:any){
+    eventCode=this.commonServices.removeFromString(["Digit","Numpad"],eventCode.toString())
+    switch (eventCode){
+      case "1":
+        this.selectCanal(eventCode,"Gazeta")
+        this.changeChannel(1)
+        this.numCanal=11
+          break
+      case "2":
+        this.selectCanal(eventCode,"Cultura")
+        this.changeChannel(2)
+          break
+      case "3":
+        this.selectCanal(eventCode,"Bandeirantes")
+        this.changeChannel(3)
+        this.numCanal=13
+          break
+      case "4":
+        this.selectCanal(eventCode,"Sbt")
+        this.changeChannel(4)
+          break
+      case "5":
+        this.selectCanal(eventCode,"Globo")
+        this.changeChannel(5)
+          break
+      case "6":
+        this.selectCanal(eventCode,"Mtv")
+        this.changeChannel(6)
+          break
+      case "7":
+        this.selectCanal(eventCode,"Record")
+        this.changeChannel(7)
+          break
+      case "9":
+        this.selectCanal(eventCode,"Manchete")
+        this.changeChannel(9)
+          break
+    }
 
   }
 
@@ -512,7 +488,25 @@ export class PlaylistComponent {
   }
 
   zapchannel(direction){
-    
+    if(direction=="up"){
+      if(this.selectedCanal=="9"){
+        this.selectedCanal="1"
+      } else if(this.selectedCanal=="7"){
+        this.selectedCanal = "9"
+      } else {
+        this.selectedCanal++
+      }
+    } else if(direction=="down"){
+      if(this.selectedCanal=="9"){
+        this.selectedCanal="8"
+      }
+      if(this.selectedCanal=="1"){
+        this.selectedCanal="9"
+      } else {
+        this.selectedCanal--
+      }
+    }
+    this.switchEventChannel(this.selectedCanal)
   }
 
 }
