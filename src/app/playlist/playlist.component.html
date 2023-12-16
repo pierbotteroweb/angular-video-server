@@ -6,8 +6,25 @@
 </video>
 
 <span *ngIf="exibeVideo && this.innerWidth>500 && exibeNumCanal" class="numCanal">{{numCanal}}</span>
-<div class="dir"></div>
 <div class="esq"></div>
+<div class="dir">
+  
+
+  <div class="arrowWrap">
+    <div class="arrowUp">
+      <i-bs name="caret-up-fill" 
+            width="100" height="100"
+            (click)="zapchannel('up')">
+      </i-bs>
+    </div>
+    <div class="arrowDown">
+      <i-bs name="caret-down-fill" 
+            width="100" height="100"
+            (click)="zapchannel('down')">
+      </i-bs>
+    </div>
+  </div>
+</div>
 
 <!-- CONTROLES DE VIDEO (PAUSE, PLAY, BARRA DE TEMPO... ) -->
 <div class="movieMode--controls desktop-only" [ngStyle]="{'visibility': mouseMoving ? 'visible' : 'hidden'}">
