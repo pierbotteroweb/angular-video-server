@@ -1000,16 +1000,31 @@ export class GradeComponent implements OnInit {
         // var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
         console.log(hour)
         let diaDaSemanaValue
+        let indexSemana
         if(day==0){
-          diaDaSemanaValue = this.semana[6]
+          indexSemana = 6
         } else {
-          diaDaSemanaValue = this.semana[day-1]
+          indexSemana = day-1
         }
+        let now = new Date().toLocaleTimeString()
+        let sixThiryAm = this.commonServices.toSeconds("06:00:00")
+        let currentHour = new Date().getHours()
+        if(this.commonServices.toSeconds(now)<=sixThiryAm){
+          if(indexSemana==11){
+            indexSemana=6
+          } else{
+            indexSemana--
+          }
+          currentHour = currentHour+18
+        }
+        diaDaSemanaValue = this.semana[indexSemana]
+        console.log("xxx",indexSemana)
+        console.log("mmm",diaDaSemanaValue)
+        console.log("yyy",currentHour)
+        
         this.selectVideoForm.get('semanaFormControl').setValue(diaDaSemanaValue)
-                     
         let listaSemanaBloco = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0][diaDaSemanaValue+"Bloco"]
         var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-        let currentHour = new Date().getHours()
         setTimeout(()=>{
           document.getElementsByClassName("col-11")[0].scrollLeft = 180+(360*(currentHour-7))
         },100)
