@@ -964,22 +964,40 @@ export class GradeComponent implements OnInit {
     .subscribe(change=>{
         let canal =  change[0].payload._delegate.doc._document.data.value.mapValue.fields.canal.integerValue   
         canal = canal.toString()
+        canal = canal=="6"?"32":canal
+        canal = canal=="1"?"11":canal
+        canal = canal=="3"?"13":canal
         let selectedCanalId = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0]._id
         this.selectVideoForm.get('canaisFormControl').setValue(selectedCanalId)
         const d = new Date();
         let day = d.getDay()
         let hour = d.getHours();
         let diaDaSemanaValue
+        let indexSemana
         if(day==0){
-          diaDaSemanaValue = this.semana[6]
+          indexSemana = 6
         } else {
-          diaDaSemanaValue = this.semana[day-1]
+          indexSemana = day-1
         }
+        let now = new Date().toLocaleTimeString()
+        let sixThiryAm = this.commonServices.toSeconds("06:00:00")
+        let currentHour = new Date().getHours()
+        if(this.commonServices.toSeconds(now)<=sixThiryAm){
+          if(indexSemana==11){
+            indexSemana=6
+          } else{
+            indexSemana--
+          }
+          currentHour = currentHour+18
+        }
+        diaDaSemanaValue = this.semana[indexSemana]
+        console.log("xxx",indexSemana)
+        console.log("mmm",diaDaSemanaValue)
+        console.log("yyy",currentHour)
+        
         this.selectVideoForm.get('semanaFormControl').setValue(diaDaSemanaValue)
-                     
         let listaSemanaBloco = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0][diaDaSemanaValue+"Bloco"]
         var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-        let currentHour = new Date().getHours()
         setTimeout(()=>{
           document.getElementsByClassName("col-11")[0].scrollLeft = 180+(360*(currentHour-7))
         },100)
