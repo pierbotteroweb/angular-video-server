@@ -18,7 +18,6 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 // COMPONENTS
 import { AppComponent } from './app.component';
-import { StreamingComponent } from './streaming/streaming.component';
 import { PlaylistComponent } from './playlist/playlist.component';
 import { GradeComponent } from './grade/grade.component';
 import { ProgramasComponent } from './programas/programas.component';
@@ -55,11 +54,11 @@ import { Zelig1983Component } from './dvds/zelig1983/zelig1983.component';
 import { TestesInterceptor } from './testes.interceptor';
 import { BasicdvdComponent } from './dvds/basicdvd/basicdvd.component';
 import { ArquivosComponent } from './arquivos/arquivos.component';
+import { OndemandComponent } from './ondemand/ondemand.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    StreamingComponent,
     PlaylistComponent,
 
     Alphaville1965Component,
@@ -88,7 +87,8 @@ import { ArquivosComponent } from './arquivos/arquivos.component';
     ProgramasComponent,
     Zelig1983Component,
     BasicdvdComponent,
-    ArquivosComponent
+    ArquivosComponent,
+    OndemandComponent
   ],
   imports: [
     CommonModule,
