@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
+import { Component, ViewChild, ElementRef, Inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PontoDePartidaService } from '../services/ponto-de-partida.service';
@@ -12,14 +12,11 @@ import { MongodbService } from '../services/mongodb.service';
 
 
 @Component({
-  selector: 'app-streaming',
-  templateUrl: './streaming.component.html',
-  styleUrls: ['./streaming.component.scss']
+  selector: 'app-ondemand',
+  templateUrl: './ondemand.component.html',
+  styleUrls: ['./ondemand.component.scss']
 })
-
-
-export class StreamingComponent {
-
+export class OndemandComponent implements OnInit {
   
   constructor(private http: HttpClient,
               @Inject(DOCUMENT) private document: any,

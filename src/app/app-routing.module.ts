@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { StreamingComponent } from "./streaming/streaming.component";
 import { PlaylistComponent } from './playlist/playlist.component';
 import { Alphaville1965Component } from "./dvds/alphaville1965/alphaville1965.component";
 import { Diehardwithavengeance1995Component } from "./dvds/diehardwithavengeance1995/diehardwithavengeance1995.component";
@@ -29,6 +28,7 @@ import { Thedayofthejackal1973Component } from './dvds/thedayofthejackal1973/the
 import { Zelig1983Component } from './dvds/zelig1983/zelig1983.component';
 import { BasicdvdComponent } from './dvds/basicdvd/basicdvd.component';
 import { ArquivosComponent } from './arquivos/arquivos.component';
+import { OndemandComponent } from './ondemand/ondemand.component';
 
 const routes: Routes = [
   { path: '', component: PlaylistComponent},
@@ -53,7 +53,7 @@ const routes: Routes = [
   { path: 'Thedayofthejackal1973', component: Thedayofthejackal1973Component},
   // { path: 'badlieutenant1992', loadChildren: () => import ('./dvds/badlieutenant1992/badlieutenant1992.module')
   //         .then(module=>module.Badlieutenant1992Module)},
-  { path: 'streaming', component: StreamingComponent},
+  { path: 'ondemand', component: OndemandComponent},
   { path: 'obandidodaluzvermelha1968', component: Obandidodaluzvermelha1968Component},
   { path: 'rosemarysbaby1968', component: Rosemarysbaby1968Component},
   { path: 'themanwhowasntthere2001', component: Themanwhowasntthere2001Component},
