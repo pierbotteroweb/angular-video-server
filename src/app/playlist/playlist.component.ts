@@ -66,6 +66,7 @@ export class PlaylistComponent {
   textLogoVisible:boolean=false
   textoAbaixoDoLogo:string=""
   unsubscribe:any
+  listaDeNumerosDeCanais:Array<any>
 
   extensoes:Array<String>=[
     "mp4","m4v","flv","mkv","wmv","webm"
@@ -106,10 +107,54 @@ export class PlaylistComponent {
     console.log(channel)
     this.selectedCanal=channel
     this.firebaseService.updateSeletorDeCanal({canal:channel})
+    this.mongodbService.updateSeletorDeCanal({canal:channel}).subscribe(() => {
+      console.log('Selected Canal updated successfully!');
+    })
   }
 
   hideNumCanal(){
     setTimeout(()=>this.exibeNumCanal=false,2000)
+  }
+
+  getSelectedChannelFromMongoDB(){
+    this.mongodbService.getSeletorDeCanal()
+    .subscribe(data=>{
+      let canal = data[0].canal.toString()
+      console.log("getSelectedChannelFromMongoDB data",canal)
+      console.log("getSelectedChannelFromMongoDB data",typeof(canal))
+      this.selectedCanal = canal
+      switch (canal){
+        case "2":  
+          this.selectCanal(canal.toString(),"Cultura")
+            break
+        case "4":
+          this.selectCanal(canal.toString(),"Sbt")
+            break
+        case "5":
+          this.selectCanal(canal.toString(),"Globo")
+            break
+        case "7":
+          this.selectCanal(canal.toString(),"Record")
+            break
+        case "8":
+          console.log("Clear Local Storage")
+          localStorage.clear()
+            break
+        case "9":
+          this.selectCanal(canal.toString(),"Manchete")
+            break
+        case "11":  
+          this.selectCanal(canal.toString(),"Gazeta")
+          break
+        case "13":
+          this.selectCanal(canal.toString(),"Bandeirantes")
+            break
+        case "32":
+          this.selectCanal(canal.toString(),"Mtv")
+          break
+      }
+    })
+  
   }
 
   getSelectedChanelFromFirebase(){
@@ -155,12 +200,23 @@ export class PlaylistComponent {
   }
   
   keyboardSetup(){
+    let enteredDigitsString =""
 
     this.document.addEventListener('keydown',event=>{
-      let stringsToRemove = ["Arrow","Page","Digit","Numpad"]
-      if(stringsToRemove.find(i=>event.code.includes(i))){
-        this.zapchannel(this.commonServices.removeFromString(stringsToRemove,event.code).toLowerCase())
-        this.switchEventChannel(event.code)
+      let stringsToRemoveArrows = ["Arrow","Page"]
+      let stringsToRemoveNumbers = ["Digit","Numpad"]
+      if(stringsToRemoveArrows.find(i=>event.code.includes(i))){
+        this.zapchannel(this.commonServices.removeFromString(stringsToRemoveArrows,event.code).toLowerCase())
+      }
+      if(stringsToRemoveNumbers.find(i=>event.code.includes(i))){
+       
+        if(event.code) enteredDigitsString += this.commonServices.removeFromString(stringsToRemoveNumbers,event.code)
+        this.numCanal=parseInt(enteredDigitsString.slice(0,2))
+        this.exibeNumCanal=true
+        setTimeout(()=>{
+          this.switchEventChannel(enteredDigitsString.slice(0,2))
+          enteredDigitsString=""
+        },2000)
       }
     }) 
   }
@@ -202,6 +258,18 @@ export class PlaylistComponent {
         this.selectCanal(eventCode,"Manchete")
         this.changeChannel(9)
           break
+      case "11":
+        this.selectCanal(eventCode,"Gazeta")
+        this.changeChannel(11)
+          break
+      case "13":
+        this.selectCanal(eventCode,"Bandeirantes")
+        this.changeChannel(13)
+          break
+      case "32":
+        this.selectCanal(eventCode,"Mtv")
+        this.changeChannel(32)
+          break
     }
 
   }
@@ -214,7 +282,9 @@ export class PlaylistComponent {
       this.unsubscribe=
       this.mongodbService.getCanais().subscribe((data:any ) => {
           this.tempPlaylist=data
+          this.listaDeNumerosDeCanais=this.tempPlaylist.map(canal=>canal.canal).sort(this.commonServices.sortNumbers())
           this.getSelectedChanelFromFirebase()
+          this.getSelectedChannelFromMongoDB()
           // localStorage.setItem('data',JSON.stringify(data))
           // this.selectCanal("5","Globo")
       },err=>{
@@ -429,7 +499,7 @@ export class PlaylistComponent {
       setTimeout(()=>{
         console.log("Heat 1995")
   
-        this.audioBoost(10)
+        // this.audioBoost(10)
       },3000)
     }
     
@@ -488,22 +558,20 @@ export class PlaylistComponent {
   }
 
   zapchannel(direction){
+    let indexListaDeCanais = this.listaDeNumerosDeCanais.indexOf(this.selectedCanal.toString())
     if(direction=="up"){
-      if(this.selectedCanal=="9"){
-        this.selectedCanal="1"
-      } else if(this.selectedCanal=="7"){
-        this.selectedCanal = "9"
+      if(indexListaDeCanais==(this.listaDeNumerosDeCanais.length-1)){
+        this.selectedCanal=this.listaDeNumerosDeCanais[0]
       } else {
-        this.selectedCanal++
+        indexListaDeCanais++
+        this.selectedCanal = this.listaDeNumerosDeCanais[indexListaDeCanais]
       }
     } else if(direction=="down"){
-      if(this.selectedCanal=="9"){
-        this.selectedCanal="8"
-      }
-      if(this.selectedCanal=="1"){
-        this.selectedCanal="9"
+      if(indexListaDeCanais==0){
+        this.selectedCanal=this.listaDeNumerosDeCanais[this.listaDeNumerosDeCanais.length-1]
       } else {
-        this.selectedCanal--
+        indexListaDeCanais--
+        this.selectedCanal = this.listaDeNumerosDeCanais[indexListaDeCanais]
       }
     }
     this.switchEventChannel(this.selectedCanal)
