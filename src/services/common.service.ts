@@ -36,6 +36,10 @@ export class CommonService {
   sortPor(objKey) {
     return (a, b) => parseFloat(a[objKey]) - parseFloat(b[objKey])
   }
+
+  sortNumbers() {
+    return (a, b) => a - b
+  }
   
   camelize(str) {
     return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
