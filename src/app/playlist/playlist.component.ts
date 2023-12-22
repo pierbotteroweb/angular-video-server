@@ -207,11 +207,19 @@ export class PlaylistComponent {
       let stringsToRemoveArrows = ["Arrow","Page"]
       let stringsToRemoveNumbers = ["Digit","Numpad"]
       if(stringsToRemoveArrows.find(i=>event.code.includes(i))){
+<<<<<<< HEAD
         this.zapchannel(sts.removeFromString(stringsToRemoveArrows,event.code).toLowerCase())
       }
       if(stringsToRemoveNumbers.find(i=>event.code.includes(i))){
        
         if(event.code) enteredDigitsString += sts.removeFromString(stringsToRemoveNumbers,event.code)
+=======
+        this.zapchannel(this.commonServices.removeFromString(stringsToRemoveArrows,event.code).toLowerCase())
+      }
+      if(stringsToRemoveNumbers.find(i=>event.code.includes(i))){
+       
+        if(event.code) enteredDigitsString += this.commonServices.removeFromString(stringsToRemoveNumbers,event.code)
+>>>>>>> e27d1aa (playlist)
         this.numCanal=parseInt(enteredDigitsString.slice(0,2))
         this.exibeNumCanal=true
         setTimeout(()=>{
@@ -283,7 +291,11 @@ export class PlaylistComponent {
       this.unsubscribe=
       this.mongodbService.getCanais().subscribe((data:any ) => {
           this.tempPlaylist=data
+<<<<<<< HEAD
           this.listaDeNumerosDeCanais=this.tempPlaylist.map(canal=>canal.canal).sort(sts.sortNumbers())
+=======
+          this.listaDeNumerosDeCanais=this.tempPlaylist.map(canal=>canal.canal).sort(this.commonServices.sortNumbers())
+>>>>>>> e27d1aa (playlist)
           this.getSelectedChanelFromFirebase()
           this.getSelectedChannelFromMongoDB()
           // localStorage.setItem('data',JSON.stringify(data))
