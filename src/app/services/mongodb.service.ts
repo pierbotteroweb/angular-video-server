@@ -9,6 +9,10 @@ export class MongodbService {
 
   constructor(private http: HttpClient) { }
 
+  getSeletorDeCanal(){
+    return this.http.get('http://shuffletv.ddns.net:9000/api/getSelectedCanal')
+  }
+
   getCanais(){
     return this.http.get('http://shuffletv.ddns.net:9000/api/getCanais')
   }
@@ -40,6 +44,10 @@ export class MongodbService {
   updateCanais(content){
     console.log(content._id)
     return this.http.post('http://shuffletv.ddns.net:9000/api/updateCanais', {'id': content._id,'content':content})
+  }
+
+  updateSeletorDeCanal(content){
+    return this.http.post('http://shuffletv.ddns.net:9000/api/updateSelectedCanal', {'id': "6584f9d879d896df8071c455",'content':content})
   }
 
   createProgramaDeTv(content){
