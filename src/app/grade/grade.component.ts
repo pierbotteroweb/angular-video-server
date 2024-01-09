@@ -974,7 +974,6 @@ export class GradeComponent implements OnInit {
         const d = new Date();
         let day = d.getDay()
         let hour = d.getHours();
-        console.log(hour)
         let diaDaSemanaValue
         let indexSemana
         if(day==0){
