@@ -82,13 +82,15 @@ export class GradeComponent implements OnInit {
   novoPrograma:FormControl
   duracaoEstimada:FormControl
 
-  semana:Array<String>=["segunda","terca","quarta","quinta","sexta","sabado","domingo"]
-  semanaSemBlocos:Array<String>=["segunda","terca","quarta","quinta","sexta","sabado","domingo"]
+  semana:Array<String>
+  semanaSemBlocos:Array<String>
 
   horas:any = []
   canais: Array<any>
 
   ngOnInit(): void {
+
+    this.semana = this.semanaSemBlocos = ["segunda","terca","quarta","quinta","sexta","sabado","domingo"]
 
     this.exibeSemanaDestino=false
     this.spyListaAdicionada = new Subject()
@@ -972,32 +974,6 @@ export class GradeComponent implements OnInit {
         const d = new Date();
         let day = d.getDay()
         let hour = d.getHours();
-        // let diaDaSemanaValue
-        // let indexSemana
-        // if(day==0){
-        //   indexSemana = 6
-        // } else {
-        //   indexSemana = day-1
-        // }
-        // let now = new Date().toLocaleTimeString()
-        // let sixThiryAm = this.commonServices.toSeconds("06:00:00")
-        // let currentHour = new Date().getHours()
-        // if(this.commonServices.toSeconds(now)<=sixThiryAm){
-        //   if(indexSemana==11){
-        //     indexSemana=6
-        //   } else{
-        //     indexSemana--
-        //   }
-        //   currentHour = currentHour+18
-        // }
-        // diaDaSemanaValue = this.semana[indexSemana]
-        // console.log("xxx",indexSemana)
-        // console.log("mmm",diaDaSemanaValue)
-        // console.log("yyy",currentHour)
-        
-        // this.selectVideoForm.get('semanaFormControl').setValue(diaDaSemanaValue)
-        // let listaSemanaBloco = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0][diaDaSemanaValue+"Bloco"]
-        // var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
         console.log(hour)
         let diaDaSemanaValue
         let indexSemana
@@ -1018,22 +994,43 @@ export class GradeComponent implements OnInit {
           currentHour = currentHour+18
         }
         diaDaSemanaValue = this.semana[indexSemana]
-        console.log("xxx",indexSemana)
-        console.log("mmm",diaDaSemanaValue)
-        console.log("yyy",currentHour)
         
         this.selectVideoForm.get('semanaFormControl').setValue(diaDaSemanaValue)
         let listaSemanaBloco = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0][diaDaSemanaValue+"Bloco"]
         var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+
+        let currentBloco
+
+        if(this.commonServices.toSeconds(now)<=sixThiryAm){
+          currentBloco = listaSemanaBloco.find(bloco=>{ 
+            let tempoTotalEmSegundosDoBloco = this.commonServices.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos
+            return tempoTotalEmSegundosDoBloco < sixThiryAm && tempoTotalEmSegundosDoBloco > this.commonServices.toSeconds(time)
+         })
+        } else {
+          currentBloco = listaSemanaBloco.find(bloco=>{ 
+            return (this.commonServices.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos)>
+           this.commonServices.toSeconds(time)
+         })
+        }
+        
+        let IndexCurrentBloco = listaSemanaBloco.indexOf(currentBloco)
+
+        let listaAteCurrent = listaSemanaBloco
+
+        listaAteCurrent = [...listaAteCurrent].splice(0,IndexCurrentBloco)
+
+        this.getInfoBlocoAtracao(currentBloco,diaDaSemanaValue,IndexCurrentBloco)
+
+        function add(accumulator, a) {
+          return accumulator + a;
+        }
+
+        let valueToScroll = this.commonServices.sumItemsOnArray(listaAteCurrent.map(prog=>prog.tempoTotalEmSegundos))/10
+
         setTimeout(()=>{
-          document.getElementsByClassName("col-11")[0].scrollLeft = 180+(360*(currentHour-7))
+          document.getElementsByClassName("col-11")[0].scrollLeft = valueToScroll
         },100)
 
-        let currentBloco = listaSemanaBloco.find((bloco,index)=>{ 
-           return (this.commonServices.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos)>
-          this.commonServices.toSeconds(time)
-        })
-        this.getInfoBlocoAtracao(currentBloco,diaDaSemanaValue,listaSemanaBloco.indexOf(currentBloco))
 
     },err=>{
       console.log("ERR",err)
