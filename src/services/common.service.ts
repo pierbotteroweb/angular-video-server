@@ -69,5 +69,15 @@ export class CommonService {
     return newText
   }
 
+  sumItemsOnArray = (array)=>{
+
+    function add(accumulator, a) {
+      return accumulator + a;
+    }
+
+    return array.reduce(add)
+
+  }
+
 }
 

@@ -3,6 +3,7 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { CommonService } from 'src/services/common.service';
 import { Subject } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
+import { FirebaseService } from '../services/firebase.service';
 
 @Component({
   selector: 'app-grade',
@@ -64,6 +65,7 @@ export class GradeComponent implements OnInit {
 
 
   constructor(private commonServices: CommonService,
+              private firebaseService: FirebaseService,
               private mongodbService: MongodbService,
               private formBuilder: FormBuilder) { 
                 this.selectVideoForm = this.formBuilder.group({
@@ -80,21 +82,23 @@ export class GradeComponent implements OnInit {
   novoPrograma:FormControl
   duracaoEstimada:FormControl
 
-  semana:Array<String>=["segunda","terca","quarta","quinta","sexta","sabado","domingo"]
-  semanaSemBlocos:Array<String>=["segunda","terca","quarta","quinta","sexta","sabado","domingo"]
+  semana:Array<String>
+  semanaSemBlocos:Array<String>
 
   horas:any = []
   canais: Array<any>
 
   ngOnInit(): void {
 
-    
+    this.semana = this.semanaSemBlocos = ["segunda","terca","quarta","quinta","sexta","sabado","domingo"]
 
     this.exibeSemanaDestino=false
     this.spyListaAdicionada = new Subject()
     this.spyListaAdicionada.subscribe((info)=>{
       if(this.intervalosCount){
-        this.addIntervalo((info.intAmount+2),info.intervaloApi)
+        setTimeout(()=>{
+          this.addIntervalo((info.intAmount+2),info.intervaloApi)
+        },500)
       } else if(this.prePosCount){
         this.addPrePos(info.prePosApi)
       }
@@ -152,6 +156,8 @@ export class GradeComponent implements OnInit {
     let unsubscribe=
     this.mongodbService.getCanais().subscribe((data:any )=>{ 
       this.canais=data.sort(this.commonServices.sortPor("canal"))
+
+      this.getSelectedChanelFromFirebase()  
       this.canais.map(canal=>{
         this.gerarListasDeBlocos(canal.emissora)
       })
@@ -424,13 +430,23 @@ export class GradeComponent implements OnInit {
         this.addBlocosFromMongoDB()
       }
 
+    } else {
+      console.log("The End")
     }
 
   }
 
   updateOnMongoDB(video,type):void {
+
+    if(video.programaDeTv=="intCorujaoDois"){
+      // console.log("updateOnMongoDB ",video)
+      // console.log("updateOnMongoDB ",video.titulo)
+      // console.log("updateOnMongoDB ",video.added)
+      // console.log("updateOnMongoDB ",video.order)
+    }
+    // console.log("Running updateOnMongoDB ",video)
     this.mongodbService.updateVideo(video._id,video).subscribe(() => {
-      console.log('Video updated successfully!');
+      // console.log('Video updated successfully!');
     });
     
   }
@@ -464,20 +480,6 @@ export class GradeComponent implements OnInit {
     this.prePosCount--
   }
 
-  // addBlocos(blocosInfo){
-    
-  //   console.log("addBlocos")
-  //   this.lengthListaFinal++
-  //   let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
-  //                    this.listaSemana[this.selectedDiaDaSemana]
-  //   let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.idProgTotal==this.idProgTotal))
-  //   let info = listaAtual[indexToSelect]
-  //   this.clickAtracao(info,this.selectedDiaDaSemana,indexToSelect)
-  //   this.selectVideoForm.get('programaDeTvFormControl').setValue(blocosInfo)
-  //   this.adicionarPrograma()
-  //   this.programasBlocosCount--
-  // }
-
   adicionarPrograma(): void {
     // CHECK IF DIA DA SEMANA AND PROGRAMA DE TV ARE SELECTED
     if(this.selectedDiaDaSemana&&this.selectedProgramaDeTv){
@@ -506,7 +508,6 @@ export class GradeComponent implements OnInit {
     let unsubscribe=
     this.mongodbService.getProgramasDeTv(this.selectedProgramaDeTv.tipo,this.selectedProgramaDeTv.value)
     .subscribe((data:any ) => {
-      console.log("Programa Sendo Adicionado data",this.selectedProgramaDeTv)
       let videoAdicionado
 
       let listaDeProgramas = data
@@ -519,6 +520,8 @@ export class GradeComponent implements OnInit {
         let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
           .sort(this.commonServices.sortPor("order"))
           
+          
+          
           if(listaFiltrada.length>0){
 
                     let prog:any = this.selectedProgramaDeTv
@@ -530,6 +533,11 @@ export class GradeComponent implements OnInit {
                     }
 
                     videoAdicionado = listaFiltrada[0]
+
+                    // if(videoAdicionado.tipo!="intervalos"&&!videoAdicionado.titulo.includes("Int")){
+                    //   this.previousAddedOrderIndex=99999       
+                    // } 
+
                       let newProg:Object ={}
                       let newProgList: Array<any> =[]
 
@@ -629,7 +637,6 @@ export class GradeComponent implements OnInit {
                       unsubscribe.unsubscribe()
                       this.recalculaHorariosDeExibicao(newList)
           } else {
-            console.log("DDDDDDDDDDD")
             this.resetAddedLista(listaDeProgramas, "programa")
             unsubscribe.unsubscribe()
           }
@@ -661,23 +668,16 @@ export class GradeComponent implements OnInit {
         //FILTER 
         let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
           .sort(this.commonServices.sortPor("order"))
-          // console.log("listaDeProgramas",listaDeProgramas)
-          // console.log("listaFiltrada",listaFiltrada)
-          // console.log("listaDeProgramas.splice(1,listaDeProgramas.length",listaDeProgramas.splice(1,listaDeProgramas.length))
-          
-          // if(listaFiltrada.length>0){
                     if(listaFiltrada.length>0){
                       videoAdicionado = listaFiltrada[0]
                     } else{
                       videoAdicionado = listaDeProgramas[0]
                       if(listaDeProgramas.length>1){
-                        // console.log("if(listaDeProgramas.length>1)",listaDeProgramas)
-                        // console.log("listaDeProgramas.splice(1,listaDeProgramas.length",listaDeProgramas.splice(1,listaDeProgramas.length))
-
-                        console.log("XXXXXXXXXXXXXXXXXXX")
                         this.resetAddedLista(listaDeProgramas.splice(1,listaDeProgramas.length),"blocos")                      
                       }
-                    }
+                    }console.log("videoAdicionado ",videoAdicionado)
+
+                    if(videoAdicionado.tipo=="intervalos") console.log("videoAdicionado ",videoAdicionado)
 
                       let newProg:Object ={}
 
@@ -708,10 +708,7 @@ export class GradeComponent implements OnInit {
                       this.updateOnMongoDB(videoAdicionado,"videoAdicionado")
                       unsubscribe.unsubscribe()
                       this.listaProgramasBlocos.push(newProg)
-          // } else {
             unsubscribe.unsubscribe()
-          // }
-
       }
       montaLista()
     });
@@ -738,9 +735,6 @@ export class GradeComponent implements OnInit {
   }
 
   resetAddedLista(lista,type){
-    console.log("Lista resetAddedLista",lista)
-    console.log("type resetAddedLista",type)
-    console.log("YYYYYYYYYYYYYYYYY")
     const functionThatReturnsAPromise = video => { //a function that returns a promise
       
       video.added=false
@@ -943,11 +937,6 @@ export class GradeComponent implements OnInit {
           if(progInfo&&progInfo.atracao){
             obj.atracao = progInfo.atracao
             obj.idProgTotal = progInfo.idProgTotal
-          } else {
-            console.log("dia",dia)
-            console.log("listaOriginal",listaOriginal)
-            console.log("progId",progId)
-            console.log("progInfo",progInfo)
           }
           let blocos = listaOriginal.filter(prog2=>prog2.idProgTotal==progId)
           
@@ -970,4 +959,85 @@ export class GradeComponent implements OnInit {
   }
 
   
+
+  getSelectedChanelFromFirebase(){
+    this.firebaseService.getSeletorDeCanal()
+    .snapshotChanges()
+    .subscribe(change=>{
+        let canal =  change[0].payload._delegate.doc._document.data.value.mapValue.fields.canal.integerValue   
+        canal = canal.toString()
+        canal = canal=="6"?"32":canal
+        canal = canal=="1"?"11":canal
+        canal = canal=="3"?"13":canal
+        let selectedCanalId = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0]._id
+        this.selectVideoForm.get('canaisFormControl').setValue(selectedCanalId)
+        const d = new Date();
+        let day = d.getDay()
+        let hour = d.getHours();
+        let diaDaSemanaValue
+        let indexSemana
+        if(day==0){
+          indexSemana = 6
+        } else {
+          indexSemana = day-1
+        }
+        let now = new Date().toLocaleTimeString()
+        let sixThiryAm = this.commonServices.toSeconds("06:00:00")
+        let currentHour = new Date().getHours()
+        if(this.commonServices.toSeconds(now)<=sixThiryAm){
+          if(indexSemana==0){
+            indexSemana=6
+          } else{
+            indexSemana--
+          }
+          currentHour = currentHour+18
+        }
+        diaDaSemanaValue = this.semana[indexSemana]
+        
+        this.selectVideoForm.get('semanaFormControl').setValue(diaDaSemanaValue)
+        let listaSemanaBloco = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0][diaDaSemanaValue+"Bloco"]
+        var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+
+        let currentBloco
+
+        if(this.commonServices.toSeconds(now)<=sixThiryAm){
+          currentBloco = listaSemanaBloco.find(bloco=>{ 
+            let tempoTotalEmSegundosDoBloco = this.commonServices.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos
+            return tempoTotalEmSegundosDoBloco < sixThiryAm && tempoTotalEmSegundosDoBloco > this.commonServices.toSeconds(time)
+         })
+        } else {
+          currentBloco = listaSemanaBloco.find(bloco=>{ 
+            return (this.commonServices.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos)>
+           this.commonServices.toSeconds(time)
+         })
+        }
+        
+        let IndexCurrentBloco = listaSemanaBloco.indexOf(currentBloco)
+
+        let listaAteCurrent = listaSemanaBloco
+
+        listaAteCurrent = [...listaAteCurrent].splice(0,IndexCurrentBloco)
+
+        this.getInfoBlocoAtracao(currentBloco,diaDaSemanaValue,IndexCurrentBloco)
+
+        function add(accumulator, a) {
+          return accumulator + a;
+        }
+
+        let valueToScroll = this.commonServices.sumItemsOnArray(listaAteCurrent.map(prog=>prog.tempoTotalEmSegundos))/10
+
+        setTimeout(()=>{
+          document.getElementsByClassName("col-11")[0].scrollLeft = valueToScroll
+        },100)
+
+
+    },err=>{
+      console.log("ERR",err)
+    })
+  }
+
+  
 }
+
+
+
