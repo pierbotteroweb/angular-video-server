@@ -985,7 +985,7 @@ export class GradeComponent implements OnInit {
         let sixThiryAm = this.commonServices.toSeconds("06:00:00")
         let currentHour = new Date().getHours()
         if(this.commonServices.toSeconds(now)<=sixThiryAm){
-          if(indexSemana==11){
+          if(indexSemana==0){
             indexSemana=6
           } else{
             indexSemana--
