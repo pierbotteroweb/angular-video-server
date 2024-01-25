@@ -400,34 +400,34 @@ export class OndemandComponent implements OnInit {
         case "ArrowLeft":
           this.videoElement.currentTime-=0.5
             break
-        case "NumpadDivide":
+        case "NumLock":
           this.posicaoDeTempo('-',0.5)
             break
-        case "Numpad7":
+        case "NumpadDecimal":
           this.posicaoDeTempo('-',1)
             break
-        case "Numpad4":
+        case "Numpad7":
           this.posicaoDeTempo('-',10)
             break
-        case "Numpad1":
+        case "Numpad4":
           this.posicaoDeTempo('-',60)
             break
-        case "Numpad0":
+        case "Numpad1":
           this.posicaoDeTempo('-',600)
             break
         case "NumpadMultiply":
           this.posicaoDeTempo('+',0.5)
             break
-        case "Numpad9":
+        case "NumpadSubtract":
           this.posicaoDeTempo('+',1)
             break
-        case "Numpad6":
+        case "Numpad9":
           this.posicaoDeTempo('+',10)
             break
-        case "Numpad3":
+        case "Numpad6":
           this.posicaoDeTempo('+',60)
             break
-        case "NumpadDecimal":
+        case "Numpad3":
           this.posicaoDeTempo('+',600)
             break
         case "KeyQ":
@@ -439,10 +439,10 @@ export class OndemandComponent implements OnInit {
         case "KeyP":
           this.proximoVideoManual()
             break
-        case "NumpadAdd":
+        case "NumpadDividem":
           this.adicionaPontoDeCorte()
             break
-        case "NumpadSubtract":
+        case "NumpadAdd":
           this.removePontoDeCorte()
             break
         case "KeyO":
