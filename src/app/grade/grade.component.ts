@@ -416,6 +416,10 @@ export class GradeComponent implements OnInit {
         this.spyListaAdicionada.next(intInfo)
       } else if(this.qtdeIntervalos){
         this.lengthListaFinal = newList.length
+        if(!this.prePosAvailable){
+          this.selectVideoForm.get('programaDeTvFormControl')
+          .setValue(this.commonServices.lowerCaseFirstChar(this.selectedProgramaDeTv.value.replace("int","")))
+        }
         this.organizaIntervalos()
       } else if(newList.length==this.lengthListaFinal&&this.prePosAvailable){
         if(this.prePosCount>0){
@@ -424,14 +428,16 @@ export class GradeComponent implements OnInit {
           prePosInfo['prePosApi'] = this.prePosApi
           this.spyListaAdicionada.next(prePosInfo)
         } else {
+          this.selectVideoForm.get('programaDeTvFormControl')
+          .setValue(this.commonServices.lowerCaseFirstChar(this.selectedProgramaDeTv.value.replace("prePos","")))
           this.organizaPrePos()
         }
-      } else if(!this.intervalosCount&&!this.prePosCount&&this.programasBlocosCount){
-        this.addBlocosFromMongoDB()
+      } else if(this.selectedProgramaDeTv.tipo!="intervalos"){
+        if(this.programasBlocosCount){
+          this.addBlocosFromMongoDB()
+        }
       }
 
-    } else {
-      console.log("The End")
     }
 
   }
