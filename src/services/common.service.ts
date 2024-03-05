@@ -79,5 +79,14 @@ export class CommonService {
 
   }
 
+  lowerCaseFirstChar(string){
+  
+    if (string.length === 0) {
+      return string
+    }
+  
+    return string[0].toLowerCase() + string.slice(1)
+  }
+
 }
 
