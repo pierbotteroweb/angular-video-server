@@ -1,4 +1,5 @@
 export interface VideoModel {
+    value: any;
     id: string;
     titulo: string;
     programaDeTv?: string;

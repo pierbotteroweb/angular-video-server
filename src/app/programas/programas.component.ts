@@ -12,11 +12,11 @@ import { sts } from 'shuffle-tv-services/lib'
 
 
 @Component({
-  selector: 'app-programas',
-  templateUrl: './programas.component.html',
-  styleUrls: ['./programas.component.scss']
+  selector: 'app-arquivos',
+  templateUrl: './arquivos.component.html',
+  styleUrls: ['./arquivos.component.scss']
 })
-export class ProgramasComponent implements OnInit {
+export class ArquivosComponent implements OnInit {
   
 
   // Set ep uma interface de dados do Javascript
@@ -141,7 +141,17 @@ export class ProgramasComponent implements OnInit {
     console.log(prog)
   }
 
+  addOrder(){
+    let newOrderPosition = this.videos.filter(video=>video.order).length+1
+    this.selectedVideos.map((video,index)=>{
+      video["order"]=this.selectedVideos[index]["order"]=newOrderPosition
+      this.updateOnMongoDB(video)
+      newOrderPosition++
+    })
+  }
+
   getVideosFromSelectedProgramaDeTv(){
+    this.selectedVideos=[]
     let programaDeTv = this.programaDeTv.find(prog=>prog.value==this.selectedProgramaDeTv)
 
     this.selectVideoForm.get('canaisFormControl').setValue(
@@ -277,6 +287,46 @@ export class ProgramasComponent implements OnInit {
   //     this.atualizaListaLocal()
   //   }
   // }
+
+  getNewFileOnDirectory(){
+    if(this.selectVideoForm.get('tipoDeVideoFormControl')){
+      let url = "http://shuffletv.ddns.net:1984/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"GetInfoFromNewFilesOnServer"
+    this.uploadVideoService.getNewFileOnDirectory(url)
+    .subscribe((res:any)=>{
+      console.log("data",res)
+      let videoObj:any = {
+        canal:"",
+        duracao:"",
+        titulo:""
+      }
+  
+      this.mongodbService.createVideo(this.selectedTipoDeVideo,videoObj).subscribe((newItemRes:any)=>{
+        console.log("newItemRes",newItemRes)
+            
+        let videoObjUpdate:any = {
+          duracao:Math.round(res.Duration),
+          titulo:res.Name,
+          tipo:this.selectedTipoDeVideo
+        }
+
+        if(this.selectedCanal){
+          videoObjUpdate.canal=this.selectedCanal
+        }
+              
+        if(this.selectedProgramaDeTv){
+          videoObjUpdate.programaDeTv=this.selectedProgramaDeTv
+          videoObjUpdate.tituloAtracao=this.tituloAtracao
+        }
+
+  
+        this.mongodbService.updateVideo(newItemRes._id,videoObjUpdate).subscribe((videoUpdated:any)=>{
+          console.log("videoUpdated",videoUpdated)
+        })
+      })
+    })
+
+    }
+  }
 
   uploadUsingMongoDb(index){
 
