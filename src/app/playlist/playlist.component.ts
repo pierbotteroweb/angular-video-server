@@ -386,32 +386,40 @@ export class PlaylistComponent {
     // let listaIntervalos = canal=='globo'?this.playlistGlobo[0]['novelaGlobo'].intervalos:this.playlistGlobo
   }
 
-  exibeLogoETexto(){
-    setTimeout(()=>{
-        this.textoAbaixoDoLogo="CLASSE A"
-        this.textLogoVisible=true
-    },3000)
-    setTimeout(()=>{
-        this.textLogoVisible=false
-    },15000)
-    setTimeout(()=>{
-        this.textoAbaixoDoLogo="A MALDIÇÃO DA MOSCA"
-        this.textLogoVisible=true
-    },18000)
-    setTimeout(()=>{
-        this.textLogoVisible=false
-    },30000)
-    setTimeout(()=>{
-        this.textoAbaixoDoLogo="FINAL"
-        this.textLogoVisible=true
-    },33000)
-    setTimeout(()=>{
-        this.textLogoVisible=false
-    },48000)
+  exibeLogoETexto(videoRodando){
+    if(videoRodando.tipo=="madrugadaFilmes"||videoRodando.tipo=="noiteFilmes"){
+      console.log("Video Rodando: ",videoRodando)
+      
+      this.textoAbaixoDoLogo=this.commonServices.formatTitle(videoRodando.titulo)
+      this.textLogoVisible=true
+      
+      setTimeout(()=>{
+          this.textoAbaixoDoLogo=videoRodando.tituloAtracao
+          .replace("Corujão Um","Corujão")
+          .replace("Corujão Dois","Corujão").toUpperCase()
+          this.textLogoVisible=true
+      },3000)
+      setTimeout(()=>{
+          this.textLogoVisible=false
+      },15000)
+      setTimeout(()=>{
+          this.textoAbaixoDoLogo=this.commonServices.formatTitle(videoRodando.titulo)
+          this.textLogoVisible=true
+      },18000)
+      setTimeout(()=>{
+          this.textLogoVisible=false
+      },30000)
+      // setTimeout(()=>{
+      //     this.textoAbaixoDoLogo="FINAL"
+      //     this.textLogoVisible=true
+      // },33000)
+      // setTimeout(()=>{
+      //     this.textLogoVisible=false
+      // },48000)
+    }
   }
 
   pegaVideoParaRodarPorHorarioDeExibicao(){
-    // this.exibeLogoETexto()
     this.reloadVideo()
     let afterMidnight = false
 
@@ -451,7 +459,7 @@ export class PlaylistComponent {
     if(this.videoRodando.tipo!="intervalos"){
       var refreshIntervalId = 
       setInterval(()=>{
-          if(this.videoRodando.tipo!="intervalos")inicio++
+        if(this.videoRodando.tipo!="intervalos")inicio++
         if(inicio>this.videoRodando.final){
           clearInterval(refreshIntervalId);
           this.pegaVideoParaRodarPorHorarioDeExibicao()
@@ -460,6 +468,8 @@ export class PlaylistComponent {
     }
 
     this.url= `http://shuffletv.ddns.net:5000/assets/${this.videoRodando['tipo']}/${encodeURI(this.videoRodando['titulo'])}#t=${inicio}`
+    
+    this.exibeLogoETexto(this.videoRodando)
 
     setTimeout(()=>{
       this.updateAVElements()

@@ -88,5 +88,15 @@ export class CommonService {
     return string[0].toLowerCase() + string.slice(1)
   }
 
+  formatTitle(title){
+    return title.replace("Dublado - ","").split(".")[0].toUpperCase().split(" 19")[0].split(" (")[0]
+  }
+
+  formatAytacaoTitle(title){
+    return title
+    .replace("Corujão Um","Corujão")
+    .replace("Corujão Dois","Corujão").toUpperCase()
+  }
+
 }
 
