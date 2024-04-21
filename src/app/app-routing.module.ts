@@ -29,6 +29,7 @@ import { Zelig1983Component } from './dvds/zelig1983/zelig1983.component';
 import { BasicdvdComponent } from './dvds/basicdvd/basicdvd.component';
 import { ArquivosComponent } from './arquivos/arquivos.component';
 import { OndemandComponent } from './ondemand/ondemand.component';
+import { Martin1977Component } from './dvds/martin1977/martin1977.component';
 
 const routes: Routes = [
   { path: '', component: PlaylistComponent},
@@ -59,6 +60,7 @@ const routes: Routes = [
   { path: 'themanwhowasntthere2001', component: Themanwhowasntthere2001Component},
   { path: 'nakedlunch1991', component: Nakedlunch1991Component},
   { path: 'zelig1983', component: Zelig1983Component},
+  { path: 'martin1977', component: Martin1977Component},
   { path: 'basicdvd', component: BasicdvdComponent}
 
 ];
