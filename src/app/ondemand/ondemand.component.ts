@@ -307,7 +307,7 @@ export class OndemandComponent implements OnInit {
           setTimeout(()=>{        
            this.setSubtitle(filme.filme,filme.horario)
           //  this.setAudioExterno(filme.filme,filme.horario)
-           this.setSubPosition(-3)
+           this.setSubPosition(-4)
           },1000)
     
           // setTimeout(()=>{
@@ -471,7 +471,7 @@ export class OndemandComponent implements OnInit {
         this.setSubPosition(-30)
         setTimeout(()=>{
           this.mouseMoving=false
-        this.setSubPosition(-3)
+        this.setSubPosition(-4)
         },3000)
       })
       this.videoElement.addEventListener('timeupdate',(event)=>{
@@ -736,7 +736,7 @@ export class OndemandComponent implements OnInit {
         setTimeout(()=>{
           this.exibeVideo=true          
           this.timeBarUpdate()
-          this.setSubPosition(-3)
+          this.setSubPosition(-4)
         },100)    
 
         this.pontoDePartidaService.updatePontoDePartida({
@@ -973,7 +973,7 @@ export class OndemandComponent implements OnInit {
     setTimeout(()=>{
       this.exibeVideo=true
       this.timeBarUpdate()
-      this.setSubPosition(-3)
+      this.setSubPosition(-4)
     },100)
 
     this.resetForm(horario)
