@@ -130,7 +130,7 @@
              <ng-template pTemplate="body" let-video let-rowIndex="rowIndex" let-columns="columns">
                 <tr [pSelectableRow]="video" [pSelectableRowIndex]="rowIndex">
                    <td style="min-width: 400px;">{{video.titulo}}</td>
-                   <td style="min-width: 50px;">{{commonServices.toTime(video.duracao)}}</td>
+                   <td style="min-width: 50px;">{{sts.toTime(video.duracao)}}</td>
                    <td style="min-width: 250px;">{{getTituloProgramaDeTv(video.programaDeTv)}}</td>
                    <td style="min-width: 50px;">{{video.canal}}</td>
                    <td style="min-width: 50px;">{{video.tipo?video.tipo:""}}</td>

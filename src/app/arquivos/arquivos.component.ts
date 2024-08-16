@@ -8,6 +8,7 @@ import { UploadVideoService } from '../services/upload-video.service';
 import { CommonService } from 'src/services/common.service';
 import { VideoModel } from './video';
 import { MongodbService } from '../services/mongodb.service';
+import { sts } from 'shuffle-tv-services/lib'
 
 
 @Component({
@@ -61,6 +62,7 @@ export class ArquivosComponent implements OnInit {
   ]
   selectVideoForm :any
   listaParaAtualizar:any=[]
+  sts = sts;
 
   constructor(
       private commonServices: CommonService,
@@ -155,7 +157,7 @@ export class ArquivosComponent implements OnInit {
     .subscribe((data:any)=>{    
       let tempData=[]
       tempData=data
-      this.videos=this.videosFiltered=tempData.sort(this.commonServices.sortPorTitulo())
+      this.videos=this.videosFiltered=tempData.sort(sts.sortPorTitulo())
       unsubscribe.unsubscribe()
     })
   }
@@ -163,7 +165,7 @@ export class ArquivosComponent implements OnInit {
   getCanaisFromMongoDB(){
     let unsubscribe=
     this.mongodbService.getCanais().subscribe((data:any )=>{ 
-      this.canais=data.sort(this.commonServices.sortPor("canal"))
+      this.canais=data.sort(sts.sortPor("canal"))
       console.log("this.canais",this.canais)
       unsubscribe.unsubscribe()
     })
@@ -176,7 +178,7 @@ export class ArquivosComponent implements OnInit {
       if(this.selectedCanal){            
        data = [...data.filter(prog=>{ return prog.canal==this.selectedCanal})]
       }
-      this.programaDeTvFiltered=this.programaDeTv=data.sort(this.commonServices.sortPorTitulo())
+      this.programaDeTvFiltered=this.programaDeTv=data.sort(sts.sortPorTitulo())
       console.log('programasDeTVFromMongoDB',this.programaDeTvFiltered)
       if(this.selectedCanal){            
         this.filterProgramaDeTV(this.selectedCanal)
@@ -199,7 +201,7 @@ export class ArquivosComponent implements OnInit {
   //       )
   //     )
   //   ).subscribe(data=>{
-  //     this.programaDeTvFiltered=this.programaDeTv=data.sort(this.commonServices.sortPorTitulo())
+  //     this.programaDeTvFiltered=this.programaDeTv=data.sort(sts.sortPorTitulo())
   //     if(this.selectedCanal){            
   //       this.filterProgramaDeTV(this.selectedCanal)
   //     }
@@ -707,7 +709,7 @@ export class ArquivosComponent implements OnInit {
   //     this.videos=data.filter(data=>{
   //       return !data.canal
   //     })
-  //     .sort(this.commonServices.sortPorTitulo())
+  //     .sort(sts.sortPorTitulo())
   //     console.log("videos",this.videos)
   //   });
 
@@ -725,7 +727,7 @@ export class ArquivosComponent implements OnInit {
   //       )
   //     )
   //   ).subscribe((data:any)=>{
-  //     this.videos=data.sort(this.commonServices.sortPorTitulo())
+  //     this.videos=data.sort(sts.sortPorTitulo())
   //     console.log("videos Movies",this.videos)
   //   })
   // }
@@ -769,7 +771,7 @@ export class ArquivosComponent implements OnInit {
   //       tempData=data
   //     }
   //     setTimeout(()=>{
-  //       this.videos=tempData.sort(this.commonServices.sortPorTitulo())
+  //       this.videos=tempData.sort(sts.sortPorTitulo())
   //       console.log("Uma lista de prog de TV",this.videos)
   //       unsubscribe.unsubscribe()
   //     },1000)
@@ -782,7 +784,7 @@ export class ArquivosComponent implements OnInit {
       let newProg={
         titulo:this.novoPrograma.value,
         tipo:this.selectedTipoDeVideo,
-        value:this.commonServices.camelize(this.novoPrograma.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "")),
+        value:sts.camelize(this.novoPrograma.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "")),
         canal:this.selectedCanal,
         prePos:this.novoPrograma.value.includes("Pre")?true:false
       }
@@ -797,7 +799,7 @@ export class ArquivosComponent implements OnInit {
   // criarPrograma(){
   //   if(this.selectedCanal,this.novoPrograma.value){
   //     this.firebaseService.createNewProgDeTVCollection({
-  //       value:this.commonServices.camelize(this.novoPrograma.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "")),
+  //       value:sts.camelize(this.novoPrograma.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "")),
   //       titulo:this.novoPrograma.value,
   //       canal:this.selectedCanal
   //     })
@@ -809,7 +811,7 @@ export class ArquivosComponent implements OnInit {
   
   checkIfProgExists(progValue,type){
 
-    let intProg = this.commonServices.camelize(type+" "+progValue.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))
+    let intProg = sts.camelize(type+" "+progValue.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))
     let found = this.programaDeTv.find(prog=>prog.value==intProg)
     return found?true:false
   }
@@ -826,14 +828,14 @@ export class ArquivosComponent implements OnInit {
   //         }
   //       })
   //       this.firebaseService.createNewProgDeTVCollection({
-  //         value:"int"+this.commonServices.toTitleCase(this.commonServices.camelize(this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))),
+  //         value:"int"+sts.toTitleCase(sts.camelize(this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))),
   //         titulo:"Int "+progTitulo,
   //         canal:this.selectedCanal
   //       })
 
   //       setTimeout(()=>{
   //         this.getListaDeProgramasDeTvFromMongoDB()
-  //         let prog = this.commonServices.toTitleCase(this.commonServices.camelize("int "+this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))) 
+  //         let prog = sts.toTitleCase(sts.camelize("int "+this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))) 
   //         console.log(prog) 
   //         this.selectVideoForm.get('programaDeTvFormControl').setValue("int"+prog)
   //       },1000)
@@ -856,14 +858,14 @@ export class ArquivosComponent implements OnInit {
   //         }
   //       })
   //       this.firebaseService.createNewProgDeTVCollection({
-  //         value:"prePos"+this.commonServices.toTitleCase(this.commonServices.camelize(this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))),
+  //         value:"prePos"+sts.toTitleCase(sts.camelize(this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))),
   //         titulo:"Pre Pos "+progTitulo,
   //         canal:this.selectedCanal
   //       })
 
   //       setTimeout(()=>{
   //         this.getListaDeProgramasDeTvFromMongoDB()
-  //         let prog = this.commonServices.camelize("pre Pos "+this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, "")) 
+  //         let prog = sts.camelize("pre Pos "+this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, "")) 
   //         console.log(prog) 
   //         this.selectVideoForm.get('programaDeTvFormControl').setValue("prePos"+prog)
   //       },1000)
@@ -882,7 +884,7 @@ export class ArquivosComponent implements OnInit {
       console.log("data")
       let tempData=[]
       tempData=data
-      this.videos=this.videosFiltered=tempData.sort(this.commonServices.sortPorTitulo())
+      this.videos=this.videosFiltered=tempData.sort(sts.sortPorTitulo())
       unsubscribe.unsubscribe()
     });
 
@@ -901,7 +903,7 @@ export class ArquivosComponent implements OnInit {
       
   //     let tempData=[]
   //     tempData=data
-  //     this.videos=tempData.sort(this.commonServices.sortPorTitulo())
+  //     this.videos=tempData.sort(sts.sortPorTitulo())
   //     console.log("videos",this.videos)
   //     unsubscribe.unsubscribe()
   //   });

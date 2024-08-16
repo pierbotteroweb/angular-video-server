@@ -7,6 +7,7 @@ import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { MongodbService } from '../services/mongodb.service';
+import { sts } from 'shuffle-tv-services/lib'
 @Component({
   selector: 'app-playlist',
   templateUrl: './playlist.component.html',
@@ -206,11 +207,11 @@ export class PlaylistComponent {
       let stringsToRemoveArrows = ["Arrow","Page"]
       let stringsToRemoveNumbers = ["Digit","Numpad"]
       if(stringsToRemoveArrows.find(i=>event.code.includes(i))){
-        this.zapchannel(this.commonServices.removeFromString(stringsToRemoveArrows,event.code).toLowerCase())
+        this.zapchannel(sts.removeFromString(stringsToRemoveArrows,event.code).toLowerCase())
       }
       if(stringsToRemoveNumbers.find(i=>event.code.includes(i))){
        
-        if(event.code) enteredDigitsString += this.commonServices.removeFromString(stringsToRemoveNumbers,event.code)
+        if(event.code) enteredDigitsString += sts.removeFromString(stringsToRemoveNumbers,event.code)
         this.numCanal=parseInt(enteredDigitsString.slice(0,2))
         this.exibeNumCanal=true
         setTimeout(()=>{
@@ -222,7 +223,7 @@ export class PlaylistComponent {
   }
 
   switchEventChannel(eventCode:any){
-    eventCode=this.commonServices.removeFromString(["Digit","Numpad"],eventCode.toString())
+    eventCode=sts.removeFromString(["Digit","Numpad"],eventCode.toString())
     switch (eventCode){
       case "1":
         this.selectCanal(eventCode,"Gazeta")
@@ -282,7 +283,7 @@ export class PlaylistComponent {
       this.unsubscribe=
       this.mongodbService.getCanais().subscribe((data:any ) => {
           this.tempPlaylist=data
-          this.listaDeNumerosDeCanais=this.tempPlaylist.map(canal=>canal.canal).sort(this.commonServices.sortNumbers())
+          this.listaDeNumerosDeCanais=this.tempPlaylist.map(canal=>canal.canal).sort(sts.sortNumbers())
           this.getSelectedChanelFromFirebase()
           this.getSelectedChannelFromMongoDB()
           // localStorage.setItem('data',JSON.stringify(data))
@@ -304,8 +305,8 @@ export class PlaylistComponent {
         let hoje:any = this.semana[hojeFull.getDay()]
         
         let now = new Date().toLocaleTimeString()
-        let sixThiryAm = this.commonServices.toSeconds("06:00:00")
-        if(this.commonServices.toSeconds(now)<=sixThiryAm){
+        let sixThiryAm = sts.toSeconds("06:00:00")
+        if(sts.toSeconds(now)<=sixThiryAm){
           let semanaIndex = hojeFull.getDay()>0?hojeFull.getDay()-1:6
           // semanaIndex = hojeFull.getDay()?semanaIndex:6
           hoje=this.semana[semanaIndex]    
@@ -314,11 +315,11 @@ export class PlaylistComponent {
         this.listaSemana = data.filter(canal=>canal.emissora==selectedCanal)[0][hoje]
         this.listaSemana.map(prog=>{
           prog.horarioDeExibicaoEmSegundos=
-          this.commonServices.toSeconds(prog.horarioDeExibicao)
+          sts.toSeconds(prog.horarioDeExibicao)
           if(prog.tipo=="madrugada") prog.tipo="madrugadaFilmes"
           if(prog.tipo=="noite") prog.tipo="noiteFilmes"
         })
-        this.listaSemana.sort(this.commonServices.sortPor("horarioDeExibicaoEmSegundos"))
+        this.listaSemana.sort(sts.sortPor("horarioDeExibicaoEmSegundos"))
         this.pegaVideoParaRodarPorHorarioDeExibicao()
         let dataFromLocalStorage = localStorage.getItem('data');
         
@@ -420,8 +421,8 @@ export class PlaylistComponent {
     let searchList = this.listaSemana
     
     this.videoRodando = searchList.filter(videoPararodar=>{
-      return this.commonServices.toSeconds(videoPararodar['horarioDeExibicao'])
-      <this.commonServices.toSeconds(now)}).reverse()[0]
+      return sts.toSeconds(videoPararodar['horarioDeExibicao'])
+      <sts.toSeconds(now)}).reverse()[0]
     
     if(!this.videoRodando){
       this.videoRodando = searchList.filter(videoPararodar=>
@@ -431,14 +432,14 @@ export class PlaylistComponent {
 
       this.setandoParticulares(this.videoRodando.titulo)
 
-    let horaExibicaoVideoRodandoMomento= this.commonServices.toSeconds(this.videoRodando['horarioDeExibicao'])
+    let horaExibicaoVideoRodandoMomento= sts.toSeconds(this.videoRodando['horarioDeExibicao'])
     
     let inicio =0
 
     if (afterMidnight){
-      inicio = this.commonServices.toSeconds(now)+(this.commonServices.toSeconds("24:00:00")-horaExibicaoVideoRodandoMomento)
+      inicio = sts.toSeconds(now)+(sts.toSeconds("24:00:00")-horaExibicaoVideoRodandoMomento)
     } else {
-      inicio = this.commonServices.toSeconds(now)-horaExibicaoVideoRodandoMomento
+      inicio = sts.toSeconds(now)-horaExibicaoVideoRodandoMomento
     }
 
     if(inicio+this.videoRodando.inicio){

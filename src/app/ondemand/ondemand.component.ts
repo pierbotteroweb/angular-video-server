@@ -8,6 +8,7 @@ import { FirebaseService } from '../services/firebase.service';
 import { UploadVideoService } from '../services/upload-video.service';
 import { map } from 'rxjs/operators';
 import { MongodbService } from '../services/mongodb.service';
+import { sts } from 'shuffle-tv-services/lib'
 
 
 
@@ -45,6 +46,7 @@ export class OndemandComponent implements OnInit {
   baseRequestUrl:string="http://shuffletv.ddns.net:1984/api/"
 
   title = 'angular-video-server';
+  sts = sts;
 
   pontosDeCorte:any={ }
 
@@ -273,7 +275,7 @@ export class OndemandComponent implements OnInit {
           this.horario = filme.horario
           this.idDofilmeAtual = filme.idDoFilme
           this.nomeDoFilmeAtual = filme.filme
-          this.commonServices.updatePageTitle(this.nomeDoFilmeAtual)
+          sts.updatePageTitle(this.nomeDoFilmeAtual)
           this.duracaoVideoSelecionado = filme.duracao
     
           this.selectVideoForm.get(filme.horario+"FormControl").setValue(filme.idDoFilme)          
@@ -326,7 +328,7 @@ export class OndemandComponent implements OnInit {
       let filtredlista = "filtredvideo"+req.horario
       let unsubscribe=
       this.mongodbService.getFromVideoCollection(req.horario.replace("Filmes","")).subscribe((data:any )=>{ 
-        this[lista]=this[filtredlista]=data.sort(this.commonServices.sortPorTitulo())
+        this[lista]=this[filtredlista]=data.sort(sts.sortPorTitulo())
         console.log("lista ",lista)
         console.log(this[lista])
 
@@ -349,7 +351,7 @@ export class OndemandComponent implements OnInit {
       let filtredlista = "filtredvideo"+req.horario
       this.http.get(this.baseRequestUrl+req.request)
       .subscribe((response:any)=>{
-        this[lista]=this[filtredlista]=response.data.sort(this.commonServices.sortPorTitulo())
+        this[lista]=this[filtredlista]=response.data.sort(sts.sortPorTitulo())
       })
 
       if(req?.subs){
@@ -381,7 +383,7 @@ export class OndemandComponent implements OnInit {
           "horaInicio":this.videoElement.currentTime
         }).subscribe(x=>{})
         
-      this.videoCurrentTime= this.commonServices?.toTime(this.videoElement.currentTime)
+      this.videoCurrentTime= sts.toTime(this.videoElement.currentTime)
       }
 
     },1000)       
@@ -718,7 +720,7 @@ export class OndemandComponent implements OnInit {
           this.url = this.baseUrl+this.horario+"/"+encodeURI(this['filtredvideo'+this.horario][indexatual+1].titulo)
           this.idDofilmeAtual=this['filtredvideo'+this.horario][indexatual+1]._id;
           this.nomeDoFilmeAtual=this['filtredvideo'+this.horario][indexatual+1].titulo;
-          this.commonServices.updatePageTitle(this.nomeDoFilmeAtual)
+          sts.updatePageTitle(this.nomeDoFilmeAtual)
           let infoDoFilmeAtual = this['filtredvideo'+this.horario].filter(video=>video._id==this.idDofilmeAtual)[0]
           this.updatePontosDeCorte(infoDoFilmeAtual)        
     
@@ -942,7 +944,7 @@ export class OndemandComponent implements OnInit {
 
     this.horario=horario
     this.idDofilmeAtual=idDoFilme
-    this.commonServices.updatePageTitle(this.nomeDoFilmeAtual)
+    sts.updatePageTitle(this.nomeDoFilmeAtual)
     this.exibeVideo=false
     if(this.nomeDoFilmeAtual.slice(-3)=="mp4"||this.nomeDoFilmeAtual.slice(-3)
                                       =="mkv"||this.nomeDoFilmeAtual.slice(-3)=="m4v"){
@@ -994,7 +996,7 @@ export class OndemandComponent implements OnInit {
       if(this.selectedCanal){            
        data = [...data.filter(prog=>{ return prog.canal==this.selectedCanal})]
       }
-      this.programaDeTvFiltered=this.programaDeTv=data.sort(this.commonServices.sortPorTitulo())
+      this.programaDeTvFiltered=this.programaDeTv=data.sort(sts.sortPorTitulo())
       unsubscribe.unsubscribe()
     })
   }
@@ -1012,7 +1014,7 @@ export class OndemandComponent implements OnInit {
       if(this.selectedCanal){            
        data = [...data.filter(prog=>{ return prog.canal==this.selectedCanal})]
       }
-      this.programaDeTvFiltered=this.programaDeTv=data.sort(this.commonServices.sortPorTitulo())
+      this.programaDeTvFiltered=this.programaDeTv=data.sort(sts.sortPorTitulo())
       unsubscribe.unsubscribe()
     })
   } 
@@ -1020,7 +1022,7 @@ export class OndemandComponent implements OnInit {
   getCanaisFromMongoDB(){
     let unsubscribe=
     this.mongodbService.getCanais().subscribe((data:any )=>{ 
-      this.canais=data.sort(this.commonServices.sortPor("canal"))
+      this.canais=data.sort(sts.sortPor("canal"))
       console.log("this.canais",this.canais)
       unsubscribe.unsubscribe()
     })
