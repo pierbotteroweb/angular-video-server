@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from 'src/services/common.service';
+import { sts } from 'shuffle-tv-services/lib'
 
 @Component({
   selector: 'app-basicdvd',
@@ -116,7 +117,7 @@ export class BasicdvdComponent implements OnInit {
 
   goToScene(i){
     this.data.url=this.baseUrl+encodeURI(this.data.dvd)+".mp4#t="+
-                  this.commonServices.toSeconds(this.chapterPoints[i]['point'])
+                  sts.toSeconds(this.chapterPoints[i]['point'])
     this.playMovie()
   }
 

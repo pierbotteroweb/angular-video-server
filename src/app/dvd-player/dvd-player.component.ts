@@ -3,7 +3,7 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { DOCUMENT } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { CommonService } from 'src/services/common.service';
-import { sts } from 'shuffle-tv-services/lib'
+import { sts } from 'shuffle-tv-services/lib';
 
 
 @Component({
@@ -40,9 +40,10 @@ export class DvdPlayerComponent implements OnInit {
     audioList:Array<Object>
     videoElement: HTMLVideoElement
     mouseMoving:boolean
+    sts = sts;
 
   ngOnInit(): void {
-    this.commonServices.updatePageTitle("DVD - "+this.data.dvd)
+    sts.updatePageTitle("DVD - "+this.data.dvd)
     this.fullScreenMode=false
     this.duracaoDoFilme=sts.toSeconds(this.data.duracaoDoFilme)
     this.subtitlesList=this.data.subtitlesList

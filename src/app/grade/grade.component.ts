@@ -156,7 +156,7 @@ export class GradeComponent implements OnInit {
   getCanaisFromMongoDB(){
     let unsubscribe=
     this.mongodbService.getCanais().subscribe((data:any )=>{ 
-      this.canais=data.sort(this.commonServices.sortPor("canal"))
+      this.canais=data.sort(sts.sortPor("canal"))
 
       this.getSelectedChanelFromFirebase()  
       this.canais.map(canal=>{
@@ -387,7 +387,7 @@ export class GradeComponent implements OnInit {
           let progAnterior = newList[index-1]
           prog.indice = index
           prog.horarioDeExibicao= 
-            this.commonServices.toTime(progAnterior.duracaoTotalDaAtracaoEmSegundos
+            sts.toTime(progAnterior.duracaoTotalDaAtracaoEmSegundos
             +sts.toSeconds(progAnterior.horarioDeExibicao))
         }
       })
@@ -419,7 +419,7 @@ export class GradeComponent implements OnInit {
         this.lengthListaFinal = newList.length
         if(!this.prePosAvailable){
           this.selectVideoForm.get('programaDeTvFormControl')
-          .setValue(this.commonServices.lowerCaseFirstChar(this.selectedProgramaDeTv.value.replace("int","")))
+          .setValue(sts.lowerCaseFirstChar(this.selectedProgramaDeTv.value.replace("int","")))
         }
         this.organizaIntervalos()
       } else if(newList.length==this.lengthListaFinal&&this.prePosAvailable){
@@ -430,7 +430,7 @@ export class GradeComponent implements OnInit {
           this.spyListaAdicionada.next(prePosInfo)
         } else {
           this.selectVideoForm.get('programaDeTvFormControl')
-          .setValue(this.commonServices.lowerCaseFirstChar(this.selectedProgramaDeTv.value.replace("prePos","")))
+          .setValue(sts.lowerCaseFirstChar(this.selectedProgramaDeTv.value.replace("prePos","")))
           this.organizaPrePos()
         }
       } else if(this.selectedProgramaDeTv.tipo!="intervalos"){
@@ -525,7 +525,7 @@ export class GradeComponent implements OnInit {
 
         //FILTER 
         let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
-          .sort(this.commonServices.sortPor("order"))
+          .sort(sts.sortPor("order"))
           
           
           
@@ -674,7 +674,7 @@ export class GradeComponent implements OnInit {
 
         //FILTER 
         let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
-          .sort(this.commonServices.sortPor("order"))
+          .sort(sts.sortPor("order"))
                     if(listaFiltrada.length>0){
                       videoAdicionado = listaFiltrada[0]
                     } else{
@@ -814,7 +814,7 @@ export class GradeComponent implements OnInit {
       if(this.selectedCanal){            
        data = [...data.filter(prog=>{ return prog.canal==this.selectedCanal})]
       }
-      this.programaDeTvFiltered=this.programaDeTv=data.sort(this.commonServices.sortPorTitulo())
+      this.programaDeTvFiltered=this.programaDeTv=data.sort(sts.sortPorTitulo())
       unsubscribe.unsubscribe()
 
     })
@@ -954,7 +954,7 @@ export class GradeComponent implements OnInit {
             obj.tituloAtracao = progInfo.tituloAtracao
           }
           obj.tempoTotalEmSegundos = blocos.map(lista=>lista.duracaoTotalDaAtracaoEmSegundos).reduce((a,b)=>{return a+b})
-          obj.tempoTotal = this.commonServices.toTime(obj.tempoTotalEmSegundos)
+          obj.tempoTotal = sts.toTime(obj.tempoTotalEmSegundos)
           return obj
         })
         this.canais[indCanal][dia+"Bloco"]=listaBlocos}
@@ -1031,7 +1031,7 @@ export class GradeComponent implements OnInit {
           return accumulator + a;
         }
 
-        let valueToScroll = this.commonServices.sumItemsOnArray(listaAteCurrent.map(prog=>prog.tempoTotalEmSegundos))/10
+        let valueToScroll = sts.sumItemsOnArray(listaAteCurrent.map(prog=>prog.tempoTotalEmSegundos))/10
 
         setTimeout(()=>{
           document.getElementsByClassName("col-11")[0].scrollLeft = valueToScroll

@@ -207,11 +207,11 @@ export class PlaylistComponent {
       let stringsToRemoveArrows = ["Arrow","Page"]
       let stringsToRemoveNumbers = ["Digit","Numpad"]
       if(stringsToRemoveArrows.find(i=>event.code.includes(i))){
-        this.zapchannel(this.commonServices.removeFromString(stringsToRemoveArrows,event.code).toLowerCase())
+        this.zapchannel(sts.removeFromString(stringsToRemoveArrows,event.code).toLowerCase())
       }
       if(stringsToRemoveNumbers.find(i=>event.code.includes(i))){
        
-        if(event.code) enteredDigitsString += this.commonServices.removeFromString(stringsToRemoveNumbers,event.code)
+        if(event.code) enteredDigitsString += sts.removeFromString(stringsToRemoveNumbers,event.code)
         this.numCanal=parseInt(enteredDigitsString.slice(0,2))
         this.exibeNumCanal=true
         setTimeout(()=>{
@@ -223,7 +223,7 @@ export class PlaylistComponent {
   }
 
   switchEventChannel(eventCode:any){
-    eventCode=this.commonServices.removeFromString(["Digit","Numpad"],eventCode.toString())
+    eventCode=sts.removeFromString(["Digit","Numpad"],eventCode.toString())
     switch (eventCode){
       case "1":
         this.selectCanal(eventCode,"Gazeta")
@@ -283,7 +283,7 @@ export class PlaylistComponent {
       this.unsubscribe=
       this.mongodbService.getCanais().subscribe((data:any ) => {
           this.tempPlaylist=data
-          this.listaDeNumerosDeCanais=this.tempPlaylist.map(canal=>canal.canal).sort(this.commonServices.sortNumbers())
+          this.listaDeNumerosDeCanais=this.tempPlaylist.map(canal=>canal.canal).sort(sts.sortNumbers())
           this.getSelectedChanelFromFirebase()
           this.getSelectedChannelFromMongoDB()
           // localStorage.setItem('data',JSON.stringify(data))
@@ -319,7 +319,7 @@ export class PlaylistComponent {
           if(prog.tipo=="madrugada") prog.tipo="madrugadaFilmes"
           if(prog.tipo=="noite") prog.tipo="noiteFilmes"
         })
-        this.listaSemana.sort(this.commonServices.sortPor("horarioDeExibicaoEmSegundos"))
+        this.listaSemana.sort(sts.sortPor("horarioDeExibicaoEmSegundos"))
         this.pegaVideoParaRodarPorHorarioDeExibicao()
         let dataFromLocalStorage = localStorage.getItem('data');
         

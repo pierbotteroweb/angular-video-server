@@ -10,8 +10,8 @@
      [ngStyle]="{'visibility': mouseMoving ? 'visible' : 'hidden'}">
 
   <span class="movieMode--controls__time">
-   {{commonServices.toTime(videoElement.currentTime)}}/
-   {{commonServices.toTime(duracaoDoFilme)}}
+   {{sts.toTime(videoElement.currentTime)}}/
+   {{sts.toTime(duracaoDoFilme)}}
   </span>
 
  <span (click)="goToMain()"
