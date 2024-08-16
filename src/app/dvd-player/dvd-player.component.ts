@@ -3,6 +3,7 @@ import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular
 import { DOCUMENT } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { CommonService } from 'src/services/common.service';
+import { sts } from 'shuffle-tv-services/lib'
 
 
 @Component({
@@ -43,7 +44,7 @@ export class DvdPlayerComponent implements OnInit {
   ngOnInit(): void {
     this.commonServices.updatePageTitle("DVD - "+this.data.dvd)
     this.fullScreenMode=false
-    this.duracaoDoFilme=this.commonServices.toSeconds(this.data.duracaoDoFilme)
+    this.duracaoDoFilme=sts.toSeconds(this.data.duracaoDoFilme)
     this.subtitlesList=this.data.subtitlesList
     this.audioList=(this.data?.audioList)?this.data.audioList:[]
     this.elem = document.documentElement;
@@ -201,9 +202,9 @@ export class DvdPlayerComponent implements OnInit {
   clickNextChapter(){
     let looking=true
     this.chapterPoints.map(chapter=>{
-      if(looking&&this.videoElement.currentTime<this.commonServices.toSeconds(chapter.point)){
+      if(looking&&this.videoElement.currentTime<sts.toSeconds(chapter.point)){
         looking=false
-        this.videoElement.currentTime=this.commonServices.toSeconds(chapter.point)
+        this.videoElement.currentTime=sts.toSeconds(chapter.point)
       }
     })
     this.videoElement.play()
@@ -214,14 +215,14 @@ export class DvdPlayerComponent implements OnInit {
     this.chapterPoints.map((chapter,index)=>{
 
 
-      if(looking&&this.videoElement.currentTime<this.commonServices.toSeconds(chapter.point)){
+      if(looking&&this.videoElement.currentTime<sts.toSeconds(chapter.point)){
         looking=false
-        this.videoElement.currentTime=this.commonServices.toSeconds(this.chapterPoints[index-2].point)
+        this.videoElement.currentTime=sts.toSeconds(this.chapterPoints[index-2].point)
       } 
       
       if (looking&&this.chapterPoints.length-1==index){
         looking=false
-        this.videoElement.currentTime=this.commonServices.toSeconds(this.chapterPoints[index-1].point)
+        this.videoElement.currentTime=sts.toSeconds(this.chapterPoints[index-1].point)
       } 
       
     })

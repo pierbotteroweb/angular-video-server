@@ -4,6 +4,7 @@ import { CommonService } from 'src/services/common.service';
 import { Subject } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 import { FirebaseService } from '../services/firebase.service';
+import { sts } from 'shuffle-tv-services/lib'
 
 @Component({
   selector: 'app-grade',
@@ -387,7 +388,7 @@ export class GradeComponent implements OnInit {
           prog.indice = index
           prog.horarioDeExibicao= 
             this.commonServices.toTime(progAnterior.duracaoTotalDaAtracaoEmSegundos
-            +this.commonServices.toSeconds(progAnterior.horarioDeExibicao))
+            +sts.toSeconds(progAnterior.horarioDeExibicao))
         }
       })
     } 
@@ -988,9 +989,9 @@ export class GradeComponent implements OnInit {
           indexSemana = day-1
         }
         let now = new Date().toLocaleTimeString()
-        let sixThiryAm = this.commonServices.toSeconds("06:00:00")
+        let sixThiryAm = sts.toSeconds("06:00:00")
         let currentHour = new Date().getHours()
-        if(this.commonServices.toSeconds(now)<=sixThiryAm){
+        if(sts.toSeconds(now)<=sixThiryAm){
           if(indexSemana==0){
             indexSemana=6
           } else{
@@ -1006,15 +1007,15 @@ export class GradeComponent implements OnInit {
 
         let currentBloco
 
-        if(this.commonServices.toSeconds(now)<=sixThiryAm){
+        if(sts.toSeconds(now)<=sixThiryAm){
           currentBloco = listaSemanaBloco.find(bloco=>{ 
-            let tempoTotalEmSegundosDoBloco = this.commonServices.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos
-            return tempoTotalEmSegundosDoBloco < sixThiryAm && tempoTotalEmSegundosDoBloco > this.commonServices.toSeconds(time)
+            let tempoTotalEmSegundosDoBloco = sts.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos
+            return tempoTotalEmSegundosDoBloco < sixThiryAm && tempoTotalEmSegundosDoBloco > sts.toSeconds(time)
          })
         } else {
           currentBloco = listaSemanaBloco.find(bloco=>{ 
-            return (this.commonServices.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos)>
-           this.commonServices.toSeconds(time)
+            return (sts.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos)>
+           sts.toSeconds(time)
          })
         }
         
