@@ -9,6 +9,11 @@ export class MongodbService {
 
   constructor(private http: HttpClient) { }
 
+  async getSeletorDeCanalUsingPromise(){
+    return await this.http.get('http://shuffletv.ddns.net:9000/api/getSelectedCanal')
+    .toPromise()
+  }
+
   getSeletorDeCanal(){
     return this.http.get('http://shuffletv.ddns.net:9000/api/getSelectedCanal')
   }
