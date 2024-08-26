@@ -30,6 +30,7 @@ import { BasicdvdComponent } from './dvds/basicdvd/basicdvd.component';
 import { ArquivosComponent } from './arquivos/arquivos.component';
 import { OndemandComponent } from './ondemand/ondemand.component';
 import { Martin1977Component } from './dvds/martin1977/martin1977.component';
+import { StreamComponent } from './stream/stream.component';
 
 const routes: Routes = [
   { path: '', component: PlaylistComponent},
@@ -61,7 +62,8 @@ const routes: Routes = [
   { path: 'nakedlunch1991', component: Nakedlunch1991Component},
   { path: 'zelig1983', component: Zelig1983Component},
   { path: 'martin1977', component: Martin1977Component},
-  { path: 'basicdvd', component: BasicdvdComponent}
+  { path: 'basicdvd', component: BasicdvdComponent},
+  { path: 'stream', component: StreamComponent}
 
 ];
 
