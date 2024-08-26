@@ -139,7 +139,17 @@ export class ArquivosComponent implements OnInit {
     console.log(prog)
   }
 
+  addOrder(){
+    let newOrderPosition = this.videos.filter(video=>video.order).length+1
+    this.selectedVideos.map((video,index)=>{
+      video["order"]=this.selectedVideos[index]["order"]=newOrderPosition
+      this.updateOnMongoDB(video)
+      newOrderPosition++
+    })
+  }
+
   getVideosFromSelectedProgramaDeTv(){
+    this.selectedVideos=[]
     let programaDeTv = this.programaDeTv.find(prog=>prog.value==this.selectedProgramaDeTv)
 
     this.selectVideoForm.get('canaisFormControl').setValue(

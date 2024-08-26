@@ -4,6 +4,7 @@ export interface VideoModel {
     programaDeTv?: string;
     duracao:number;
     tipo?:string;
+    order?:number;
     sub:boolean
     // cortes?: Array<number>;
     // horario?: string;
