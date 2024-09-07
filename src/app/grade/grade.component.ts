@@ -892,6 +892,10 @@ dia: any;
   }
 
   getInfoBlocoAtracao(info,dia,index){
+    console.log("getInfoBlocoAtracao this.listaSemana[dia]",this.listaSemana[dia].filter(prog=>prog.atracao==info.atracao))
+    console.log("getInfoBlocoAtracao this.listaSemana[dia]",this.listaSemana[dia].filter(prog=>prog.idProgTotal==info.idProgTotal))
+    console.log("getInfoBlocoAtracao info",info)
+    console.log("getInfoBlocoAtracao dia",dia)
     let listSelectedProgram = this.listaSemana[dia].filter(prog=>prog.idProgTotal==info.idProgTotal)
     let infoUltimodaLista = listSelectedProgram[listSelectedProgram.length-1]
     this.clickAtracao(infoUltimodaLista,dia,infoUltimodaLista.indice)
@@ -927,6 +931,7 @@ dia: any;
       this.selectVideoForm.get('semanaFormControl').setValue(dia)
       this.selectedDiaDaSemana = dia
     // }
+    console.log("clickAtracao this.programaClicado",this.programaClicado)
   }
 
   clickAtracaoFromBloco (info,dia,index){
