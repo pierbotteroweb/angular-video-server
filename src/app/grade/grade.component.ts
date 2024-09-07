@@ -826,8 +826,14 @@ export class GradeComponent implements OnInit {
 
   getStyle(width,dia,index?){
     if(this.programaClicado&&(this.programaClicado.indice==index)&&(this.programaClicado.dia==dia)){
+      console.log("getStyle this.programaClicado.indice",this.programaClicado.indice)
+      console.log("getStyle index",index)
+      console.log("getStyle width",width)
+      console.log("getStyle dia",dia)
+      console.log("getStyle this.programaClicado", this.programaClicado)
       return `width:${width/10}px;background:blue`
     } else {      
+      console.log("getStyle this.programaClicado", this.programaClicado)
       return `width:${width/10}px`
     }
   }
@@ -844,11 +850,19 @@ export class GradeComponent implements OnInit {
   }
 
   getInfoBlocoAtracao(info,dia,index){
-    this.getInfoClicado=false
-    this.getInfoBlocoClicado=true
+    console.log("getInfoBlocoAtracao this.listaSemana[dia]",this.listaSemana[dia].filter(prog=>prog.atracao==info.atracao))
+    console.log("getInfoBlocoAtracao this.listaSemana[dia]",this.listaSemana[dia].filter(prog=>prog.idProgTotal==info.idProgTotal))
+    console.log("getInfoBlocoAtracao info",info)
+    console.log("getInfoBlocoAtracao dia",dia)
+    let listSelectedProgram = this.listaSemana[dia].filter(prog=>prog.idProgTotal==info.idProgTotal)
+    let infoUltimodaLista = listSelectedProgram[listSelectedProgram.length-1]
+    this.clickAtracao(infoUltimodaLista,dia,infoUltimodaLista.indice)
+    this.getStyle(infoUltimodaLista.duracaoTotalDaAtracaoEmSegundos,dia,infoUltimodaLista.indice)
+    this.getInfoClicado=true
+    // this.getInfoBlocoClicado=true
     this.getInfoFromBlocoClicado=false
     this.alerta=""
-    this.programaClicado=""
+    // this.programaClicado=""
     if(this.programaBlocoSelectionado==info){
       this.programaBlocoSelectionado=""
     }else{
@@ -860,20 +874,22 @@ export class GradeComponent implements OnInit {
   }
 
   clickAtracao(info,dia,index){
+    console.log("clickAtracao info",info)
     this.getInfoClicado=true
     this.getInfoBlocoClicado=false
     this.getInfoFromBlocoClicado=false
     this.alerta=""
     this.programaBlocoSelectionado=""
-    if(this.programaClicado==info){
-      this.programaClicado=""
-    }else{
+    // if(this.programaClicado==info){
+    //   this.programaClicado=""
+    // }else{
       info.indice=index
       info.dia=dia
       this.programaClicado = info
       this.selectVideoForm.get('semanaFormControl').setValue(dia)
       this.selectedDiaDaSemana = dia
-    }
+    // }
+    console.log("clickAtracao this.programaClicado",this.programaClicado)
   }
 
   clickAtracaoFromBloco (info,dia,index){
