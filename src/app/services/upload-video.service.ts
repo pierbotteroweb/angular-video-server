@@ -8,6 +8,10 @@ export class UploadVideoService {
 
   constructor(private http: HttpClient) { }
 
+  getNewFileOnDirectory(url: string){
+    return this.http.get(url)
+  }
+
   upload(files: Set<File>, url: string){
     if(files){
 
