@@ -288,6 +288,46 @@ export class ArquivosComponent implements OnInit {
   //   }
   // }
 
+  getNewFileOnDirectory(){
+    if(this.selectVideoForm.get('tipoDeVideoFormControl')){
+      let url = "http://shuffletv.ddns.net:1984/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"GetInfoFromNewFilesOnServer"
+    this.uploadVideoService.getNewFileOnDirectory(url)
+    .subscribe((res:any)=>{
+      console.log("data",res)
+      let videoObj:any = {
+        canal:"",
+        duracao:"",
+        titulo:""
+      }
+  
+      this.mongodbService.createVideo(this.selectedTipoDeVideo,videoObj).subscribe((newItemRes:any)=>{
+        console.log("newItemRes",newItemRes)
+            
+        let videoObjUpdate:any = {
+          duracao:Math.round(res.Duration),
+          titulo:res.Name,
+          tipo:this.selectedTipoDeVideo
+        }
+
+        if(this.selectedCanal){
+          videoObjUpdate.canal=this.selectedCanal
+        }
+              
+        if(this.selectedProgramaDeTv){
+          videoObjUpdate.programaDeTv=this.selectedProgramaDeTv
+          videoObjUpdate.tituloAtracao=this.tituloAtracao
+        }
+
+  
+        this.mongodbService.updateVideo(newItemRes._id,videoObjUpdate).subscribe((videoUpdated:any)=>{
+          console.log("videoUpdated",videoUpdated)
+        })
+      })
+    })
+
+    }
+  }
+
   uploadUsingMongoDb(index){
 
     if(index<this.videosToUpload.length){
