@@ -1,4 +1,5 @@
 export interface VideoModel {
+    order: unknown;
     value: any;
     id: string;
     titulo: string;
