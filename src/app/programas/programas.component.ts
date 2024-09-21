@@ -31,6 +31,7 @@ export class ProgramasComponent implements OnInit {
   selectedProgramaDeTv:string
   selectedTipoDeVideo:string
   clickedProgramaDeTv:ProgramaModel
+  clickedProgramaDeTvAnexo:ProgramaModel
   canais: Array<any>
   tiposDeVideo: Array<any> = [
     { value: "listaNoite", titulo: "noite", port: "5000" },
@@ -144,10 +145,6 @@ export class ProgramasComponent implements OnInit {
       this.programaDeTvFiltered= unfiltered
   }
 
-  onRowSelect(event) {
-      this.updateTableWithClickedProgramaDeTv(event.data)
-  }
-
   updateTableWithClickedProgramaDeTv(data){
     if(data.tipo!=="intervalos"){
       this.clickedProgramaDeTv = data
@@ -173,6 +170,17 @@ export class ProgramasComponent implements OnInit {
     }
   }
 
+  onRowSelect(event) {
+      if(event.data.tipo=="intervalos"||event.data.bloco){
+        this.clickedProgramaDeTvAnexo = event.data
+        console.log(event.data)
+      } else {
+        this.updateTableWithClickedProgramaDeTv(event.data)
+        console.log(this.clickedProgramaDeTv)
+        console.log(event.data)
+      }
+  }
+
   onRowUnselect(event) {
     console.log(this.clickedProgramaDeTv)
     console.log(event.data)
@@ -180,6 +188,35 @@ export class ProgramasComponent implements OnInit {
       this.programaDeTvTable=this.programaDeTv
     }
   }
+
+  deleteSelected() {
+    if(this.clickedProgramaDeTvAnexo){
+      if(this.clickedProgramaDeTvAnexo.tipo=="intervalos"){
+        if(this.clickedProgramaDeTvAnexo.prePos){
+          this.clickedProgramaDeTv.anexos["prePos"] = ""
+        } else {
+          this.clickedProgramaDeTv.anexos["intervalo"] = ""
+        }
+      } else {
+          this.clickedProgramaDeTv.anexos[this.clickedProgramaDeTvAnexo.bloco] =
+          this.clickedProgramaDeTv.anexos[this.clickedProgramaDeTvAnexo.bloco]
+          .filter(bloco=>bloco!=this.clickedProgramaDeTvAnexo.value)
+      }
+      let anexosObj:any ={
+        _id:this.clickedProgramaDeTv._id,
+        anexos:this.clickedProgramaDeTv.anexos
+      }
+
+      this.mongodbService.updateProgramaDeTv(anexosObj).subscribe((res:any)=>{
+          this.updateTableWithClickedProgramaDeTv(res)
+      })
+      
+    } else {
+      console.log("Delete Programa")
+      console.log(this.clickedProgramaDeTv)
+    }
+  }
+  
   addAnexos(tipo){
     let anexosObj:any ={
       _id:this.clickedProgramaDeTv._id,
