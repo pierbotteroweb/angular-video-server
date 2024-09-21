@@ -12,3 +12,18 @@
     }
 }
 
+.btn{
+    margin: 0.3em 1em;
+}
+
+.dropdown-item:hover {
+    color: #fefeff;
+    text-decoration: none;
+    background-color: #0b74de;
+}
+
+.dropdown-item--danger:hover {
+    color: #fefeff;
+    text-decoration: none;
+    background-color: red;
+}

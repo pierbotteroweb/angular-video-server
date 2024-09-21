@@ -427,33 +427,6 @@ export class ArquivosComponent implements OnInit {
     console.log(this.selectedVideos)
   }
 
-  // setTipo(){
-  //   // this.selectedVideos = [...this.videos];
-  //   console.log(this.selectedVideos)
-  //   this.selectedVideos.map((video,index)=>{
-  //       this.update(this.selectedTipoDeVideo,video.id,{tipo:this.selectedTipoDeVideo})
-  //       this.videos.map(video2=>{
-  //         if(video.id==video2.id){
-  //           video2['tipo']=this.selectedTipoDeVideo
-  //         }
-  //       })
-  //       this.clearSelect()
-  //   })    
-  // }
-
-  // setTitulodaAtracao(){
-  //   console.log(this.selectedVideos)
-
-  //   this.selectedVideos.map(video=>{
-  //     console.log("setTitulodaAtracao - video", video )
-  //       if(video?.programaDeTv){
-  //         let tituloAtracao = this.programaDeTv.find(prog=>prog.value==video.programaDeTv)?.titulo
-  //         if(tituloAtracao){
-  //         this.update(this.selectedTipoDeVideo,video.id,{tituloAtracao:tituloAtracao})}
-  //       }
-  //   })
-  // }
-
   setOrder(){
     this.selectedVideos.filter(video=>video.titulo
       .includes(this.selectVideoForm.get("filtroDeBuscaFormControl").value))
