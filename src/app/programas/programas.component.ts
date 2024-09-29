@@ -232,6 +232,12 @@ export class ProgramasComponent implements OnInit {
         anexosObj.anexos[tipo]=[]
       }
       anexosObj.anexos[tipo].push(this.selectedProgramaDeTv)
+      anexosObj.anexos.blocosAmount=0
+      for(let i=1;i<6;i++){
+        if(anexosObj.anexos["bloco"+(i)]&&anexosObj.anexos["bloco"+(i)].length>0){
+          anexosObj.anexos.blocosAmount=i          
+        }
+      }
       
     } else {
       anexosObj.anexos[tipo]=this.selectedProgramaDeTv
