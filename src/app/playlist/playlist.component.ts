@@ -393,7 +393,7 @@ export class PlaylistComponent {
     },3000)
     setTimeout(()=>{
         this.textLogoVisible=false
-    },15000)
+    },15091)
     setTimeout(()=>{
         this.textoAbaixoDoLogo="A MALDIÇÃO DA MOSCA"
         this.textLogoVisible=true
@@ -459,7 +459,7 @@ export class PlaylistComponent {
       },1000)
     }
 
-    this.url= `http://shuffletv.ddns.net:5000/assets/${this.videoRodando['tipo']}/${encodeURI(this.videoRodando['titulo'])}#t=${inicio}`
+    this.url= `http://thisisshuffletv.zapto.org:5091/assets/${this.videoRodando['tipo']}/${encodeURI(this.videoRodando['titulo'])}#t=${inicio}`
 
     setTimeout(()=>{
       this.updateAVElements()

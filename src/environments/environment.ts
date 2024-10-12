@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  BASE_URL:"http://shuffletv.ddns.net:1984/api/assets/dvds/",
+  BASE_URL:"http://thisisshuffletv.zapto.org:1991/api/assets/dvds/",
   API: 'http://localhost:3000/',
   firebase: {
     apiKey: "AIzaSyCwnQT7_QChY_ce7z3uoiFWy6GMqlF--1c",

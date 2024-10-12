@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve -o --port 1984 --disable-host-check --host 0.0.0.0  --proxy-config proxy.config.js",
+    "start": "ng serve -o --port 1991 --disable-host-check --host 0.0.0.0  --proxy-config proxy.config.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

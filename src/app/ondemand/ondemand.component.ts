@@ -42,8 +42,8 @@ export class OndemandComponent implements OnInit {
                 })
                }
 
-  baseUrl:string="http://shuffletv.ddns.net:1984/api/assets/"
-  baseRequestUrl:string="http://shuffletv.ddns.net:1984/api/"
+  baseUrl:string="http://thisisshuffletv.zapto.org:1991/api/assets/"
+  baseRequestUrl:string="http://thisisshuffletv.zapto.org:1991/api/"
 
   title = 'angular-video-server';
   sts = sts;
@@ -570,7 +570,7 @@ export class OndemandComponent implements OnInit {
       }
     })
     // let lista = this["video"+[this.horario]]
-    // let url = "http://shuffletv.ddns.net:1984/api/"+request+"UpdateList"
+    // let url = "http://thisisshuffletv.zapto.org:1991/api/"+request+"UpdateList"
 
     // this.firebaseService.update(this.horario,id, media).then(() => {
     //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)
@@ -595,7 +595,7 @@ export class OndemandComponent implements OnInit {
       }
     })
     let lista = this["video"+[this.horario]]
-    let url = "http://shuffletv.ddns.net:1984/api/"+request+"UpdateList"
+    let url = "http://thisisshuffletv.zapto.org:1991/api/"+request+"UpdateList"
 
     // this.firebaseService.update(this.horario,id, media).then(() => {
     //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)
@@ -1151,7 +1151,7 @@ export class OndemandComponent implements OnInit {
     },3000)
     setTimeout(()=>{
         this.exibeImg=false
-    },15000)
+    },15091)
     setTimeout(()=>{
         this.exibeImg=true
     },18000)

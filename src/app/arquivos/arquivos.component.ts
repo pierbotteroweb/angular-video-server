@@ -38,14 +38,14 @@ export class ArquivosComponent implements OnInit {
   videos: VideoModel[]
   canais: Array<any>
   tiposDeVideo: Array<any> = [
-    { value: "listaNoite", titulo: "noite", port: "5000" },
-    { value: "listaDublados", titulo: "dublado", port: "5000" },
-    { value: "listaMadrugada", titulo: "madrugada", port: "5000" },
-    { value: "novelas", titulo: "novelas", port: "5000" },
-    { value: "listaOriginais", titulo: "originais", port: "5000" },
-    { value: "listaIntervalos", titulo: "intervalos", port: "5000" },
-    { value: "listaMovies", titulo: "movies", port: "5000" },
-    { value: "listaDvds", titulo: "dvds", port: "5000" }
+    { value: "listaNoite", titulo: "noite", port: "5091" },
+    { value: "listaDublados", titulo: "dublado", port: "5091" },
+    { value: "listaMadrugada", titulo: "madrugada", port: "5091" },
+    { value: "novelas", titulo: "novelas", port: "5091" },
+    { value: "listaOriginais", titulo: "originais", port: "5091" },
+    { value: "listaIntervalos", titulo: "intervalos", port: "5091" },
+    { value: "listaMovies", titulo: "movies", port: "5091" },
+    { value: "listaDvds", titulo: "dvds", port: "5091" }
   ];
   programaDeTv: Array<any>=[]
   programaDeTvFiltered: Array<any>=[]
@@ -238,7 +238,7 @@ export class ArquivosComponent implements OnInit {
   // upload(index){
 
   //   if(index<this.videosToUpload.length){
-  //     let url = "http://shuffletv.ddns.net:1984/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
+  //     let url = "http://thisisshuffletv.zapto.org:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
 
   //     let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
   //     .pipe(
@@ -290,7 +290,7 @@ export class ArquivosComponent implements OnInit {
 
   getNewFileOnDirectory(){
     if(this.selectVideoForm.get('tipoDeVideoFormControl')){
-      let url = "http://shuffletv.ddns.net:1984/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"GetInfoFromNewFilesOnServer"
+      let url = "http://thisisshuffletv.zapto.org:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"GetInfoFromNewFilesOnServer"
     this.uploadVideoService.getNewFileOnDirectory(url)
     .subscribe((res:any)=>{
       console.log("data",res)
@@ -331,7 +331,7 @@ export class ArquivosComponent implements OnInit {
   uploadUsingMongoDb(index){
 
     if(index<this.videosToUpload.length){
-      let url = "http://shuffletv.ddns.net:1984/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
+      let url = "http://thisisshuffletv.zapto.org:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
 
       let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
       .pipe(
@@ -960,7 +960,7 @@ export class ArquivosComponent implements OnInit {
   //       )
   //     ).subscribe((data:any)=>{
   //       this.listaParaAtualizar=data
-  //       let url = "http://shuffletv.ddns.net:1984/api/"+
+  //       let url = "http://thisisshuffletv.zapto.org:1991/api/"+
   //       this.selectVideoForm.get('tipoDeVideoFormControl').value+"UpdateList"
   //       this.uploadVideoService.listUpdate(this.listaParaAtualizar,url)
   //       .subscribe(res=>{

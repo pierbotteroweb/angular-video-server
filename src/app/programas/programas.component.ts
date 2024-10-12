@@ -34,14 +34,14 @@ export class ProgramasComponent implements OnInit {
   clickedProgramaDeTvAnexo:ProgramaModel
   canais: Array<any>
   tiposDeVideo: Array<any> = [
-    { value: "listaNoite", titulo: "noite", port: "5000" },
-    { value: "listaDublados", titulo: "dublado", port: "5000" },
-    { value: "listaMadrugada", titulo: "madrugada", port: "5000" },
-    { value: "novelas", titulo: "novelas", port: "5000" },
-    { value: "listaOriginais", titulo: "originais", port: "5000" },
-    { value: "listaIntervalos", titulo: "intervalos", port: "5000" },
-    { value: "listaMovies", titulo: "movies", port: "5000" },
-    { value: "listaDvds", titulo: "dvds", port: "5000" }
+    { value: "listaNoite", titulo: "noite", port: "5091" },
+    { value: "listaDublados", titulo: "dublado", port: "5091" },
+    { value: "listaMadrugada", titulo: "madrugada", port: "5091" },
+    { value: "novelas", titulo: "novelas", port: "5091" },
+    { value: "listaOriginais", titulo: "originais", port: "5091" },
+    { value: "listaIntervalos", titulo: "intervalos", port: "5091" },
+    { value: "listaMovies", titulo: "movies", port: "5091" },
+    { value: "listaDvds", titulo: "dvds", port: "5091" }
   ];
   programaDeTv: ProgramaModel[]
   programaDeTvFiltered: ProgramaModel[]

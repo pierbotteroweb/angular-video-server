@@ -8545,7 +8545,7 @@
                     "final": 0,
                     "indice": 13,
                     "tipo": "madrugada",
-                    "volume": 0.5000000000000001,
+                    "volume": 0.5091000000000001,
                     "atracao": "cinemaNaMadrugada",
                     "duracaoTotalDaAtracaoEmSegundos": -38,
                     "tituloAtracao": "Cinema na Madrugada",
@@ -8557,7 +8557,7 @@
                     "tituloAtracao": "Cinema na Madrugada",
                     "indice": 14,
                     "final": 8339,
-                    "volume": 0.5000000000000001,
+                    "volume": 0.5091000000000001,
                     "horarioDeExibicao": "23:29:49",
                     "id": "PUNqupqAwC6sQ0iyZlFb",
                     "tipo": "madrugada",
@@ -8579,7 +8579,7 @@
                 {
                     "inicio": 38,
                     "atracao": "cinemaNaMadrugada",
-                    "volume": 0.5000000000000001,
+                    "volume": 0.5091000000000001,
                     "duracaoTotalDaAtracaoEmSegundos": -38,
                     "tipo": "madrugada",
                     "tituloAtracao": "Cinema na Madrugada",
@@ -8595,7 +8595,7 @@
                     "atracao": "cinemaNaMadrugada",
                     "duracaoTotalDaAtracaoEmSegundos": 8339,
                     "indice": 17,
-                    "volume": 0.5000000000000001,
+                    "volume": 0.5091000000000001,
                     "tituloAtracao": "Cinema na Madrugada",
                     "final": 8339,
                     "horarioDeExibicao": "03:21:15",
@@ -9358,7 +9358,7 @@
                     "tipo": "madrugada",
                     "duracaoTotalDaAtracaoEmSegundos": -38,
                     "atracao": "cinemaNaMadrugada",
-                    "volume": 0.5000000000000001
+                    "volume": 0.5091000000000001
                 },
                 {
                     "horarioDeExibicao": "03:51:53",
@@ -9370,7 +9370,7 @@
                     "tituloAtracao": "Cinema na Madrugada",
                     "id": "PUNqupqAwC6sQ0iyZlFb",
                     "indice": 38,
-                    "volume": 0.5000000000000001,
+                    "volume": 0.5091000000000001,
                     "tipo": "madrugada"
                 }
             ]
