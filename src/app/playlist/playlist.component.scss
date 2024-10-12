@@ -9,12 +9,15 @@
 .text{
     font-family: "Baloo Da 2", cursive;
     position: fixed;
-    bottom: 30px;
+    bottom: 22.5vh;
+    max-width: 74vh;
     left: 50%;
-    font-size: 41px;
+    font-size: 7.3vh;
+    line-height: 7.3vh;
     color: #b3bc76;
-    text-shadow: 3px 4px 0px rgb(0 0 0);
-    transform: translateX(-50%);
+    text-align: center;
+    text-shadow: 0.8vh 0.5vh 0px black;
+    transform: translate(-50%,100%);
     -webkit-user-select: none; /* Safari */        
     -moz-user-select: none; /* Firefo{x */
     -ms-user-select: none; /* IE10+/Edge */
@@ -27,7 +30,7 @@
 .logo{
     vertical-align: middle;
     border-style: none;
-    bottom: 108px;
+    bottom: 26.5vh;
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
@@ -36,7 +39,7 @@
     transition: visibility 0s 2s, opacity 2s linear;
     margin-bottom: 0;
     img{
-        width: 53px;
+        width: 8.6vh;
     }
 }
 
