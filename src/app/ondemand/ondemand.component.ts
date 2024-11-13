@@ -384,6 +384,7 @@ export class OndemandComponent implements OnInit {
         }).subscribe(x=>{})
         
       this.videoCurrentTime= sts.toTime(this.videoElement.currentTime)
+      this.setPontoDePartida(this.videoElement.currentTime)
       }
 
     },1000)       
@@ -557,6 +558,19 @@ export class OndemandComponent implements OnInit {
 
   }
 
+  setPontoDePartida(pontoDePartida){
+    let media
+    this["video"+[this.horario]].find(video=>{ 
+      if(video._id==this.idDofilmeAtual){
+        media=video
+        media['pontoDePartida']=pontoDePartida
+      }
+    })
+
+    this.updateOnMongoDB(media)
+    
+  }
+
   salvarPontoDeCorte(){
     let id = this.idDofilmeAtual
     let request = this.requests.find(req=>req.horario==this.horario).request
@@ -610,9 +624,8 @@ export class OndemandComponent implements OnInit {
   }
 
   updateOnMongoDB(video):void {
-    console.log("updateOnMongoDB",video)
     this.mongodbService.updateVideo(video._id,video).subscribe(() => {
-      console.log('Video updated successfully!');
+      
     });
     
   }
@@ -959,7 +972,9 @@ export class OndemandComponent implements OnInit {
 
     this.url = this.baseUrl+horario+"/"+encodeURI(this.nomeDoFilmeAtual)
 
-    if(infoDoFilmeAtual?.corteInicio){
+    if(infoDoFilmeAtual?.pontoDePartida){
+      this.url=this.url+"#t="+infoDoFilmeAtual.pontoDePartida
+    }else if(infoDoFilmeAtual?.corteInicio){
       console.log("infoDoFilmeAtual?.corteInicio ",infoDoFilmeAtual.corteInicio)
       this.url=this.url+"#t="+infoDoFilmeAtual.corteInicio
     } else {
