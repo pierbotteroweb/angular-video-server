@@ -425,6 +425,7 @@ export class OndemandComponent implements OnInit {
 
     setInterval(()=>{
       if(this.videoElement){
+<<<<<<< HEAD
       let media
       this["video"+[this.horario]].find(video=>{ 
         if(video._id==this.idDofilmeAtual){
@@ -441,6 +442,14 @@ export class OndemandComponent implements OnInit {
             this.updateOnMongoDB(media)
           }
         })
+=======
+        this.pontoDePartidaService.updatePontoDePartida({
+          "horaInicio":this.videoElement.currentTime
+        }).subscribe(x=>{})
+        
+      this.videoCurrentTime= sts.toTime(this.videoElement.currentTime)
+      this.setPontoDePartida(this.videoElement.currentTime)
+>>>>>>> d101633 (ondemand)
       }
 
     },15000)       
@@ -612,6 +621,19 @@ export class OndemandComponent implements OnInit {
 
     this.updateOnMongoDB(media)
 
+  }
+
+  setPontoDePartida(pontoDePartida){
+    let media
+    this["video"+[this.horario]].find(video=>{ 
+      if(video._id==this.idDofilmeAtual){
+        media=video
+        media['pontoDePartida']=pontoDePartida
+      }
+    })
+
+    this.updateOnMongoDB(media)
+    
   }
 
   salvarPontoDeCorte(){
