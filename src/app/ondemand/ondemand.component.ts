@@ -449,6 +449,9 @@ export class OndemandComponent implements OnInit {
         
       this.videoCurrentTime= sts.toTime(this.videoElement.currentTime)
       this.setPontoDePartida(this.videoElement.currentTime)
+<<<<<<< HEAD
+>>>>>>> d101633 (ondemand)
+=======
 >>>>>>> d101633 (ondemand)
       }
 
