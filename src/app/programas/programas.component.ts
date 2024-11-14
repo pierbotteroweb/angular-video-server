@@ -173,17 +173,12 @@ export class ProgramasComponent implements OnInit {
   onRowSelect(event) {
       if(event.data.tipo=="intervalos"||event.data.bloco){
         this.clickedProgramaDeTvAnexo = event.data
-        console.log(event.data)
       } else {
         this.updateTableWithClickedProgramaDeTv(event.data)
-        console.log(this.clickedProgramaDeTv)
-        console.log(event.data)
       }
   }
 
   onRowUnselect(event) {
-    console.log(this.clickedProgramaDeTv)
-    console.log(event.data)
     if(this.clickedProgramaDeTv._id==event.data._id){
       this.programaDeTvTable=this.programaDeTv
     }
@@ -208,12 +203,16 @@ export class ProgramasComponent implements OnInit {
       }
 
       this.mongodbService.updateProgramaDeTv(anexosObj).subscribe((res:any)=>{
+        this.programaDeTv.map((item,index)=>{
+          if(item._id==res._id){
+            this.programaDeTv[index]=res
+          }
+        })
           this.updateTableWithClickedProgramaDeTv(res)
       })
       
     } else {
       console.log("Delete Programa")
-      console.log(this.clickedProgramaDeTv)
     }
   }
   
@@ -244,6 +243,11 @@ export class ProgramasComponent implements OnInit {
     }
 
     this.mongodbService.updateProgramaDeTv(anexosObj).subscribe((res:any)=>{
+      this.programaDeTv.map((item,index)=>{
+        if(item._id==res._id){
+          this.programaDeTv[index]=res
+        }
+      })
         this.updateTableWithClickedProgramaDeTv(res)
     })
   }
