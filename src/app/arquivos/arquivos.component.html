@@ -108,8 +108,9 @@
 
                      <div class="col-3">
                         <div class="row">
-                          <button  style="margin: 0.3em 1em;" class="btn btn-success" (click)="getNewFileOnDirectory()" >Get New on Dir</button>     
+                          <button style="margin: 0.3em 1em;" class="btn btn-success" (click)="getNewFileOnDirectory()" >Get New on Dir</button>     
                           <button style="margin: 0 1em 0 2em;height: 90%;" class="btn btn-success" (click)="uploadUsingMongoDb(0)" >Upload</button>
+                          <button style="margin: 0 1em 0 2em;height: 90%;" class="btn btn-success" type="button" (click)="playOnDemand()" >Play</button>
                           <div class="upload-block">
                              <div class="custom-file">
                                  <input type="file" class="custom-file-input" id="customFile" (change)="onUploadEventChange($event)" multiple />
@@ -146,7 +147,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-video let-rowIndex="rowIndex" let-columns="columns">
                <tr [pSelectableRow]="video" [pSelectableRowIndex]="rowIndex">
-                  <td style="min-width: 400px;">{{video.titulo}}</td>
+                  <td style="min-width: 400px">{{video.titulo}}</td>
                   <td style="min-width: 50px;">{{sts.toTime(video.duracao)}}</td>
                   <td style="min-width: 250px;">{{getTituloProgramaDeTv(video.programaDeTv)}}</td>
                   <td style="min-width: 50px;">{{video.canal}}</td>

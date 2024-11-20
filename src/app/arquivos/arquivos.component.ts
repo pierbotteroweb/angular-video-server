@@ -9,6 +9,8 @@ import { CommonService } from 'src/services/common.service';
 import { VideoModel } from './video';
 import { MongodbService } from '../services/mongodb.service';
 import { sts } from 'shuffle-tv-services/lib'
+import { PontoDePartidaService } from '../services/ponto-de-partida.service';
+import { WebSocketService } from '../services/WebSocketService.service';
 
 
 @Component({
@@ -68,6 +70,8 @@ export class ArquivosComponent implements OnInit {
       private commonServices: CommonService,
       private uploadVideoService: UploadVideoService,
       private mongodbService: MongodbService,
+      private pontoDePartidaService: PontoDePartidaService,
+      private webSocketService: WebSocketService,
       // private firebaseService: FirebaseService,
       private formBuilder: FormBuilder) { 
         this.selectVideoForm = this.formBuilder.group({
@@ -83,6 +87,7 @@ export class ArquivosComponent implements OnInit {
   // get canaisFormControl() { return this.selectVideoForm('canaisFormControl') as FormControl}
 
   ngOnInit() {
+    this.webSocketService.connect('ws://thisisshuffletv.zapto.org:9091');
       // this.productService.getProductsSmall().then(data => this.products = data);
       // this.retrieve()
 
@@ -1029,6 +1034,42 @@ export class ArquivosComponent implements OnInit {
     //     console.log('Video updated sucessfully')
     //   })
     // });
+  }
+
+  playOnDemand(){
+
+    // Listen for messages from the server
+    let subscription =  this.webSocketService.getMessages().subscribe((message) => {
+      let change = JSON.parse(message).updateDescription.updatedFields
+      console.log("Change", change)
+      subscription.unsubscribe()
+    });
+
+    let video:any = this.selectedVideos[0]
+    console.log(video)
+
+    let horario = video.tipo
+
+    if(horario=="noite"||horario=="madrugada"){
+      horario = horario+"Filmes"
+    }
+
+    setTimeout(() => {
+  
+      this.pontoDePartidaService.updatePontoDePartida({
+        "idDoFilme":video._id,
+        "filme":video.titulo,
+        "horario":horario,
+        "duracao":video.duracao,
+        "horaInicio":0,
+        "cortesParaIntervalo":video.cortesParaIntervalo,
+        "corteInicio":video.corteInicio,
+        "corteFinal":video.corteFinal,
+        "play":true
+      }).subscribe(data=>{
+        console.log("Ponto salvo com sucesso")
+      })
+    }, 100);
   }
 
   setButtonMode(mode){

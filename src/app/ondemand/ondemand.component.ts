@@ -9,6 +9,7 @@ import { UploadVideoService } from '../services/upload-video.service';
 import { map } from 'rxjs/operators';
 import { MongodbService } from '../services/mongodb.service';
 import { sts } from 'shuffle-tv-services/lib'
+import { WebSocketService } from '../services/WebSocketService.service';
 
 
 
@@ -24,6 +25,7 @@ export class OndemandComponent implements OnInit {
               private pontoDePartidaService: PontoDePartidaService,
               private mongodbService: MongodbService,
               private uploadVideoService: UploadVideoService,
+              private webSocketService: WebSocketService,
               private firebaseService: FirebaseService,
               private commonServices: CommonService,
               private formBuilder: FormBuilder) {
@@ -182,6 +184,16 @@ export class OndemandComponent implements OnInit {
 
 
   ngOnInit(){
+    this.webSocketService.connect('ws://thisisshuffletv.zapto.org:9091');
+
+    // Listen for messages from the server
+    this.webSocketService.getMessages().subscribe((message) => {
+      let change = JSON.parse(message)
+      console.log("Change", change)
+      this.getPontoDePartida(true)
+    });
+
+
     console.log(window.URL)
     this.boost=1
     this.resetPontosDeCorte()
@@ -262,7 +274,7 @@ export class OndemandComponent implements OnInit {
     })
   }
 
-  getPontoDePartida(){
+  getPontoDePartida(doInivio?){
 
     this.exibeVideo=false
 
@@ -281,8 +293,7 @@ export class OndemandComponent implements OnInit {
           this.selectVideoForm.get(filme.horario+"FormControl").setValue(filme.idDoFilme)          
     
           this.url=this.baseUrl+filme.horario+"/"
-                    +encodeURI(filme.filme)+"#t="+filme.horaInicio
-              
+                    +encodeURI(filme.filme)+(doInivio? "" : "#t="+filme.horaInicio)
           let infoDoFilmeAtual = {}
           infoDoFilmeAtual['cortesParaIntervalo'] = filme?.cortesParaIntervalo
           infoDoFilmeAtual['corteInicio'] = filme?.corteInicio
@@ -380,14 +391,15 @@ export class OndemandComponent implements OnInit {
     setInterval(()=>{
       if(this.videoElement){
         this.pontoDePartidaService.updatePontoDePartida({
-          "horaInicio":this.videoElement.currentTime
+          "horaInicio":this.videoElement.currentTime,
+          "play":false
         }).subscribe(x=>{})
         
       this.videoCurrentTime= sts.toTime(this.videoElement.currentTime)
       this.setPontoDePartida(this.videoElement.currentTime)
       }
 
-    },1000)       
+    },15000)       
   }
 
   avancaERecuaTempoVideoPorTeclado(){
@@ -564,6 +576,7 @@ export class OndemandComponent implements OnInit {
       if(video._id==this.idDofilmeAtual){
         media=video
         media['pontoDePartida']=pontoDePartida
+        media['play']=false
       }
     })
 
