@@ -33,6 +33,10 @@ export class MongodbService {
     return this.http.get('http://thisisshuffletv.zapto.org:9091/api/'+videoCollection)
   }
 
+  getFromVideoCollectionById(videoCollection,id){
+    return this.http.post('http://thisisshuffletv.zapto.org:9091/api/getVideoById/'+videoCollection.replace("Filmes",""), {'id': id})
+  }
+
   deleteFromVideoCollection(videoCollection,videoId){
     return this.http.post('http://thisisshuffletv.zapto.org:9091/api/delete'+videoCollection, {'id': videoId})
   }
