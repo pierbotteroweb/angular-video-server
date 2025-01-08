@@ -163,7 +163,7 @@ export class Obandidodaluzvermelha1968Component {
       setTimeout(()=>{
         let cues:any  = document.getElementsByTagName('video')[0].textTracks[0].cues;  
         for(let loop=0;loop<=cues.length-1;loop++){
-          cues[loop].line=-3;  
+          cues[loop].line=-5;  
         }
       
       },1000)

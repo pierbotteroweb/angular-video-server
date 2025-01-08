@@ -1058,15 +1058,10 @@ export class ArquivosComponent implements OnInit {
   
       this.pontoDePartidaService.updatePontoDePartida({
         "idDoFilme":video._id,
-        "filme":video.titulo,
         "horario":horario,
-        "duracao":video.duracao,
-        "horaInicio":0,
-        "cortesParaIntervalo":video.cortesParaIntervalo,
-        "corteInicio":video.corteInicio,
-        "corteFinal":video.corteFinal,
         "play":true
       }).subscribe(data=>{
+        this.clearSelect()
         console.log("Ponto salvo com sucesso")
       })
     }, 100);

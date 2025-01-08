@@ -190,7 +190,7 @@ export class OndemandComponent implements OnInit {
     this.webSocketService.getMessages().subscribe((message) => {
       let change = JSON.parse(message)
       console.log("Change", change)
-      this.getPontoDePartida(true)
+      this.getPontoDePartida()
     });
 
 
@@ -202,7 +202,6 @@ export class OndemandComponent implements OnInit {
     this.carregandoListasDeVideosDoMongoDB()
     // this.carregandoListasDeVideos()
     this.getPontoDePartida()
-    this.updatePontoDePartidaACadaSegundo()
     this.avancaERecuaTempoVideoPorTeclado()
     this.getListaDeProgramasDeTvFromMongoDB()
     // this.getListaDeProgramasDeTv()
@@ -274,56 +273,55 @@ export class OndemandComponent implements OnInit {
     })
   }
 
-  getPontoDePartida(doInivio?){
+  getPontoDePartida(){
 
     this.exibeVideo=false
 
     this.pontoDePartidaService.getPontoDePartida().subscribe(
       data=>{
-        if(data[0].filme!=""){
+        if(data[0].idDoFilme!=""){
+          this.mongodbService.getFromVideoCollectionById(data[0].horario,data[0].idDoFilme).subscribe((filme:any)=>{
+            console.log("123",data)
 
-          this.audioExterno=false
-          let filme = data[0]
-          this.horario = filme.horario
-          this.idDofilmeAtual = filme.idDoFilme
-          this.nomeDoFilmeAtual = filme.filme
-          sts.updatePageTitle(this.nomeDoFilmeAtual)
-          this.duracaoVideoSelecionado = filme.duracao
-    
-          this.selectVideoForm.get(filme.horario+"FormControl").setValue(filme.idDoFilme)          
-    
-          this.url=this.baseUrl+filme.horario+"/"
-                    +encodeURI(filme.filme)+(doInivio? "" : "#t="+filme.horaInicio)
-          let infoDoFilmeAtual = {}
-          infoDoFilmeAtual['cortesParaIntervalo'] = filme?.cortesParaIntervalo
-          infoDoFilmeAtual['corteInicio'] = filme?.corteInicio
-          infoDoFilmeAtual['corteFinal'] = filme?.corteFinal
-          this.updatePontosDeCorte(infoDoFilmeAtual)              
-          this.exibeVideo=true
-          this.updateAVElements()
-          this.timeBarUpdate()   
-          
-          if(filme?.volume){
-
-            setTimeout(()=>{
-              this.videoElement.volume=filme?.volume
-            },500)
-
-          }
-          // this.updateVolume(volObj) 
-
-          this.setSquare(filme.horario)
-          this.setandoParticulares(this.nomeDoFilmeAtual)
-    
-          setTimeout(()=>{        
-           this.setSubtitle(filme.filme,filme.horario)
-          //  this.setAudioExterno(filme.filme,filme.horario)
-           this.setSubPosition(-4)
-          },1000)
-    
-          // setTimeout(()=>{
-          // },3000)
-
+            this.audioExterno=false
+            this.horario = data[0].horario
+            this.idDofilmeAtual = data[0].idDoFilme
+            this.nomeDoFilmeAtual = filme.titulo
+            sts.updatePageTitle(this.nomeDoFilmeAtual)
+            this.duracaoVideoSelecionado = filme.duracao
+      
+            this.selectVideoForm.get(this.horario+"FormControl").setValue(data[0].idDoFilme)          
+      
+            this.url=this.baseUrl+this.horario+"/"
+                      +encodeURI(filme.titulo)+"#t="
+                      +(filme?.pontoDePartida?filme.pontoDePartida:"0")
+            let infoDoFilmeAtual = {}
+            infoDoFilmeAtual['cortesParaIntervalo'] = filme?.cortesParaIntervalo
+            infoDoFilmeAtual['corteInicio'] = (filme?.corteInicio?filme.corteInicio:"0")
+            infoDoFilmeAtual['corteFinal'] = (filme?.corteFinal?filme.corteFinal:filme.duracao)
+            this.updatePontosDeCorte(infoDoFilmeAtual)              
+            this.exibeVideo=true
+            this.setMediaDoPontoDePartida()
+            this.updateAVElements()
+            this.timeBarUpdate()   
+            
+            if(filme?.volume){
+  
+              setTimeout(()=>{
+                this.videoElement.volume=filme?.volume
+              },500)
+  
+            }
+            // this.updateVolume(volObj) 
+  
+            this.setSquare(this.horario)
+            this.setandoParticulares(this.nomeDoFilmeAtual)
+      
+            setTimeout(()=>{        
+             this.setSubtitle(filme.titulo,this.horario)
+             this.setSubPosition(-4)
+            },1000)
+          })
         } else {
           this.url = this.baseUrl+"dublado/"+encodeURI("Civic TV, chanel 83.mp4")+"#t=11"
           this.exibeVideo=true
@@ -384,19 +382,39 @@ export class OndemandComponent implements OnInit {
       this[filtredlista] = this[lista].filter(prog=>prog.programaDeTv==this.selectedProgramaDeTv)
     }
   }
+
+
+  setMediaDoPontoDePartida(){
+    let infoASerAtualizada={}
+        infoASerAtualizada['idDoFilme']=this.idDofilmeAtual
+        infoASerAtualizada['horario']=this.horario
+        infoASerAtualizada['play']=false
+        this.pontoDePartidaService.updatePontoDePartida(infoASerAtualizada).subscribe(x=>{})
+        this.updatePontoDePartidaNoVideoNoMongoDBACadaSegundo()
+  }
   
-  updatePontoDePartidaACadaSegundo(){
+  updatePontoDePartidaNoVideoNoMongoDBACadaSegundo(){
 
     this.updateAVElements()
+
+    setInterval(()=>{
+      
+      if(this.videoElement){
+        this.videoCurrentTime= sts.toTime(this.videoElement.currentTime)
+      }
+    },1000)
+
     setInterval(()=>{
       if(this.videoElement){
-        this.pontoDePartidaService.updatePontoDePartida({
-          "horaInicio":this.videoElement.currentTime,
-          "play":false
-        }).subscribe(x=>{})
-        
-      this.videoCurrentTime= sts.toTime(this.videoElement.currentTime)
-      this.setPontoDePartida(this.videoElement.currentTime)
+      let media
+      this["video"+[this.horario]].find(video=>{ 
+        if(video._id==this.idDofilmeAtual){
+            media=video
+            media['pontoDePartida']=this.videoElement.currentTime
+    
+            this.updateOnMongoDB(media)
+          }
+        })
       }
 
     },15000)       
@@ -568,20 +586,6 @@ export class OndemandComponent implements OnInit {
 
     this.updateOnMongoDB(media)
 
-  }
-
-  setPontoDePartida(pontoDePartida){
-    let media
-    this["video"+[this.horario]].find(video=>{ 
-      if(video._id==this.idDofilmeAtual){
-        media=video
-        media['pontoDePartida']=pontoDePartida
-        media['play']=false
-      }
-    })
-
-    this.updateOnMongoDB(media)
-    
   }
 
   salvarPontoDeCorte(){
