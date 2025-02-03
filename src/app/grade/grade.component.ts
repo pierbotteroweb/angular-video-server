@@ -66,8 +66,8 @@ export class GradeComponent implements OnInit {
   getInfoClicado:boolean;
   getInfoBlocoClicado:boolean;
   getInfoFromBlocoClicado:boolean;
-dia: any;
-
+  dia: any;
+  groupMode: boolean;
 
   constructor(private commonServices: CommonService,
               private firebaseService: FirebaseService,
@@ -94,6 +94,7 @@ dia: any;
   canais: Array<any>
 
   ngOnInit(): void {
+    this.groupMode = false;
 
     this.semana = this.semanaSemBlocos = ["segunda","terca","quarta","quinta","sexta","sabado","domingo"]
 
@@ -1053,6 +1054,10 @@ dia: any;
     diaDaSemanaValue = this.semana[indexSemana]
 
     return diaDaSemanaValue    
+  }
+
+  toTime(time){
+    return sts.toTime(time)
   }
 
   
