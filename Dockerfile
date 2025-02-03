@@ -1,0 +1,23 @@
+# Base image
+FROM node:14.15.0
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Install Angular CLI globally
+RUN npm install -g @angular/cli@12.2.4
+
+# Copy package.json and package-lock.json for dependency installation
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the application source code
+COPY . .
+
+# Expose the application port
+EXPOSE 1991
+
+# Start the Angular app
+CMD ["ng", "serve", "-o", "--port", "1991", "--disable-host-check", "--host", "0.0.0.0", "--proxy-config", "proxy.config.js"]

@@ -12,6 +12,15 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    // Fetch the configuration file before the Angular app starts
+    fetch('assets/config.json')
+      .then(response => response.json())
+      .then(config => {
+        window.myToken = config.MY_TOKEN; // Set the token on the global window object
+        console.log(window.myToken); // Log the token to the console
+      });
+  </script>
 </head>
 <body>
   <app-root></app-root>
