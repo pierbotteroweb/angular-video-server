@@ -868,8 +868,14 @@ dia: any;
 
   getStyle(width,dia,index?){
     if(this.programaClicado&&(this.programaClicado.indice==index)&&(this.programaClicado.dia==dia)){
+      console.log("getStyle this.programaClicado.indice",this.programaClicado.indice)
+      console.log("getStyle index",index)
+      console.log("getStyle width",width)
+      console.log("getStyle dia",dia)
+      console.log("getStyle this.programaClicado", this.programaClicado)
       return `width:${width/10}px;background:blue`
     } else {      
+      console.log("getStyle this.programaClicado", this.programaClicado)
       return `width:${width/10}px`
     }
   }
@@ -906,6 +912,7 @@ dia: any;
   }
 
   clickAtracao(info,dia,index){
+    console.log("clickAtracao info",info)
     this.getInfoClicado=true
     this.getInfoBlocoClicado=false
     this.getInfoFromBlocoClicado=false
