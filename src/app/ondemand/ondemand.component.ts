@@ -44,8 +44,8 @@ export class OndemandComponent implements OnInit {
                 })
                }
 
-  baseUrl:string="http://thisisshuffletv.zapto.org:1991/api/assets/"
-  baseRequestUrl:string="http://thisisshuffletv.zapto.org:1991/api/"
+  baseUrl:string="http://thisisshuffletv.:1991/api/assets/"
+  baseRequestUrl:string="http://thisisshuffletv.:1991/api/"
 
   title = 'angular-video-server';
   sts = sts;
@@ -184,7 +184,7 @@ export class OndemandComponent implements OnInit {
 
 
   ngOnInit(){
-    this.webSocketService.connect('ws://thisisshuffletv.zapto.org:9091');
+    this.webSocketService.connect('ws://thisisshuffletv.:9091');
 
     // Listen for messages from the server
     this.webSocketService.getMessages().subscribe((message) => {
@@ -601,7 +601,7 @@ export class OndemandComponent implements OnInit {
       }
     })
     // let lista = this["video"+[this.horario]]
-    // let url = "http://thisisshuffletv.zapto.org:1991/api/"+request+"UpdateList"
+    // let url = "http://thisisshuffletv.:1991/api/"+request+"UpdateList"
 
     // this.firebaseService.update(this.horario,id, media).then(() => {
     //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)
@@ -626,7 +626,7 @@ export class OndemandComponent implements OnInit {
       }
     })
     let lista = this["video"+[this.horario]]
-    let url = "http://thisisshuffletv.zapto.org:1991/api/"+request+"UpdateList"
+    let url = "http://thisisshuffletv.:1991/api/"+request+"UpdateList"
 
     // this.firebaseService.update(this.horario,id, media).then(() => {
     //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)

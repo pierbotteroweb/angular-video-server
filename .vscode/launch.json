@@ -9,7 +9,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://thisisshuffletv.zapto.org:1991/",
+            "url": "http://thisisshuffletv.:1991/",
             "webRoot": "${workspaceFolder}"
         }
     ]

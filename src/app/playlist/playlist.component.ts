@@ -467,7 +467,7 @@ export class PlaylistComponent {
       },1000)
     }
 
-    this.url= `http://thisisshuffletv.zapto.org:5091/assets/${this.videoRodando['tipo']}/${encodeURI(this.videoRodando['titulo'])}#t=${inicio}`
+    this.url= `http://thisisshuffletv.:5091/assets/${this.videoRodando['tipo']}/${encodeURI(this.videoRodando['titulo'])}#t=${inicio}`
 
     setTimeout(()=>{
       this.updateAVElements()

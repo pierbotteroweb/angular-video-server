@@ -11,7 +11,7 @@ export class Liquidsky1982Component implements OnInit {
   constructor(    
     private commonServices: CommonService
     ) { }
-  baseUrl:any="http://thisisshuffletv.zapto.org:1991/api/assets/dvds/"
+  baseUrl:any="http://thisisshuffletv.:1991/api/assets/dvds/"
   elem: any;
   data:any={};
 

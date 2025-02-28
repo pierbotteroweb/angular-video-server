@@ -7,8 +7,8 @@ import { take } from "rxjs/operators";
 })
 export class PontoDePartidaService {
 
-  // private readonly API:any= 'http://thisisshuffletv.zapto.org:2099/data'
-  private readonly API:any= 'http://thisisshuffletv.zapto.org:9091/api'
+  // private readonly API:any= 'http://thisisshuffletv.:2099/data'
+  private readonly API:any= 'http://thisisshuffletv.:9091/api'
 
   constructor(private http: HttpClient) { }
 
