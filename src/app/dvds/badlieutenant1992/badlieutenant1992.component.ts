@@ -15,7 +15,7 @@ export class Badlieutenant1992Component {
     private http: HttpClient,
     @Inject(DOCUMENT) private document: any
   ) { }
-  baseUrl: any = "http://thisisshuffletv.:1991/api/assets/dvds/"
+  baseUrl: any = "http://thisisshuffletv:1991/assets/dvds/"
   elem: any;
   data: any = {};
 

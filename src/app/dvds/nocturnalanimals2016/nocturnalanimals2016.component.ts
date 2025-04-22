@@ -12,7 +12,7 @@ export class Nocturnalanimals2016Component implements OnInit {
     
     private commonServices: CommonService
     ) { }
-  baseUrl:any="http://thisisshuffletv.:1991/api/assets/dvds/"
+  baseUrl:any="http://thisisshuffletv:1991/assets/dvds/"
   elem: any;
   data:any={};
 

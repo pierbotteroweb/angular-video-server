@@ -1,12 +1,12 @@
- http://thisisshuffletv.:2099/data
+ http://thisisshuffletv:2099/data
 
 ###
 
-GET http://thisisshuffletv.:2099/data/1
+GET http://thisisshuffletv:2099/data/1
 
 ###
 
-PATCH http://thisisshuffletv.:2099/data/0 HTTP/1.1
+PATCH http://thisisshuffletv:2099/data/0 HTTP/1.1
 content-type: application/json
 
 {
@@ -15,7 +15,7 @@ content-type: application/json
 
 ###
 
-POST http://thisisshuffletv.:2099/data HTTP/1.1
+POST http://thisisshuffletv:2099/data HTTP/1.1
 content-type: application/json
 
 {
@@ -29,7 +29,7 @@ content-type: application/json
 
 ###
 
-PUT http://thisisshuffletv.:2099/data/3 HTTP/1.1
+PUT http://thisisshuffletv:2099/data/3 HTTP/1.1
 content-type: application/json
 
 {
@@ -43,4 +43,4 @@ content-type: application/json
 
 ###
 
-DELETE http://thisisshuffletv.:2099/data/5
+DELETE http://thisisshuffletv:2099/data/5

@@ -18,7 +18,7 @@ export class DvdPlayerComponent implements OnInit {
     private http: HttpClient,    
     @Inject(DOCUMENT) private document: any
     ) { }
-    baseUrl:any="http://thisisshuffletv.:1991/api/assets/dvds/"
+    baseUrl:any="http://thisisshuffletv:1991/assets/dvds/"
     elem: any;
     @Input() chapterPoints:Array<any>
     @Input() data:any

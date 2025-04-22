@@ -87,7 +87,7 @@ export class ArquivosComponent implements OnInit {
   // get canaisFormControl() { return this.selectVideoForm('canaisFormControl') as FormControl}
 
   ngOnInit() {
-    this.webSocketService.connect('ws://thisisshuffletv.:9091');
+    this.webSocketService.connect('ws://thisisshuffletv:9091');
       // this.productService.getProductsSmall().then(data => this.products = data);
       // this.retrieve()
 
@@ -243,7 +243,7 @@ export class ArquivosComponent implements OnInit {
   // upload(index){
 
   //   if(index<this.videosToUpload.length){
-  //     let url = "http://thisisshuffletv.:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
+  //     let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
 
   //     let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
   //     .pipe(
@@ -295,7 +295,7 @@ export class ArquivosComponent implements OnInit {
 
   getNewFileOnDirectory(){
     if(this.selectVideoForm.get('tipoDeVideoFormControl')){
-      let url = "http://thisisshuffletv.:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"GetInfoFromNewFilesOnServer"
+      let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"GetInfoFromNewFilesOnServer"
     this.uploadVideoService.getNewFileOnDirectory(url)
     .subscribe((res:any)=>{
       console.log("data",res)
@@ -336,7 +336,7 @@ export class ArquivosComponent implements OnInit {
   uploadUsingMongoDb(index){
 
     if(index<this.videosToUpload.length){
-      let url = "http://thisisshuffletv.:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
+      let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
 
       let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
       .pipe(
@@ -965,7 +965,7 @@ export class ArquivosComponent implements OnInit {
   //       )
   //     ).subscribe((data:any)=>{
   //       this.listaParaAtualizar=data
-  //       let url = "http://thisisshuffletv.:1991/api/"+
+  //       let url = "http://thisisshuffletv:1991/api/"+
   //       this.selectVideoForm.get('tipoDeVideoFormControl').value+"UpdateList"
   //       this.uploadVideoService.listUpdate(this.listaParaAtualizar,url)
   //       .subscribe(res=>{

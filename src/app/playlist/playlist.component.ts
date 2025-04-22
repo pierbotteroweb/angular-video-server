@@ -22,6 +22,8 @@ export class PlaylistComponent {
     private http: HttpClient) { }
 
 
+    
+
   title = 'angular-video-server';
   tempPlaylist:any
   url:any
@@ -467,7 +469,7 @@ export class PlaylistComponent {
       },1000)
     }
 
-    this.url= `http://thisisshuffletv.:5091/assets/${this.videoRodando['tipo']}/${encodeURI(this.videoRodando['titulo'])}#t=${inicio}`
+    this.url= `http://thisisshuffletv:5091/assets/${this.videoRodando['tipo']}/${encodeURI(this.videoRodando['titulo'])}#t=${inicio}`
 
     setTimeout(()=>{
       this.updateAVElements()
