@@ -29,7 +29,7 @@ export class ProgramasComponent implements OnInit {
   selectedCanal:string
   currentRefList:[]
   selectedProgramaDeTv:string
-  selectedTipoDeVideo:string
+  selectedmimeType:string
   clickedProgramaDeTv:ProgramaModel
   clickedProgramaDeTvAnexo:ProgramaModel
   canais: Array<any>
@@ -66,7 +66,7 @@ export class ProgramasComponent implements OnInit {
       private formBuilder: FormBuilder) { 
         this.selectVideoForm = this.formBuilder.group({
           canaisFormControl:[""],
-          tipoDeVideoFormControl:[""],
+          mimeTypeFormControl:[""],
           programaDeTvFormControl:[""],
           subProgramaDeTvFormControl:[""],
           prePosProgramaDeTvFormControl:[""],
@@ -96,12 +96,12 @@ export class ProgramasComponent implements OnInit {
         this.tituloAtracao = this.programaDeTv.find(prog=>prog.value==value).titulo
       })
 
-      this.selectVideoForm.get('tipoDeVideoFormControl')
+      this.selectVideoForm.get('mimeTypeFormControl')
       .valueChanges.subscribe(value=>{
         this.tiposDeVideo.map(tipo=>{
           if(tipo.value==value){
-            this.selectedTipoDeVideo=tipo.titulo
-            this.filterProgramaDeTV(this.selectedCanal,this.selectedTipoDeVideo)
+            this.selectedmimeType=tipo.titulo
+            this.filterProgramaDeTV(this.selectedCanal,this.selectedmimeType)
           }
         })
       })
@@ -253,7 +253,7 @@ export class ProgramasComponent implements OnInit {
   }
 
   deleteFromMongoDB(id): void {
-    this.mongodbService.deleteFromVideoCollection(this.selectedTipoDeVideo,id).subscribe(() => {
+    this.mongodbService.deleteFromVideoCollection(this.selectedmimeType,id).subscribe(() => {
     });
   }
 

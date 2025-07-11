@@ -73,7 +73,7 @@ export class GradeComponent implements OnInit {
                   semanaFormControl:[""],
                   semanaDestinoFormControl:[""],
                   canaisFormControl:[""],
-                  tipoDeVideoFormControl:[""],
+                  mimeTypeFormControl:[""],
                   programaDeTvFormControl:[""]
                 })
                }

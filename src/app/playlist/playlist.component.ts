@@ -24,7 +24,6 @@ export class PlaylistComponent {
 
     
 
-  title = 'angular-video-server';
   tempPlaylist:any
   url:any
   exibeVideo:boolean=true
@@ -37,7 +36,7 @@ export class PlaylistComponent {
   filmesComerciais:any
   maldicaodamosca:boolean=false
 
-  tipodeVideo:any="video/mp4"
+  mimeType:any="video/mp4"
   indexCurrent:any
   horario:any='noiteFilmes'
   filmeAtual:any

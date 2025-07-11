@@ -1,15 +1,15 @@
-<video preload="auto" crossorigin="anonymous" (ended)="proximo()"  mousevolume  class="desktop-only"
+<video preload="auto" crossorigin="anonymous" (ended)="proximo()"  mousevolume   class="desktop-only"
        [ngClass]="{'maldicaodamosca': maldicaodamosca,'square': square}" 
        *ngIf="exibeVideo && this.innerWidth>500" autoplay>
-  <source [src]=url [type]="tipodeVideo">
+  <source [src]=url [type]="mimeType">
   Your browser does not support the video tag.
 </video>
 
 <span *ngIf="exibeVideo && this.innerWidth>500 && exibeNumCanal" class="numCanal">{{numCanal}}</span>
-<div class="esq"></div>
-<div class="dir">
+<!-- <div class="esq"></div>
+<div class="dir"> -->
   
-
+<!-- 
   <div class="arrowWrap">
     <div class="arrowUp">
       <i-bs name="caret-up-fill" 
@@ -24,7 +24,7 @@
       </i-bs>
     </div>
   </div>
-</div>
+</div> -->
 
 <!-- CONTROLES DE VIDEO (PAUSE, PLAY, BARRA DE TEMPO... ) -->
 <div class="movieMode--controls desktop-only" [ngStyle]="{'visibility': mouseMoving ? 'visible' : 'hidden'}">

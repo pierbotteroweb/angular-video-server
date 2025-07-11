@@ -40,7 +40,7 @@ export class OndemandComponent implements OnInit {
                   dvdsFormControl: [""],
                   canaisFormControl:[""],
                   programaDeTvFormControl:[""],
-                  tipoDeVideoFormControl:[""]
+                  mimeTypeFormControl:[""]
                 })
                }
 
@@ -94,7 +94,7 @@ export class OndemandComponent implements OnInit {
     {request:"listaDvds",horario:"dvds",subs:"listaDvdsSubs"}
   ]
 
-  tipodeVideo:any="video/mp4"
+  mimeType:any="video/mp4"
   indexCurrent:any
   horario:any='noiteFilmes'
   idDofilmeAtual:any
@@ -978,13 +978,13 @@ export class OndemandComponent implements OnInit {
     this.exibeVideo=false
     if(this.nomeDoFilmeAtual.slice(-3)=="mp4"||this.nomeDoFilmeAtual.slice(-3)
                                       =="mkv"||this.nomeDoFilmeAtual.slice(-3)=="m4v"){
-      this.tipodeVideo = "video/mp4"
+      this.mimeType = "video/mp4"
     } else if(this.nomeDoFilmeAtual.slice(-3)=="wmv"){
-      this.tipodeVideo = "video/wmv"
+      this.mimeType = "video/wmv"
     } else if(this.nomeDoFilmeAtual.slice(-3)=="flv"){
-      this.tipodeVideo = "video/flv"
+      this.mimeType = "video/flv"
     } else {
-      this.tipodeVideo = "video/webm"
+      this.mimeType = "video/webm"
     }
 
     this.url = this.baseUrl+horario+"/"+encodeURI(this.nomeDoFilmeAtual)
