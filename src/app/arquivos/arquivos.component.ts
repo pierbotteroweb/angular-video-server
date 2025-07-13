@@ -35,7 +35,7 @@ export class ArquivosComponent implements OnInit {
   selectedCanal:string
   currentRefList:[]
   selectedProgramaDeTv:string
-  selectedTipoDeVideo:string
+  selectedmimeType:string
   videosFiltered: VideoModel[]
   videos: VideoModel[]
   canais: Array<any>
@@ -76,7 +76,7 @@ export class ArquivosComponent implements OnInit {
       private formBuilder: FormBuilder) { 
         this.selectVideoForm = this.formBuilder.group({
           canaisFormControl:[""],
-          tipoDeVideoFormControl:[""],
+          mimeTypeFormControl:[""],
           programaDeTvFormControl:[""],
           subProgramaDeTvFormControl:[""],
           prePosProgramaDeTvFormControl:[""],
@@ -126,12 +126,12 @@ export class ArquivosComponent implements OnInit {
         this.addPrePosProgramaDeTV(value)
       })
 
-      this.selectVideoForm.get('tipoDeVideoFormControl')
+      this.selectVideoForm.get('mimeTypeFormControl')
       .valueChanges.subscribe(value=>{
         this.tiposDeVideo.map(tipo=>{
           if(tipo.value==value){
-            this.selectedTipoDeVideo=tipo.titulo
-            this.filterProgramaDeTV(this.selectedCanal,this.selectedTipoDeVideo)
+            this.selectedmimeType=tipo.titulo
+            this.filterProgramaDeTV(this.selectedCanal,this.selectedmimeType)
           }
         })
       })
@@ -163,7 +163,7 @@ export class ArquivosComponent implements OnInit {
       this.canais.find(canal=>canal.emissora==programaDeTv.canal)._id
     )
 
-    this.selectVideoForm.get('tipoDeVideoFormControl').setValue(
+    this.selectVideoForm.get('mimeTypeFormControl').setValue(
      this.tiposDeVideo.find(tipo=>tipo.titulo==programaDeTv.tipo).value
     )
 
@@ -243,7 +243,7 @@ export class ArquivosComponent implements OnInit {
   // upload(index){
 
   //   if(index<this.videosToUpload.length){
-  //     let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
+  //     let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('mimeTypeFormControl').value+"Upload"
 
   //     let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
   //     .pipe(
@@ -259,13 +259,13 @@ export class ArquivosComponent implements OnInit {
   //           titulo:""
   //         }
 
-  //         this.firebaseService.create(this.selectedTipoDeVideo,videoObj).then((newItemRes) => {
+  //         this.firebaseService.create(this.selectedmimeType,videoObj).then((newItemRes) => {
                 
   //           let videoObjUpdate:any = {
   //             canal:this.selectedCanal,
   //             duracao:Math.round(res['message'].file.duration),
   //             titulo:res['message'].file.name,
-  //             tipo:this.selectedTipoDeVideo,
+  //             tipo:this.selectedmimeType,
   //             tituloAtracao:this.tituloAtracao,
   //           }
 
@@ -273,11 +273,11 @@ export class ArquivosComponent implements OnInit {
   //             videoObjUpdate.programaDeTv=this.selectedProgramaDeTv
   //           }
 
-  //           this.firebaseService.update(this.selectedTipoDeVideo,newItemRes.id, videoObjUpdate).then(() => {
+  //           this.firebaseService.update(this.selectedmimeType,newItemRes.id, videoObjUpdate).then(() => {
   //             if(this.selectedProgramaDeTv){
   //               this.firebaseService.addItemToRefCollection(
   //                 this.selectedProgramaDeTv,
-  //                 this.selectedTipoDeVideo,newItemRes.id)
+  //                 this.selectedmimeType,newItemRes.id)
   //                 .then(data=>{
   //                   this.upload(index+1)
   //                 })
@@ -294,8 +294,8 @@ export class ArquivosComponent implements OnInit {
   // }
 
   getNewFileOnDirectory(){
-    if(this.selectVideoForm.get('tipoDeVideoFormControl')){
-      let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"GetInfoFromNewFilesOnServer"
+    if(this.selectVideoForm.get('mimeTypeFormControl')){
+      let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('mimeTypeFormControl').value+"GetInfoFromNewFilesOnServer"
     this.uploadVideoService.getNewFileOnDirectory(url)
     .subscribe((res:any)=>{
       console.log("data",res)
@@ -305,13 +305,13 @@ export class ArquivosComponent implements OnInit {
         titulo:""
       }
   
-      this.mongodbService.createVideo(this.selectedTipoDeVideo,videoObj).subscribe((newItemRes:any)=>{
+      this.mongodbService.createVideo(this.selectedmimeType,videoObj).subscribe((newItemRes:any)=>{
         console.log("newItemRes",newItemRes)
             
         let videoObjUpdate:any = {
           duracao:Math.round(res.Duration),
           titulo:res.Name,
-          tipo:this.selectedTipoDeVideo
+          tipo:this.selectedmimeType
         }
 
         if(this.selectedCanal){
@@ -336,7 +336,7 @@ export class ArquivosComponent implements OnInit {
   uploadUsingMongoDb(index){
 
     if(index<this.videosToUpload.length){
-      let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('tipoDeVideoFormControl').value+"Upload"
+      let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('mimeTypeFormControl').value+"Upload"
 
       let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
       .pipe(
@@ -352,13 +352,13 @@ export class ArquivosComponent implements OnInit {
             titulo:""
           }
       
-          this.mongodbService.createVideo(this.selectedTipoDeVideo,videoObj).subscribe((newItemRes:any)=>{
+          this.mongodbService.createVideo(this.selectedmimeType,videoObj).subscribe((newItemRes:any)=>{
             console.log("newItemRes",newItemRes)
                 
             let videoObjUpdate:any = {
               duracao:Math.round(res['message'].file.duration),
               titulo:res['message'].file.name,
-              tipo:this.selectedTipoDeVideo
+              tipo:this.selectedmimeType
             }
 
             if(this.selectedCanal){
@@ -410,7 +410,7 @@ export class ArquivosComponent implements OnInit {
       console.log("Product Selected - function onRowSelect trigered")
       console.log("event ",event)
       console.log(this.selectVideoForm.get("canaisFormControl").value)
-      console.log(this.selectedTipoDeVideo)
+      console.log(this.selectedmimeType)
   }
 
   onRowUnselect(event) {
@@ -556,7 +556,7 @@ export class ArquivosComponent implements OnInit {
 
   // addSubs(){
   //     this.selectedVideos.map(video=>{
-  //         this.update(this.selectedTipoDeVideo,video.id,{sub:true})
+  //         this.update(this.selectedmimeType,video.id,{sub:true})
   //     })    
   // }
 
@@ -661,7 +661,7 @@ export class ArquivosComponent implements OnInit {
   //         })
   //         this.firebaseService.addItemToRefCollection(
   //           this.selectedProgramaDeTv,
-  //           this.selectedTipoDeVideo,video.id)
+  //           this.selectedmimeType,video.id)
   //           .then(data=>{
   //           })
   //     })
@@ -672,11 +672,11 @@ export class ArquivosComponent implements OnInit {
   // addParaTia(){
   //     this.selectedVideos.map(video=>{
   //       this.update(video.tipo,video.id,{
-  //         tipo:this.selectedTipoDeVideo
+  //         tipo:this.selectedmimeType
   //       })
   //         this.firebaseService.addItemToRefCollection(
   //           "filmeDaTia",
-  //           this.selectedTipoDeVideo,video.id)
+  //           this.selectedmimeType,video.id)
   //           .then(data=>{
   //             this.update(video.tipo,video.id,{tia:true})
   //           })
@@ -727,7 +727,7 @@ export class ArquivosComponent implements OnInit {
   // retrieveSemCanal(): void {
   //   this.listaParaAtualizar=[]
   //   let unsubscribe =
-  //   this.firebaseService.getAll(this.selectedTipoDeVideo).snapshotChanges().pipe(
+  //   this.firebaseService.getAll(this.selectedmimeType).snapshotChanges().pipe(
   //     map(changes =>
   //       changes.map(c =>
   //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
@@ -746,8 +746,8 @@ export class ArquivosComponent implements OnInit {
 
   // getListMovies(){
   //   this.listaParaAtualizar=[]
-  //   if(this.selectedTipoDeVideo=="dvds"||this.selectedTipoDeVideo=="movies")
-  //   this.firebaseService.getAll(this.selectedTipoDeVideo).snapshotChanges()
+  //   if(this.selectedmimeType=="dvds"||this.selectedmimeType=="movies")
+  //   this.firebaseService.getAll(this.selectedmimeType).snapshotChanges()
   //   .pipe(
   //     map(changes =>
   //       changes.map(c =>
@@ -765,7 +765,7 @@ export class ArquivosComponent implements OnInit {
   //   let data = canalOuPrograma=="canal"?this.selectedCanal:this.selectedProgramaDeTv
     
   //   let unsubscribe=
-  //   this.firebaseService.getListFromfirestore(this.selectedTipoDeVideo,canalOuPrograma,data).snapshotChanges().pipe(
+  //   this.firebaseService.getListFromfirestore(this.selectedmimeType,canalOuPrograma,data).snapshotChanges().pipe(
   //     map(changes =>
   //       changes.map(c =>
   //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
@@ -811,7 +811,7 @@ export class ArquivosComponent implements OnInit {
       console.log("this.novoPrograma.value",this.novoPrograma.value)
       let newProg={
         titulo:this.novoPrograma.value,
-        tipo:this.selectedTipoDeVideo,
+        tipo:this.selectedmimeType,
         value:sts.camelize(this.novoPrograma.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "")),
         canal:this.selectedCanal,
         prePos:this.novoPrograma.value.includes("Pre")?true:false
@@ -904,10 +904,10 @@ export class ArquivosComponent implements OnInit {
   // }
 
   retreiveFromMongoDB(){
-    console.log(this.selectedTipoDeVideo)
+    console.log(this.selectedmimeType)
     let termoParaFiltro =this.selectVideoForm.get('filtroDeBuscaFormControl').value
     let unsubscribe =
-    this.mongodbService.getFromVideoCollection(this.selectedTipoDeVideo)
+    this.mongodbService.getFromVideoCollection(this.selectedmimeType)
     .subscribe((data:any )=> {      
       console.log("data")
       let tempData=[]
@@ -921,7 +921,7 @@ export class ArquivosComponent implements OnInit {
   // retrieve(): void {
   //   let termoParaFiltro =this.selectVideoForm.get('filtroDeBuscaFormControl').value
   //   let unsubscribe =
-  //   this.firebaseService.getAll(this.selectedTipoDeVideo,termoParaFiltro).snapshotChanges().pipe(
+  //   this.firebaseService.getAll(this.selectedmimeType,termoParaFiltro).snapshotChanges().pipe(
   //     map(changes =>
   //       changes.map(c =>
   //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
@@ -939,7 +939,7 @@ export class ArquivosComponent implements OnInit {
   // }
 
   // save(media): void {
-  //   this.firebaseService.create(this.selectedTipoDeVideo,media).then((res) => {
+  //   this.firebaseService.create(this.selectedmimeType,media).then((res) => {
   //     console.log('Created new item successfully! =>',res.id);
   //   });
   // }
@@ -957,7 +957,7 @@ export class ArquivosComponent implements OnInit {
 
   // atualizaListaLocal(){
   //   let unsubscribe=
-  //     this.firebaseService.getAll(this.selectedTipoDeVideo).snapshotChanges().pipe(
+  //     this.firebaseService.getAll(this.selectedmimeType).snapshotChanges().pipe(
   //       map(changes =>
   //         changes.map(c =>
   //           ({ id: c.payload.doc.id, ...c.payload.doc.data() })
@@ -966,7 +966,7 @@ export class ArquivosComponent implements OnInit {
   //     ).subscribe((data:any)=>{
   //       this.listaParaAtualizar=data
   //       let url = "http://thisisshuffletv:1991/api/"+
-  //       this.selectVideoForm.get('tipoDeVideoFormControl').value+"UpdateList"
+  //       this.selectVideoForm.get('mimeTypeFormControl').value+"UpdateList"
   //       this.uploadVideoService.listUpdate(this.listaParaAtualizar,url)
   //       .subscribe(res=>{
           
@@ -980,14 +980,14 @@ export class ArquivosComponent implements OnInit {
   //     this.firebaseService.deleteRef(this.selectedProgramaDeTv,id)
     
   //   }else {
-  //     this.firebaseService.delete(this.selectedTipoDeVideo,id).then(() => {
+  //     this.firebaseService.delete(this.selectedmimeType,id).then(() => {
   //       console.log('Item deleted successfully!');
   //     });
   //   }
   // }
 
   deleteFromMongoDB(id): void {
-    this.mongodbService.deleteFromVideoCollection(this.selectedTipoDeVideo,id).subscribe(() => {
+    this.mongodbService.deleteFromVideoCollection(this.selectedmimeType,id).subscribe(() => {
       console.log('Item deleted successfully!');
     });
   }

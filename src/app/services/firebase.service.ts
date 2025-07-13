@@ -78,9 +78,9 @@ export class FirebaseService {
     }
   }
 
-  getListFromfirestore(tipoDeVideo:string,tipoDeLista?:any,data?:any): AngularFirestoreCollection<Media> {
+  getListFromfirestore(mimeType:string,tipoDeLista?:any,data?:any): AngularFirestoreCollection<Media> {
     if(tipoDeLista=="canal"){
-      return this.db.collection(tipoDeVideo, ref=>
+      return this.db.collection(mimeType, ref=>
         ref.where("canal","==",data)
       ) 
     }else if(tipoDeLista=="programa"){
@@ -90,8 +90,8 @@ export class FirebaseService {
     }
   }
 
-  create(tipoDeVideo:string,media: Media): any {
-    return this[tipoDeVideo+"Ref"].add({ ...media })
+  create(mimeType:string,media: Media): any {
+    return this[mimeType+"Ref"].add({ ...media })
   }
 
   createNewCollection(newCollection):any{
@@ -120,15 +120,15 @@ export class FirebaseService {
     return this.db.collection("/"+refCollection).add({ ...media })
   }
 
-  update(tipoDeVideo:string,id: string, media: any): Promise<void> {
-    console.log("tipoDeVideo",tipoDeVideo)
+  update(mimeType:string,id: string, media: any): Promise<void> {
+    console.log("mimeType",mimeType)
     console.log("id",id)
     console.log("media",media)
-    return this[tipoDeVideo.replace("Filmes","")+"Ref"].doc(id).update(media);
+    return this[mimeType.replace("Filmes","")+"Ref"].doc(id).update(media);
   }
 
-  delete(tipoDeVideo:string,id: string): Promise<void> {
-    return this[tipoDeVideo+"Ref"].doc(id).delete();
+  delete(mimeType:string,id: string): Promise<void> {
+    return this[mimeType+"Ref"].doc(id).delete();
   }
 
   deleteRef(refCollection,refId) {
@@ -143,10 +143,10 @@ export class FirebaseService {
           this.db.collection("/"+refCollection).doc(refId).delete();
         } else {
 
-          let tipoDeVideo = dados.ref.path.split("/")[0]
+          let mimeType = dados.ref.path.split("/")[0]
           let idDadoOriginal = dados.ref.path.split("/")[1]
           let media = {programaDeTv:""}
-          this.update(tipoDeVideo,idDadoOriginal,media).then(data=>{
+          this.update(mimeType,idDadoOriginal,media).then(data=>{
             this.db.collection("/"+refCollection).doc(refId).delete();
           })
 

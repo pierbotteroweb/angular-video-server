@@ -4,7 +4,7 @@
        [ngStyle]="{'opacity':screenOpacity}"
        (ended)="proximoVideo()" (pause)="videoPausado()"
        (play)="videoStartado()" (click)="clickScreenMovie()">
-        <source [src]=url [type]="tipodeVideo">
+        <source [src]=url [type]="mimeType">
         <track label="Legenda 1" kind="subtitles" srclang="en" [src]=subUrl default>
           Your browser does not support the video tag.
 </video>
