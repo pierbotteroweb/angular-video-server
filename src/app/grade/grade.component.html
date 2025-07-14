@@ -78,9 +78,6 @@
 
                   <button class="btn btn-primary" (click)="clearInfoAtracao()" >
                           Clear</button>
-
-                  <button class="btn btn-primary" (click)="groupMode = !groupMode" >
-                          Group Mode</button>
                </div>
             </div>
             <div class="col-3 info-selected" *ngIf="getInfoClicado">
@@ -133,38 +130,27 @@
                 <div class="dozeHoras">
                     <div class="atracao" [style]="getStyle(programa.duracaoTotalDaAtracaoEmSegundos,dia,i)" 
                          *ngFor="let programa of listaSemana[dia]; index as i" (click)="clickAtracao(programa,dia,i)" >
-                         <div *ngIf="groupMode && listaBeingdisplayed[i].firstOfProgram"  (click)="getInfoBlocoAtracao(programa,dia,i)" 
-                            class="fullBlock" [style]="getStyle(listaBeingdisplayed[i].fullDuration,dia,i)" >
-                            <p style="margin-left: 5px;">
-                                {{listaBeingdisplayed[i].tituloAtracaoTotal}} 
-                                {{listaBeingdisplayed[i].movietitle}}</p>
-                            <span style="margin-left: 5px;">
-                                Duração: {{toTime(listaBeingdisplayed[i].fullDuration)}} |</span>
-                            <span>
-                                Horário de Exibição: {{listaBeingdisplayed[i].horarioDeExibicao}}</span>
-                            <span class="divider"></span>
-                        </div>
                          <p style="white-space: nowrap; overflow: hidden;">{{programa.tituloAtracao}}</p>
                          <!-- <span>{{programa.titulo}} </span><br> -->
                          <span>{{programa.horarioDeExibicao}}</span>
                     </div>
                 </div>
-                <div class="dozeHoras" *ngIf="!groupMode"> 
+                <div class="dozeHoras">
                     <div class="atracao" [style]="getStyleBloco(programa.tempoTotalEmSegundos,dia,i)" 
                          *ngFor="let programa of listaSemana[dia+'Bloco']; index as i" (click)="getInfoBlocoAtracao(programa,dia,i)" >
                          <p style="padding:0;white-space: nowrap; overflow: hidden;">{{programa.tituloAtracao}}</p>
                          <p style="padding:0;">{{programa.horarioDeExibicao}}</p>
                          <span>{{programa.tempoTotal}}</span>
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
 
     
-    <div class="container-fluid" *ngFor="let dia of semana"></div>>
-        <div class="row" *ngIf="listaParaUpdate&&listaParaUpdate.length>0">
-            <div class="col-1" [ngStyle]="{'background': dia==selectedDiaDaSemana ? 'lightgreen' : 'white'}">
+    <div class="container-fluid" *ngIf="listaParaUpdate&&listaParaUpdate.length>0">
+        <div class="row" >
+            <div class="col-1" [ngStyle]="{'background': selectedDiaDaSemana==dia ? 'lightgreen' : 'white'}">
                 <p>Dia Da Semana Em Update</p>
                 <p>{{selectedDiaDaSemana | titlecase }}</p>
             </div>         
@@ -185,3 +171,4 @@
             </div>
         </div>
     </div>
+</div>
