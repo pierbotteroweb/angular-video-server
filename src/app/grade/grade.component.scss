@@ -22,6 +22,7 @@
 }
 
 .atracao{
+    position: relative;
     display: inline-block;
     background:lightseagreen;
     color: #fff;
@@ -34,5 +35,21 @@
     p{
         font-weight: bold;
         font-size: 1.1em;
+    }
+}
+
+.fullBlock{
+    white-space: nowrap;
+    position: absolute;
+    background-color: green;
+    z-index: 1;
+    .divider{
+        position: absolute;
+        top: -38px;
+        left: 0px;
+        width: 1px;
+        height: 102px;
+        background: white;
+        display: block;
     }
 }

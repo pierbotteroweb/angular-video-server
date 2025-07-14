@@ -12,11 +12,14 @@ import { sts } from 'shuffle-tv-services/lib'
   styleUrls: ['./grade.component.scss']
 })
 export class GradeComponent implements OnInit {
-  programaDeTv: { id: string; 
+  programaDeTv: {
+    _id: any; id: string; 
                   titulo: string; 
                   duracao: string; 
                   canal?: string;  
                   value?: string; }[];
+  
+  listaBeingdisplayed:any = [];
 
   programaDeTvFiltered: { id: string; 
                           titulo: string; 
@@ -63,7 +66,8 @@ export class GradeComponent implements OnInit {
   getInfoClicado:boolean;
   getInfoBlocoClicado:boolean;
   getInfoFromBlocoClicado:boolean;
-
+  dia: any;
+  groupMode: boolean;
 
   constructor(private commonServices: CommonService,
               private firebaseService: FirebaseService,
@@ -90,6 +94,7 @@ export class GradeComponent implements OnInit {
   canais: Array<any>
 
   ngOnInit(): void {
+    this.groupMode = false;
 
     this.semana = this.semanaSemBlocos = ["segunda","terca","quarta","quinta","sexta","sabado","domingo"]
 
@@ -487,6 +492,18 @@ export class GradeComponent implements OnInit {
     this.prePosCount--
   }
 
+  getProgramasDeTvTitle(id){
+    return id
+    // this.programaDeTv.map(prog=>{
+    //   console.log("a",id)
+    //   console.log("b",prog._id)
+    //   console.log("c",prog.id)
+    //   if(prog._id==id){
+    //     return prog.titulo
+    //   }
+    // })
+  }
+
   adicionarPrograma(): void {
     // CHECK IF DIA DA SEMANA AND PROGRAMA DE TV ARE SELECTED
     if(this.selectedDiaDaSemana&&this.selectedProgramaDeTv){
@@ -682,9 +699,9 @@ export class GradeComponent implements OnInit {
                       if(listaDeProgramas.length>1){
                         this.resetAddedLista(listaDeProgramas.splice(1,listaDeProgramas.length),"blocos")                      
                       }
-                    }console.log("videoAdicionado ",videoAdicionado)
+                    }
 
-                    if(videoAdicionado.tipo=="intervalos") console.log("videoAdicionado ",videoAdicionado)
+                    // if(videoAdicionado.tipo=="intervalos") console.log("videoAdicionado ",videoAdicionado)
 
                       let newProg:Object ={}
 
@@ -800,11 +817,37 @@ export class GradeComponent implements OnInit {
       this.listaSemana = this.canais.filter(canal=>canal.emissora==this.selectedCanal)[0]
       if(this.selectedDiaDaSemana&&!this.listaSemana[this.selectedDiaDaSemana]) this.addDiasDeSemanaNoCanal()
       this.getListaDeProgramasDeTvFromMongodb()
+      this.createIndexListOfProgramasDeTV()
   }
 
   addDiasDeSemanaNoCanal(){
     this.semana.map((dia:any)=>{
       this.listaSemana[dia]=[]
+    })
+  }
+
+  createIndexListOfProgramasDeTV(){
+    
+    this.listaBeingdisplayed = this.listaSemana[this.selectedDiaDaSemana || this.getDiaDaSemanaValue()]
+    let indexOfProgBeingMapped
+    this.listaBeingdisplayed.map((prog:any,index)=>{
+      if(index==0 || prog.idProgTotal!=this.listaBeingdisplayed[index-1].idProgTotal){
+        this.listaBeingdisplayed[index].firstOfProgram=true
+        this.listaBeingdisplayed[index].fullDuration=prog.duracaoTotalDaAtracaoEmSegundos
+        indexOfProgBeingMapped=index
+      } else if( prog.idProgTotal == this.listaBeingdisplayed[index-1].idProgTotal) {
+        this.listaBeingdisplayed[indexOfProgBeingMapped].fullDuration+=prog.duracaoTotalDaAtracaoEmSegundos
+      }
+
+      if(prog.tipo!="intervalos"){
+        this.listaBeingdisplayed[indexOfProgBeingMapped].tituloAtracaoTotal=
+        this.programaDeTv.find(item=>item.value==prog.atracao).titulo
+      }
+
+      if(["noite","madrugada","movies"].some(item=>item==prog.tipo)){
+        this.listaBeingdisplayed[indexOfProgBeingMapped].movietitle = " - "+prog.titulo.replace("Dublado - ","").split(".")[0]     
+      }
+
     })
   }
 
@@ -826,8 +869,14 @@ export class GradeComponent implements OnInit {
 
   getStyle(width,dia,index?){
     if(this.programaClicado&&(this.programaClicado.indice==index)&&(this.programaClicado.dia==dia)){
+      console.log("getStyle this.programaClicado.indice",this.programaClicado.indice)
+      console.log("getStyle index",index)
+      console.log("getStyle width",width)
+      console.log("getStyle dia",dia)
+      console.log("getStyle this.programaClicado", this.programaClicado)
       return `width:${width/10}px;background:blue`
     } else {      
+      console.log("getStyle this.programaClicado", this.programaClicado)
       return `width:${width/10}px`
     }
   }
@@ -844,11 +893,19 @@ export class GradeComponent implements OnInit {
   }
 
   getInfoBlocoAtracao(info,dia,index){
-    this.getInfoClicado=false
-    this.getInfoBlocoClicado=true
+    console.log("getInfoBlocoAtracao this.listaSemana[dia]",this.listaSemana[dia].filter(prog=>prog.atracao==info.atracao))
+    console.log("getInfoBlocoAtracao this.listaSemana[dia]",this.listaSemana[dia].filter(prog=>prog.idProgTotal==info.idProgTotal))
+    console.log("getInfoBlocoAtracao info",info)
+    console.log("getInfoBlocoAtracao dia",dia)
+    let listSelectedProgram = this.listaSemana[dia].filter(prog=>prog.idProgTotal==info.idProgTotal)
+    let infoUltimodaLista = listSelectedProgram[listSelectedProgram.length-1]
+    this.clickAtracao(infoUltimodaLista,dia,infoUltimodaLista.indice)
+    this.getStyle(infoUltimodaLista.duracaoTotalDaAtracaoEmSegundos,dia,infoUltimodaLista.indice)
+    this.getInfoClicado=true
+    // this.getInfoBlocoClicado=true
     this.getInfoFromBlocoClicado=false
     this.alerta=""
-    this.programaClicado=""
+    // this.programaClicado=""
     if(this.programaBlocoSelectionado==info){
       this.programaBlocoSelectionado=""
     }else{
@@ -860,20 +917,22 @@ export class GradeComponent implements OnInit {
   }
 
   clickAtracao(info,dia,index){
+    console.log("clickAtracao info",info)
     this.getInfoClicado=true
     this.getInfoBlocoClicado=false
     this.getInfoFromBlocoClicado=false
     this.alerta=""
     this.programaBlocoSelectionado=""
-    if(this.programaClicado==info){
-      this.programaClicado=""
-    }else{
+    // if(this.programaClicado==info){
+    //   this.programaClicado=""
+    // }else{
       info.indice=index
       info.dia=dia
       this.programaClicado = info
       this.selectVideoForm.get('semanaFormControl').setValue(dia)
       this.selectedDiaDaSemana = dia
-    }
+    // }
+    console.log("clickAtracao this.programaClicado",this.programaClicado)
   }
 
   clickAtracaoFromBloco (info,dia,index){
@@ -881,6 +940,11 @@ export class GradeComponent implements OnInit {
     this.getInfoFromBlocoClicado=true
     this.programaClicado = info
 
+  }
+
+  clickAbc(prog, prog2){
+    console.log("A",prog)
+    console.log("B",prog2)
   }
 
   clearInfoAtracao(){
@@ -965,6 +1029,37 @@ export class GradeComponent implements OnInit {
         this.semana = [...this.semana,...semanaBloco]
   }
 
+  getDiaDaSemanaValue(){
+    const d = new Date();
+    let day = d.getDay()
+    let hour = d.getHours();
+    let diaDaSemanaValue
+    let indexSemana
+    if(day==0){
+      indexSemana = 6
+    } else {
+      indexSemana = day-1
+    }
+    let now = new Date().toLocaleTimeString()
+    let sixThiryAm = sts.toSeconds("06:00:00")
+    let currentHour = new Date().getHours()
+    if(sts.toSeconds(now)<=sixThiryAm){
+      if(indexSemana==0){
+        indexSemana=6
+      } else{
+        indexSemana--
+      }
+      currentHour = currentHour+18
+    }
+    diaDaSemanaValue = this.semana[indexSemana]
+
+    return diaDaSemanaValue    
+  }
+
+  toTime(time){
+    return sts.toTime(time)
+  }
+
   
 
   getSelectedChanelFromFirebase(){
@@ -979,27 +1074,11 @@ export class GradeComponent implements OnInit {
         let selectedCanalId = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0]._id
         this.selectVideoForm.get('canaisFormControl').setValue(selectedCanalId)
         const d = new Date();
-        let day = d.getDay()
-        let hour = d.getHours();
-        let diaDaSemanaValue
-        let indexSemana
-        if(day==0){
-          indexSemana = 6
-        } else {
-          indexSemana = day-1
-        }
         let now = new Date().toLocaleTimeString()
         let sixThiryAm = sts.toSeconds("06:00:00")
-        let currentHour = new Date().getHours()
-        if(sts.toSeconds(now)<=sixThiryAm){
-          if(indexSemana==0){
-            indexSemana=6
-          } else{
-            indexSemana--
-          }
-          currentHour = currentHour+18
-        }
-        diaDaSemanaValue = this.semana[indexSemana]
+
+        let diaDaSemanaValue = this.getDiaDaSemanaValue()
+        this.selectedDiaDaSemana = diaDaSemanaValue
         
         this.selectVideoForm.get('semanaFormControl').setValue(diaDaSemanaValue)
         let listaSemanaBloco = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0][diaDaSemanaValue+"Bloco"]
