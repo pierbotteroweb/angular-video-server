@@ -1,0 +1,43 @@
+<div class="mobile-remote-control">
+  <div class="remote-header">
+    <div class="brand">TOSHIBA</div>
+    <div class="model">CONTROLE REMOTO</div>
+    <div class="model-number">CT-218</div>
+  </div>
+  
+  <div class="control-section">
+    <div class="control-button volume">
+      <div class="button-label">LIG.-DESL.</div>
+      <div class="button-label">VOL.</div>
+      <button class="volume-button" (click)="zapchannel('up')"></button>
+    </div>
+    
+    <div class="control-button channels">
+      <div class="button-label">CANAIS</div>
+      <button class="channel-button" (click)="zapchannel('down')"></button>
+    </div>
+  </div>
+  
+  <div class="channel-buttons">
+    <div class="button-row">
+      <button [class.selected]="selectedCanal == 1" (click)="changeChannel(1)">1</button>
+      <button [class.selected]="selectedCanal == 2" (click)="changeChannel(2)">2</button>
+      <button [class.selected]="selectedCanal == 3" (click)="changeChannel(3)">3</button>
+    </div>
+    <div class="button-row">
+      <button [class.selected]="selectedCanal == 4" (click)="changeChannel(4)">4</button>
+      <button [class.selected]="selectedCanal == 5" (click)="changeChannel(5)">5</button>
+      <button [class.selected]="selectedCanal == 6" (click)="changeChannel(6)">6</button>
+    </div>
+    <div class="button-row">
+      <button [class.selected]="selectedCanal == 7" (click)="changeChannel(7)">7</button>
+      <button [class.selected]="selectedCanal == 8" (click)="changeChannel(8)">8</button>
+      <button [class.selected]="selectedCanal == 9" (click)="changeChannel(9)">9</button>
+    </div>
+    <div class="button-row">
+      <button [class.selected]="selectedCanal == 11" (click)="changeChannel(11)">0</button>
+      <button [class.selected]="selectedCanal == 13" (click)="changeChannel(13)">-</button>
+      <button [class.selected]="selectedCanal == 32" (click)="changeChannel(32)">+</button>
+    </div>
+  </div>
+</div> 

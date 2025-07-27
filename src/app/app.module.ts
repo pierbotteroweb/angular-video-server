@@ -21,6 +21,9 @@ import { AppComponent } from './app.component';
 import { PlaylistComponent } from './playlist/playlist.component';
 import { GradeComponent } from './grade/grade.component';
 import { ProgramasComponent } from './programas/programas.component';
+import { MobileRemoteComponent } from './mobile-remote/mobile-remote.component';
+
+
 
 // // MODULO COMPARTILHADO
 // import { SharedComponentsModule } from './shared/shared-components/shared-components.module';
@@ -61,6 +64,7 @@ import { Martin1977Component } from './dvds/martin1977/martin1977.component';
   declarations: [
     AppComponent,
     PlaylistComponent,
+    MobileRemoteComponent,
 
     Alphaville1965Component,
     Diehardwithavengeance1995Component,

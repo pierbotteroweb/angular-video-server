@@ -43,14 +43,10 @@
 <p class="logo" [ngClass]="{'text-logo-visible':textLogoVisible}"><img src="../../assets/logos/globo.png" alt=""></p>
 <p class="text" [ngClass]="{'text-logo-visible':textLogoVisible}">{{textoAbaixoDoLogo}}</p>
 
-<div class="remote-control" *ngIf="this.innerWidth<500">
-  <button (click)="changeChannel(1)">1</button>
-  <button (click)="changeChannel(2)">2</button>
-  <button (click)="changeChannel(3)">3</button>
-  <button (click)="changeChannel(4)" [ngStyle]="{'backgroundColor':((selectedCanal==4)? 'lightgray': 'white')}">4</button>
-  <button (click)="changeChannel(5)" [ngStyle]="{'backgroundColor':((selectedCanal==5)? 'lightgray': 'white')}">5</button>
-  <button (click)="changeChannel(6)">6</button>
-  <button (click)="changeChannel(7)">7</button>
-  <button (click)="changeChannel(8)">8</button>
-  <button (click)="changeChannel(9)">9</button>
-</div>
+<app-mobile-remote 
+  *ngIf="this.innerWidth<500" 
+  [selectedCanal]="selectedCanal"
+  [listaDeNumerosDeCanais]="listaDeNumerosDeCanais"
+  (channelChange)="changeChannel($event)"
+  (directionChange)="zapchannel($event)">
+</app-mobile-remote>
