@@ -55,7 +55,7 @@ export class PlaylistComponent {
         this.getLista(canal)
     })
     this.keyboardSetup()
-}
+  }
 
   changeChannel(channel){
     this.selectedCanal=channel
