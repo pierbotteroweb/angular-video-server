@@ -1,11 +1,11 @@
 <video preload="auto" crossorigin="anonymous" (ended)="proximo()"  mousevolume   class="desktop-only"
        [ngClass]="{'maldicaodamosca': maldicaodamosca,'square': square}" 
-       *ngIf="exibeVideo && this.innerWidth>500" autoplay>
-  <source [src]=url [type]="mimeType">
+       *ngIf="exibirVideo && this.windowInnerWidth>500" autoplay>
+  <source [src]=urlMediaPath [type]="mimeType">
   Your browser does not support the video tag.
 </video>
 
-<span *ngIf="exibeVideo && this.innerWidth>500 && exibeNumCanal" class="numCanal">{{numCanal}}</span>
+<span *ngIf="exibirVideo && this.windowInnerWidth>500 && exibeNumCanal" class="numCanal">{{numCanal}}</span>
 <div class="esq"></div>
 <div class="dir"> 
   <div class="arrowWrap">
@@ -25,17 +25,17 @@
 </div>
 
 <!-- CONTROLES DE VIDEO (PAUSE, PLAY, BARRA DE TEMPO... ) -->
-<div class="movieMode--controls desktop-only" [ngStyle]="{'visibility': mouseMoving ? 'visible' : 'hidden'}">
+<div class="movieMode--controls desktop-only" [ngStyle]="{'visibility': mouseIsMoving ? 'visible' : 'hidden'}">
 
   <span (click)="fullScreen()" class="movieMode--controls__fullscreen">
-    <i-bs *ngIf="!fullScreenMode" name="fullscreen" width="50" height="50"></i-bs>
-    <i-bs *ngIf="fullScreenMode" name="fullscreen-exit" width="50" height="50"></i-bs>
+    <i-bs *ngIf="!isFullScreenMode" name="fullscreen" width="50" height="50"></i-bs>
+    <i-bs *ngIf="isFullScreenMode" name="fullscreen-exit" width="50" height="50"></i-bs>
   </span>
 
 
   <span (click)="clickPauseMovie()" class="movieMode--controls__pause">
-    <i-bs *ngIf="pause" name="play-fill" width="50" height="50"></i-bs>
-    <i-bs *ngIf="!pause" name="pause-fill" width="50" height="50"></i-bs>
+    <i-bs *ngIf="videoIsPaused" name="play-fill" width="50" height="50"></i-bs>
+    <i-bs *ngIf="!videoIsPaused" name="pause-fill" width="50" height="50"></i-bs>
   </span>
 
 </div>
@@ -44,9 +44,9 @@
 <p class="text" [ngClass]="{'text-logo-visible':textLogoVisible}">{{textoAbaixoDoLogo}}</p>
 
 <app-mobile-remote 
-  *ngIf="this.innerWidth<500" 
+  *ngIf="this.windowInnerWidth<500" 
   [selectedCanal]="selectedCanal"
-  [listaDeNumerosDeCanais]="listaDeNumerosDeCanais"
+  [arrayNumerosCanais]="arrayNumerosCanais"
   (channelChange)="changeChannel($event)"
   (directionChange)="zapchannel($event)">
 </app-mobile-remote>
