@@ -409,7 +409,6 @@ export class PlaylistComponent {
   }
 
   proximo(){
-    console.log("func this.próximo")
     setTimeout(()=>{
       this.pegaVideoParaRodarPorHorarioDeExibicao()
     },100)
