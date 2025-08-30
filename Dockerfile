@@ -13,11 +13,8 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy the application source code
-COPY . .
-
 # Expose the application port
 EXPOSE 1991
 
-# Start the Angular app
-CMD ["ng", "serve", "-o", "--port", "1991", "--disable-host-check", "--host", "0.0.0.0", "--proxy-config", "proxy.config.js"]
+# Start the Angular app with polling enabled for file watching
+CMD ["ng", "serve", "--port", "1991", "--disable-host-check", "--host", "0.0.0.0", "--proxy-config", "proxy.config.js", "--poll", "2000"]
