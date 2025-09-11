@@ -64,7 +64,6 @@ export class GradeComponent implements OnInit {
   getInfoBlocoClicado:boolean;
   getInfoFromBlocoClicado:boolean;
 
-
   constructor(private commonServices: CommonService,
               private firebaseService: FirebaseService,
               private mongodbService: MongodbService,
@@ -77,15 +76,14 @@ export class GradeComponent implements OnInit {
                   programaDeTvFormControl:[""]
                 })
                }
+
   programaClicado:any;
   programaBlocoSelectionado:any;
   selectVideoForm :any
   novoPrograma:FormControl
   duracaoEstimada:FormControl
-
   semana:Array<String>
   semanaSemBlocos:Array<String>
-
   horas:any = []
   canais: Array<any>
 
@@ -157,14 +155,12 @@ export class GradeComponent implements OnInit {
     let unsubscribe=
     this.mongodbService.getCanais().subscribe((data:any )=>{ 
       this.canais=data.sort(sts.sortPor("canal"))
-
-      this.getSelectedChanelFromFirebase()  
+      this.displaySelectedCanalInfo()
       this.canais.map(canal=>{
         this.gerarListasDeBlocos(canal.emissora)
       })
       unsubscribe.unsubscribe()
     })
-
   }
   
   removePrograma(){
@@ -247,8 +243,6 @@ export class GradeComponent implements OnInit {
       this.recalculaHorariosDeExibicao(listaFinal) 
     })
   }
-
-  
 
   organizaPrePos(){
     let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaSemana[this.selectedDiaDaSemana]
@@ -474,6 +468,7 @@ export class GradeComponent implements OnInit {
     this.adicionarPrograma()
     this.intervalosCount--
   }
+
   addPrePos(prePosApi){
     this.lengthListaFinal++
 
@@ -832,7 +827,6 @@ export class GradeComponent implements OnInit {
     }
   }
 
-
   getStyleBloco(width,dia,index?){
     if(this.programaBlocoSelectionado&&
       (this.programaBlocoSelectionado.indice==index)&&
@@ -965,84 +959,107 @@ export class GradeComponent implements OnInit {
         this.semana = [...this.semana,...semanaBloco]
   }
 
-  
-
-  getSelectedChanelFromFirebase(){
+  displaySelectedCanalInfo(){
     this.firebaseService.getSeletorDeCanal()
     .snapshotChanges()
     .subscribe(change=>{
+
         let canal =  change[0].payload._delegate.doc._document.data.value.mapValue.fields.canal.integerValue   
-        canal = canal.toString()
-        canal = canal=="6"?"32":canal
-        canal = canal=="1"?"11":canal
-        canal = canal=="3"?"13":canal
-        let selectedCanalId = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0]._id
-        this.selectVideoForm.get('canaisFormControl').setValue(selectedCanalId)
-        const d = new Date();
-        let day = d.getDay()
-        let hour = d.getHours();
-        let diaDaSemanaValue
-        let indexSemana
-        if(day==0){
-          indexSemana = 6
-        } else {
-          indexSemana = day-1
-        }
-        let now = new Date().toLocaleTimeString()
-        let sixThiryAm = sts.toSeconds("06:00:00")
-        let currentHour = new Date().getHours()
-        if(sts.toSeconds(now)<=sixThiryAm){
-          if(indexSemana==0){
-            indexSemana=6
-          } else{
-            indexSemana--
-          }
-          currentHour = currentHour+18
-        }
-        diaDaSemanaValue = this.semana[indexSemana]
-        
-        this.selectVideoForm.get('semanaFormControl').setValue(diaDaSemanaValue)
-        let listaSemanaBloco = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0][diaDaSemanaValue+"Bloco"]
-        var time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+        const newDate = new Date();
 
-        let currentBloco
+        this.findSelectedCanalId(canal)
 
-        if(sts.toSeconds(now)<=sixThiryAm){
-          currentBloco = listaSemanaBloco.find(bloco=>{ 
-            let tempoTotalEmSegundosDoBloco = sts.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos
-            return tempoTotalEmSegundosDoBloco < sixThiryAm && tempoTotalEmSegundosDoBloco > sts.toSeconds(time)
-         })
-        } else {
-          currentBloco = listaSemanaBloco.find(bloco=>{ 
-            return (sts.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos)>
-           sts.toSeconds(time)
-         })
-        }
-        
-        let IndexCurrentBloco = listaSemanaBloco.indexOf(currentBloco)
+        this.findDiaDaSemanaValue(newDate)
 
-        let listaAteCurrent = listaSemanaBloco
-
-        listaAteCurrent = [...listaAteCurrent].splice(0,IndexCurrentBloco)
-
-        this.getInfoBlocoAtracao(currentBloco,diaDaSemanaValue,IndexCurrentBloco)
-
-        function add(accumulator, a) {
-          return accumulator + a;
-        }
-
-        let valueToScroll = sts.sumItemsOnArray(listaAteCurrent.map(prog=>prog.tempoTotalEmSegundos))/10
-
-        setTimeout(()=>{
-          document.getElementsByClassName("col-11")[0].scrollLeft = valueToScroll
-        },100)
-
+        this.scrollTocurrentBloco(canal,newDate)
 
     },err=>{
       console.log("ERR",err)
     })
   }
 
+  findSelectedCanalId(canal){   
+    canal = canal.toString()
+    canal = canal=="6"?"32":canal
+    canal = canal=="1"?"11":canal
+    canal = canal=="3"?"13":canal
+    let selectedCanalId = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0]._id
+    this.setCanaisForm(selectedCanalId)
+  }
+
+  setCanaisForm(selectedCanalId){
+    this.selectVideoForm.get('canaisFormControl').setValue(selectedCanalId)
+  }
+
+  findDiaDaSemanaValue(newDate){
+    let day = newDate.getDay()
+    let hour = newDate.getHours();
+    let diaDaSemanaValue
+    let indexSemana
+    if(day==0){
+      indexSemana = 6
+    } else {
+      indexSemana = day-1
+    }
+    let now = newDate.toLocaleTimeString()
+    let sixThiryAm = sts.toSeconds("06:00:00")
+    let currentHour = newDate.getHours()
+    if(sts.toSeconds(now)<=sixThiryAm){
+      if(indexSemana==0){
+        indexSemana=6
+      } else{
+        indexSemana--
+      }
+      currentHour = currentHour+18
+    }
+    diaDaSemanaValue = this.semana[indexSemana]
+    this.setSemanaForm(diaDaSemanaValue)
+  }
+
+  setSemanaForm(diaDaSemanaValue){        
+    this.selectVideoForm.get('semanaFormControl').setValue(diaDaSemanaValue)
+  }
+
+  scrollTocurrentBloco(canal,newDate){
+
+    let diaDaSemanaValue = this.selectVideoForm.get('semanaFormControl').value
+    let listaSemanaBloco = this.canais.filter(canalMapeado=>canalMapeado.canal==canal)[0][diaDaSemanaValue+"Bloco"]
+    var time = newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds();
+
+    let currentBloco
+    let now = newDate.toLocaleTimeString()
+    let sixThiryAm = sts.toSeconds("06:00:00")
+
+    if(sts.toSeconds(now)<=sixThiryAm){
+      currentBloco = listaSemanaBloco.find(bloco=>{ 
+        let tempoTotalEmSegundosDoBloco = sts.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos
+        return tempoTotalEmSegundosDoBloco < sixThiryAm && tempoTotalEmSegundosDoBloco > sts.toSeconds(time)
+     })
+    } else {
+      currentBloco = listaSemanaBloco.find(bloco=>{ 
+        return (sts.toSeconds(bloco.horarioDeExibicao)+bloco.tempoTotalEmSegundos)>
+       sts.toSeconds(time)
+     })
+    }
+    
+    let IndexCurrentBloco = listaSemanaBloco.indexOf(currentBloco)
+
+    let listaAteCurrent = listaSemanaBloco
+
+    listaAteCurrent = [...listaAteCurrent].splice(0,IndexCurrentBloco)
+
+    this.getInfoBlocoAtracao(currentBloco,diaDaSemanaValue,IndexCurrentBloco)
+
+    function add(accumulator, a) {
+      return accumulator + a;
+    }
+
+    let valueToScroll = sts.sumItemsOnArray(listaAteCurrent.map(prog=>prog.tempoTotalEmSegundos))/10
+
+    setTimeout(()=>{
+      document.getElementsByClassName("col-11")[0].scrollLeft = valueToScroll
+    },100)
+  }
   
 }
 
