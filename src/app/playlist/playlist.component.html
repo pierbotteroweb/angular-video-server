@@ -1,13 +1,12 @@
 <video preload="auto" crossorigin="anonymous" (ended)="proximo()"  mousevolume   class="desktop-only"
-       [ngClass]="{'maldicaodamosca': maldicaodamosca,'square': square}" 
        *ngIf="exibirVideo && this.windowInnerWidth>500" autoplay>
   <source [src]=urlMediaPath [type]="mimeType">
   Your browser does not support the video tag.
 </video>
 
 <span *ngIf="exibirVideo && this.windowInnerWidth>500 && exibeNumCanal" class="numCanal">{{numCanal}}</span>
-<div class="esq"></div>
-<div class="dir"> 
+<div class="esq" *ngIf="viewport < 2.3"></div>
+<div class="dir" *ngIf="viewport < 2.3">
   <div class="arrowWrap">
     <div class="arrowUp">
       <i-bs name="caret-up-fill" 

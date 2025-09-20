@@ -41,11 +41,13 @@ export class PlaylistComponent {
   textoAbaixoDoLogo:string=""
   unsubscribe:any
   arrayNumerosCanais:Array<any>
+  viewport: number
 
   @ViewChild ('player') player: ElementRef;
 
   ngOnInit(){
     this.windowInnerWidth = window.innerWidth
+    this.viewport = window.innerWidth / window.innerHeight
     this.getCanaisFromMongoDB()
     this.spySelectedCanal = new Subject()
     this.spySelectedCanal.subscribe((canal)=>{
