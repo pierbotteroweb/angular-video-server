@@ -18,4 +18,4 @@ export class MobileRemoteComponent {
   zapchannel(direction: string) {
     this.directionChange.emit(direction);
   }
-} 
+}
