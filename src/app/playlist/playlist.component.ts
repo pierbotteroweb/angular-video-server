@@ -69,6 +69,7 @@ export class PlaylistComponent {
   textoAbaixoDoLogo:string=""
   unsubscribe:any
   listaDeNumerosDeCanais:Array<any>
+  viewport: number
 
   extensoes:Array<String>=[
     "mp4","m4v","flv","mkv","wmv","webm"
@@ -91,7 +92,9 @@ export class PlaylistComponent {
 //   }
   
 //   eval(String(trackerScript))
+
     this.innerWidth = window.innerWidth
+    this.viewport = window.innerWidth / window.innerHeight
     this.getCanaisFromMongoDB()
     this.spySelectedCanal = new Subject()
     this.spySelectedCanal.subscribe((canal)=>{
