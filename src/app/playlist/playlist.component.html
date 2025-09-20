@@ -6,8 +6,8 @@
 </video>
 
 <span *ngIf="exibeVideo && this.innerWidth>500 && exibeNumCanal" class="numCanal">{{numCanal}}</span>
-<div class="esq"></div>
-<div class="dir"> 
+<div class="esq" *ngIf="viewport < 2.3"></div>
+<div class="dir" *ngIf="viewport < 2.3"> 
   <div class="arrowWrap">
     <div class="arrowUp">
       <i-bs name="caret-up-fill" 
