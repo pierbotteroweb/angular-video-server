@@ -308,7 +308,13 @@ export class PlaylistComponent {
         let hojeFull = new Date()
         let hoje:any = this.semana[hojeFull.getDay()]
         
-        let now = new Date().toLocaleTimeString()
+        let now = new Date().toLocaleTimeString("pt-BR", {
+          timeZone: "America/Sao_Paulo",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        });
+        
         let sixThiryAm = sts.toSeconds("06:00:00")
         if(sts.toSeconds(now)<=sixThiryAm){
           let semanaIndex = hojeFull.getDay()>0?hojeFull.getDay()-1:6
@@ -429,7 +435,12 @@ export class PlaylistComponent {
 
     let hora = new Date()
 
-    let now = new Date().toLocaleTimeString()
+    let now = new Date().toLocaleTimeString("pt-BR", {
+          timeZone: "America/Sao_Paulo",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        })
     let searchList = this.listaSemana
     
     this.videoRodando = searchList.filter(videoPararodar=>{
