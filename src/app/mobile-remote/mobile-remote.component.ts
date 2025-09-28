@@ -7,7 +7,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class MobileRemoteComponent {
   @Input() selectedCanal: number;
-  @Input() listaDeNumerosDeCanais: Array<any>;
+  @Input() arrayNumerosCanais: Array<any>;
   @Output() channelChange = new EventEmitter<number>();
   @Output() directionChange = new EventEmitter<string>();
 
