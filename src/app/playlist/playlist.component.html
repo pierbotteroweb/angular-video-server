@@ -1,11 +1,14 @@
-<video preload="auto" crossorigin="anonymous" (ended)="proximo()"  mousevolume   class="desktop-only"
-       [ngClass]="{'maldicaodamosca': maldicaodamosca,'square': square}" 
+<video preload="auto" crossorigin="anonymous" (ended)="proximo()"  mousevolume   class="video desktop-only"
+       [ngClass]="{'video--object-fit-contain': viewport < 2.3}" 
        *ngIf="exibeVideo && this.innerWidth>500" autoplay>
   <source [src]=url [type]="mimeType">
   Your browser does not support the video tag.
 </video>
 
-<span *ngIf="exibeVideo && this.innerWidth>500 && exibeNumCanal" class="numCanal">{{numCanal}}</span>
+<span *ngIf="exibeVideo && this.innerWidth>500 && exibeNumCanal" 
+  class="numCanal" [ngStyle]="{'right': viewport < 2.3 ? '25%' : '15%'}">
+  {{numCanal}}</span>
+
 <div class="esq" *ngIf="viewport < 2.3"></div>
 <div class="dir" *ngIf="viewport < 2.3"> 
   <div class="arrowWrap">
