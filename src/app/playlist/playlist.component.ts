@@ -18,82 +18,39 @@ export class PlaylistComponent {
     @Inject(DOCUMENT) private document: any,
     private commonServices: CommonService,
     private firebaseService: FirebaseService,
-    private mongodbService: MongodbService,
-    private http: HttpClient) { }
+    private mongodbService: MongodbService) { }
 
 
     
 
-  tempPlaylist:any
-  url:any
-  exibeVideo:boolean=true
+  fullCanaisCollection:any
+  urlMediaPath:any
+  exibirVideo:boolean=true
   exibeNumCanal:boolean=true
   numCanal:number=5
 
-  filmesNoite:any
-  filmesMadrugada:any
-  filmesDublado:any
-  filmesComerciais:any
-  maldicaodamosca:boolean=false
-
   mimeType:any="video/mp4"
-  indexCurrent:any
-  horario:any='noiteFilmes'
-  filmeAtual:any
-  videoRodando:any
-  proximovideo:any
-  semana:Array<String>=["domingo","segunda","terca","quarta","quinta","sexta","sabado"]
-
-  proximPlaylist:any
-  elem:any
-  square:boolean=true
-
-  canal:string='globo'
-  fullScreenMode:boolean  
-  inicioVideo:any
-  fimVideo:any
-
-  listaSemana:any
-
-
-  videoElement: HTMLVideoElement
-  videobar = new FormControl(0)
-
-
-  mouseMoving:boolean
-  pause:boolean=false
+  mediaEmExecucao:any
+  diasDaSemana:Array<String>=["domingo","segunda","terca","quarta","quinta","sexta","sabado"]
+  domDocumentElement:any
+  isFullScreenMode:boolean
+  playList:any
+  domVideoElement: HTMLVideoElement
+  mouseIsMoving:boolean
+  videoIsPaused:boolean=false
   selectedCanal:any
   spySelectedCanal:Subject<string>
-  innerWidth:number
+  windowInnerWidth:number
   textLogoVisible:boolean=false
   textoAbaixoDoLogo:string=""
   unsubscribe:any
-  listaDeNumerosDeCanais:Array<any>
+  arrayNumerosCanais:Array<any>
   viewport: number
-
-  extensoes:Array<String>=[
-    "mp4","m4v","flv","mkv","wmv","webm"
-  ]
 
   @ViewChild ('player') player: ElementRef;
 
   ngOnInit(){
-    // window.location.assign(window.location.href.split("?")[0])
-    // console.log(window.location.href)
-    // this.exibeLogoETexto()
-
-// let trackerScript = 'console.log("Tracked url:", window.location.href)';
-// function trackerJail(){
-//   let window = {
-//     location: {
-//       // put your filtered url here
-//       href: "not so fast mr.bond"
-//     }
-//   }
-  
-//   eval(String(trackerScript))
-
-    this.innerWidth = window.innerWidth
+    this.windowInnerWidth = window.innerWidth
     this.viewport = window.innerWidth / window.innerHeight
     this.getCanaisFromMongoDB()
     this.spySelectedCanal = new Subject()
@@ -103,13 +60,7 @@ export class PlaylistComponent {
     this.keyboardSetup()
 }
 
-// console.log(window.location.href)
-// trackerJail()
-//     console.log(this.innerWidth)
-//   }
-
   changeChannel(channel){
-    console.log(channel)
     this.selectedCanal=channel
     this.firebaseService.updateSeletorDeCanal({canal:channel})
     this.mongodbService.updateSeletorDeCanal({canal:channel}).subscribe(() => {
@@ -140,10 +91,6 @@ export class PlaylistComponent {
             break
         case "7":
           this.selectCanal(canal.toString(),"Record")
-            break
-        case "8":
-          console.log("Clear Local Storage")
-          localStorage.clear()
             break
         case "9":
           this.selectCanal(canal.toString(),"Manchete")
@@ -191,12 +138,17 @@ export class PlaylistComponent {
           case "7":
             this.selectCanal(canal.toString(),"Record")
               break
-          case "8":
-            console.log("Clear Local Storage")
-            localStorage.clear()
-              break
           case "9":
             this.selectCanal(canal.toString(),"Manchete")
+              break
+          case "11":
+            this.selectCanal(canal.toString(),"Gazeta")
+              break
+          case "13":
+            this.selectCanal(canal.toString(),"Bandeirantes")
+              break
+          case "32":
+            this.selectCanal(canal.toString(),"Mtv")
               break
         }
     },err=>{
@@ -280,33 +232,24 @@ export class PlaylistComponent {
   }
 
   getCanaisFromMongoDB(){
-    let dataFromLocalStorage = null;
-    
-    if(!dataFromLocalStorage){
 
-      this.unsubscribe=
-      this.mongodbService.getCanais().subscribe((data:any ) => {
-          this.tempPlaylist=data
-          this.listaDeNumerosDeCanais=this.tempPlaylist.map(canal=>canal.canal).sort(sts.sortNumbers())
-          this.getSelectedChanelFromFirebase()
-          this.getSelectedChannelFromMongoDB()
-          // localStorage.setItem('data',JSON.stringify(data))
-          // this.selectCanal("5","Globo")
-      },err=>{
-          console.log("Error ========",err)
-      });
-      
-    } else {
-      console.log("Do LocalStorage")
-      this.tempPlaylist = JSON.parse(localStorage.getItem('data'))
-    }
+    this.unsubscribe=
+    this.mongodbService.getCanais().subscribe((data:any ) => {
+        this.fullCanaisCollection=data
+        this.arrayNumerosCanais=this.fullCanaisCollection.map(canal=>canal.canal).sort(sts.sortNumbers())
+        this.getSelectedChanelFromFirebase()
+        this.getSelectedChannelFromMongoDB()
+        // localStorage.setItem('data',JSON.stringify(data))
+        // this.selectCanal("5","Globo")
+    },err=>{
+        console.log("Error ========",err)
+    });
   }
   
   getLista(selectedCanal){   
 
-        let data = this.tempPlaylist
-        let hojeFull = new Date()
-        let hoje:any = this.semana[hojeFull.getDay()]
+        let dataDeHoje = new Date()
+        let diaDaSemanaAtual:any = this.diasDaSemana[dataDeHoje.getDay()]
         
         let now = new Date().toLocaleTimeString("pt-BR", {
           timeZone: "America/Sao_Paulo",
@@ -317,47 +260,37 @@ export class PlaylistComponent {
         
         let sixThiryAm = sts.toSeconds("06:00:00")
         if(sts.toSeconds(now)<=sixThiryAm){
-          let semanaIndex = hojeFull.getDay()>0?hojeFull.getDay()-1:6
-          // semanaIndex = hojeFull.getDay()?semanaIndex:6
-          hoje=this.semana[semanaIndex]    
+          let semanaIndex = dataDeHoje.getDay()>0?dataDeHoje.getDay()-1:6
+          diaDaSemanaAtual=this.diasDaSemana[semanaIndex] 
         }
-        //hoje = this.semana[6]
-        this.listaSemana = data.filter(canal=>canal.emissora==selectedCanal)[0][hoje]
-        this.listaSemana.map(prog=>{
-          prog.horarioDeExibicaoEmSegundos=
-          sts.toSeconds(prog.horarioDeExibicao)
-          if(prog.tipo=="madrugada") prog.tipo="madrugadaFilmes"
-          if(prog.tipo=="noite") prog.tipo="noiteFilmes"
+        this.playList = this.fullCanaisCollection.filter(canal=>canal.emissora==selectedCanal)[0][diaDaSemanaAtual]
+        this.playList.map(playListNode=>{
+          playListNode.horarioDeExibicaoEmSegundos=
+          sts.toSeconds(playListNode.horarioDeExibicao)
+          if(playListNode.tipo=="madrugada") playListNode.tipo="madrugadaFilmes"
+          if(playListNode.tipo=="noite") playListNode.tipo="noiteFilmes"
         })
-        this.listaSemana.sort(sts.sortPor("horarioDeExibicaoEmSegundos"))
+        this.playList.sort(sts.sortPor("horarioDeExibicaoEmSegundos"))
         this.pegaVideoParaRodarPorHorarioDeExibicao()
-        let dataFromLocalStorage = localStorage.getItem('data');
-        
-        if(!dataFromLocalStorage){
-          this.unsubscribe.unsubscribe()
-        }
   }
 
   clickPauseMovie(){
-    this.pause=!this.pause
-    this.pause?this.videoElement.pause():this.videoElement.play()
+    this.videoIsPaused=!this.videoIsPaused
+    this.videoIsPaused?this.domVideoElement.pause():this.domVideoElement.play()
   }
 
 
   fullScreen(){
-    this.fullScreenMode=!this.fullScreenMode
-    if(this.fullScreenMode){
-      if (this.elem.requestFullscreen) {
-        this.elem.requestFullscreen();
-      } else if (this.elem.mozRequestFullScreen) {
-        /* Firefox */
-        this.elem.mozRequestFullScreen();
-      } else if (this.elem.webkitRequestFullscreen) {
-        /* Chrome, Safari and Opera */
-        this.elem.webkitRequestFullscreen();
-      } else if (this.elem.msRequestFullscreen) {
-        /* IE/Edge */
-        this.elem.msRequestFullscreen();
+    this.isFullScreenMode=!this.isFullScreenMode
+    if(this.isFullScreenMode){
+      if (this.domDocumentElement.requestFullscreen) {
+        this.domDocumentElement.requestFullscreen();
+      } else if (this.domDocumentElement.mozRequestFullScreen) {
+        this.domDocumentElement.mozRequestFullScreen();
+      } else if (this.domDocumentElement.webkitRequestFullscreen) {
+        this.domDocumentElement.webkitRequestFullscreen();
+      } else if (this.domDocumentElement.msRequestFullscreen) {
+        this.domDocumentElement.msRequestFullscreen();
       }   
     } else {
       if(document.exitFullscreen) {
@@ -366,45 +299,21 @@ export class PlaylistComponent {
     }
   }
 
-  
-
-  audioBoost(boots:number){
-
-    let myVideoElement = document.getElementsByTagName('video')[0]
-
-
-      // create an audio context and hook up the video element as the source
-      var audioCtx = new AudioContext();
-      var source = audioCtx.createMediaElementSource(myVideoElement);
-
-      // create a gain node
-      var gainNode = audioCtx.createGain();
-      gainNode.gain.value = boots; // double the volume
-      source.connect(gainNode);
-
-      // connect the gain node to an output destination
-      gainNode.connect(audioCtx.destination);
-
-  }
-
   selectCanal(text,canal){
     this.numCanal=text.replace("Numpad","").replace("Digit","")
     this.exibeNumCanal=true
     this.hideNumCanal()
     this.spySelectedCanal.next(canal)
-    // let filme = canal=='globo'?this.playlistGlobo[0]['novelaGlobo']:this.playlistGlobo
-    // let listaIntervalos = canal=='globo'?this.playlistGlobo[0]['novelaGlobo'].intervalos:this.playlistGlobo
   }
 
-  exibeLogoETexto(videoRodando){
-    if(videoRodando.tipo=="madrugadaFilmes"||videoRodando.tipo=="noiteFilmes"){
-      console.log("Video Rodando: ",videoRodando)
+  exibeLogoETexto(mediaEmExecucao){
+    if(mediaEmExecucao.tipo=="madrugadaFilmes"||mediaEmExecucao.tipo=="noiteFilmes"){
       
-      this.textoAbaixoDoLogo=this.commonServices.formatTitle(videoRodando.titulo)
+      this.textoAbaixoDoLogo=this.commonServices.formatTitle(mediaEmExecucao.titulo)
       this.textLogoVisible=true
       
       setTimeout(()=>{
-          this.textoAbaixoDoLogo=videoRodando.tituloAtracao
+          this.textoAbaixoDoLogo=mediaEmExecucao.tituloAtracao
           .replace("Corujão Um","Corujão")
           .replace("Corujão Dois","Corujão").toUpperCase()
           this.textLogoVisible=true
@@ -413,19 +322,12 @@ export class PlaylistComponent {
           this.textLogoVisible=false
       },15000)
       setTimeout(()=>{
-          this.textoAbaixoDoLogo=this.commonServices.formatTitle(videoRodando.titulo)
+          this.textoAbaixoDoLogo=this.commonServices.formatTitle(mediaEmExecucao.titulo)
           this.textLogoVisible=true
       },18000)
       setTimeout(()=>{
           this.textLogoVisible=false
       },30000)
-      // setTimeout(()=>{
-      //     this.textoAbaixoDoLogo="FINAL"
-      //     this.textLogoVisible=true
-      // },33000)
-      // setTimeout(()=>{
-      //     this.textLogoVisible=false
-      // },48000)
     }
   }
 
@@ -441,48 +343,46 @@ export class PlaylistComponent {
           minute: "2-digit",
           second: "2-digit"
         })
-    let searchList = this.listaSemana
+    let searchList = this.playList
     
-    this.videoRodando = searchList.filter(videoPararodar=>{
+    this.mediaEmExecucao = searchList.filter(videoPararodar=>{
       return sts.toSeconds(videoPararodar['horarioDeExibicao'])
       <sts.toSeconds(now)}).reverse()[0]
     
-    if(!this.videoRodando){
-      this.videoRodando = searchList.filter(videoPararodar=>
+    if(!this.mediaEmExecucao){
+      this.mediaEmExecucao = searchList.filter(videoPararodar=>
         videoPararodar['horarioDeExibicao'].split(":")[0]=="23").reverse()[0]
         afterMidnight=true
     }
 
-      this.setandoParticulares(this.videoRodando.titulo)
-
-    let horaExibicaoVideoRodandoMomento= sts.toSeconds(this.videoRodando['horarioDeExibicao'])
+    let horaExibicaomediaEmExecucaoMomento= sts.toSeconds(this.mediaEmExecucao['horarioDeExibicao'])
     
     let inicio =0
 
     if (afterMidnight){
-      inicio = sts.toSeconds(now)+(sts.toSeconds("24:00:00")-horaExibicaoVideoRodandoMomento)
+      inicio = sts.toSeconds(now)+(sts.toSeconds("24:00:00")-horaExibicaomediaEmExecucaoMomento)
     } else {
-      inicio = sts.toSeconds(now)-horaExibicaoVideoRodandoMomento
+      inicio = sts.toSeconds(now)-horaExibicaomediaEmExecucaoMomento
     }
 
-    if(inicio+this.videoRodando.inicio){
+    if(inicio+this.mediaEmExecucao.inicio){
 
-      inicio = inicio+this.videoRodando.inicio
+      inicio = inicio+this.mediaEmExecucao.inicio
 
     }
 
-    if(this.videoRodando.tipo!="intervalos"){
+    if(this.mediaEmExecucao.tipo!="intervalos"){
       var refreshIntervalId = 
       setInterval(()=>{
-        if(this.videoRodando.tipo!="intervalos")inicio++
-        if(inicio>this.videoRodando.final){
+        if(this.mediaEmExecucao.tipo!="intervalos")inicio++
+        if(inicio>this.mediaEmExecucao.final){
           clearInterval(refreshIntervalId);
           this.pegaVideoParaRodarPorHorarioDeExibicao()
         }
       },1000)
     }
 
-    this.url= `http://thisisshuffletv:5091/assets/${this.videoRodando['tipo']}/${encodeURI(this.videoRodando['titulo'])}#t=${inicio}`
+    this.urlMediaPath= `http://thisisshuffletv:5091/assets/${this.mediaEmExecucao['tipo']}/${encodeURI(this.mediaEmExecucao['titulo'])}#t=${inicio}`
 
     setTimeout(()=>{
       this.updateAVElements()
@@ -491,76 +391,22 @@ export class PlaylistComponent {
   }
 
   reloadVideo(){
-      this.exibeVideo=false
+      this.exibirVideo=false
       setTimeout(() => {
-      this.exibeVideo=true    
+      this.exibirVideo=true    
       }, 1000);
-  }
-
-  setandoParticulares(nomeDoFilmeAtual){
-    
-
-    if(nomeDoFilmeAtual=="Nocturnal Animals 2016.mp4"){
-      setTimeout(()=>{
-        console.log("Nocturnal Animals 2016.mp4")
-  
-        this.audioBoost(10)
-      },3000)
-    }
-    
-    
-
-    if(nomeDoFilmeAtual=="The Dark Knight 2008.mp4"){
-      setTimeout(()=>{
-        console.log("The Dark Knight 2008.mp4")
-  
-        this.audioBoost(10)
-      },3000)
-    }
-    
-
-    if(nomeDoFilmeAtual=="Heat 1995.mp4"){
-      setTimeout(()=>{
-        console.log("Heat 1995")
-  
-        // this.audioBoost(10)
-      },3000)
-    }
-    
-
-    if(nomeDoFilmeAtual=="The Silence Of The Lambs 1991.mp4"){
-      setTimeout(()=>{
-        console.log("Heat 1995")
-  
-        this.audioBoost(10)
-      },3000)
-    }
-
-    if(nomeDoFilmeAtual=="Dublado - A Maldição da Mosca 1965.mp4"){
-      this.maldicaodamosca=true
-      this.square=false
-    }else if((nomeDoFilmeAtual=="Dublado - Um Jogo de Vida e Morte (Primeiro filme gravado em VHS).webm")||nomeDoFilmeAtual.includes("Doug")){
-      this.square=true
-      this.maldicaodamosca=false
-    }else if(nomeDoFilmeAtual.includes("Alfred Hitchcock - ")){
-      this.square=true
-      this.maldicaodamosca=false
-    }else{
-      this.maldicaodamosca=false
-      this.square=false
-    }
   }
 
   updateAVElements(){
 
-    if(this.innerWidth>500){
-      this.elem = document.documentElement;
-      this.videoElement = document.getElementsByTagName('video')[0]
-      this.updateVolume(this.videoRodando)
-      this.videoElement.addEventListener('mousemove',event=>{
-        this.mouseMoving=true
+    if(this.windowInnerWidth>500){
+      this.domDocumentElement = document.documentElement;
+      this.domVideoElement = document.getElementsByTagName('video')[0]
+      this.updateVolume(this.mediaEmExecucao)
+      this.domVideoElement.addEventListener('mousemove',event=>{
+        this.mouseIsMoving=true
         setTimeout(()=>{
-          this.mouseMoving=false
+          this.mouseIsMoving=false
         },500)
       })
 
@@ -575,27 +421,27 @@ export class PlaylistComponent {
   }
 
   updateVolume(infoDeVolDoFilmeAtual){
-    if(this.innerWidth>500 && infoDeVolDoFilmeAtual.volume){
-      this.videoElement.volume=infoDeVolDoFilmeAtual.volume     
+    if(this.windowInnerWidth>500 && infoDeVolDoFilmeAtual.volume){
+      this.domVideoElement.volume=infoDeVolDoFilmeAtual.volume     
 
     }
   }
 
   zapchannel(direction){
-    let indexListaDeCanais = this.listaDeNumerosDeCanais.indexOf(this.selectedCanal.toString())
+    let indexListaDeCanais = this.arrayNumerosCanais.indexOf(this.selectedCanal.toString())
     if(direction=="up"){
-      if(indexListaDeCanais==(this.listaDeNumerosDeCanais.length-1)){
-        this.selectedCanal=this.listaDeNumerosDeCanais[0]
+      if(indexListaDeCanais==(this.arrayNumerosCanais.length-1)){
+        this.selectedCanal=this.arrayNumerosCanais[0]
       } else {
         indexListaDeCanais++
-        this.selectedCanal = this.listaDeNumerosDeCanais[indexListaDeCanais]
+        this.selectedCanal = this.arrayNumerosCanais[indexListaDeCanais]
       }
     } else if(direction=="down"){
       if(indexListaDeCanais==0){
-        this.selectedCanal=this.listaDeNumerosDeCanais[this.listaDeNumerosDeCanais.length-1]
+        this.selectedCanal=this.arrayNumerosCanais[this.arrayNumerosCanais.length-1]
       } else {
         indexListaDeCanais--
-        this.selectedCanal = this.listaDeNumerosDeCanais[indexListaDeCanais]
+        this.selectedCanal = this.arrayNumerosCanais[indexListaDeCanais]
       }
     }
     this.switchEventChannel(this.selectedCanal)
