@@ -1,0 +1,34 @@
+.sidebar{
+    width: 14%;
+    position: fixed;
+    height: 100%;
+    background: black;
+    top: 0;
+
+    &_left{
+        left: 0;
+    }
+
+    &_right{
+        right: 0;
+    }
+}
+
+.arrowWrap{
+    position: absolute;
+    left: 22%;
+    top: 10vw;
+    color: #fff;
+    .arrowUp,
+    .arrowDown{
+        visibility: hidden;
+        cursor: pointer;
+        font-size: 1vh;
+    }
+}
+
+.arrowWrap:hover > .arrowUp,
+.arrowWrap:hover > .arrowDown{
+    visibility: visible;
+}
+
