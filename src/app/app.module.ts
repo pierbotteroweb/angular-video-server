@@ -59,6 +59,7 @@ import { BasicdvdComponent } from './dvds/basicdvd/basicdvd.component';
 import { ArquivosComponent } from './arquivos/arquivos.component';
 import { OndemandComponent } from './ondemand/ondemand.component';
 import { Martin1977Component } from './dvds/martin1977/martin1977.component';
+import { SidebarsComponent } from './playlist/components/sidebars/sidebars.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { Martin1977Component } from './dvds/martin1977/martin1977.component';
     BasicdvdComponent,
     ArquivosComponent,
     OndemandComponent,
-    Martin1977Component
+    Martin1977Component,
+    SidebarsComponent
   ],
   imports: [
     CommonModule,

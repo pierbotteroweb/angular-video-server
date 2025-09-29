@@ -80,24 +80,6 @@
     }
 }
 
-.esq{
-    width: 14%;
-    position: fixed;
-    height: 100%;
-    background: black;
-    top: 0;
-    left: 0;
-}
-
-.dir{
-    width: 14%;
-    position: fixed;
-    height: 100%;
-    background: black;
-    top: 0;
-    right: 0;
-}
-
 .viewport{
     position: fixed;
     top: 50%;
@@ -105,24 +87,6 @@
     color: white;
     font-weight: bold;
     font-size: 50px;
-}
-
-.arrowWrap{
-    position: absolute;
-    left: 22%;
-    top: 10vw;
-    color: #fff;
-    .arrowUp,
-    .arrowDown{
-        visibility: hidden;
-        cursor: pointer;
-        font-size: 1vh;
-    }
-}
-
-.arrowWrap:hover > .arrowUp,
-.arrowWrap:hover > .arrowDown{
-    visibility: visible;
 }
 
 .numCanal{

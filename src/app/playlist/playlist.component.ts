@@ -1,9 +1,6 @@
 import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonService } from 'src/services/common.service';
 import { FirebaseService } from '../services/firebase.service';
-import { map } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { MongodbService } from '../services/mongodb.service';
