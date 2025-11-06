@@ -63,6 +63,7 @@ export class GradeComponent implements OnInit {
   getInfoClicado:boolean;
   getInfoBlocoClicado:boolean;
   getInfoFromBlocoClicado:boolean;
+  unsubscribeGetProgramasDeTv:any;
 
   constructor(private commonServices: CommonService,
               private firebaseService: FirebaseService,
@@ -484,11 +485,13 @@ export class GradeComponent implements OnInit {
 
   adicionarPrograma(): void {
     // CHECK IF DIA DA SEMANA AND PROGRAMA DE TV ARE SELECTED
-    if(this.selectedDiaDaSemana&&this.selectedProgramaDeTv){
+    if(!this.selectedDiaDaSemana || !this.selectedProgramaDeTv){
+      this.alerta="Informe o dia da semana e programa a ser adicionado"
+      return
+    }
     // GET UNSUBSCRIBABLE LIST OF PROGRAMS ACCORDING TO SELECTED PROGRAMA DE TV
 
-    if(this.selectedProgramaDeTv.anexos&&this.selectedProgramaDeTv.anexos.blocosAmount
-      &&this.listaBlocos.length==0){
+    if(this.selectedProgramaDeTv.anexos?.blocosAmount&&this.listaBlocos.length==0){
       this.programasPorBloco={}
       this.blocosAmount=this.selectedProgramaDeTv.anexos.blocosAmount
       this.selectedProgramaDeTvBlocos=this.selectedProgramaDeTv
@@ -507,151 +510,148 @@ export class GradeComponent implements OnInit {
     }
 
     
-    let unsubscribe=
+    this.unsubscribeGetProgramasDeTv =
     this.mongodbService.getProgramasDeTv(this.selectedProgramaDeTv.tipo,this.selectedProgramaDeTv.value)
     .subscribe((data:any ) => {
-      let videoAdicionado
-
-      let listaDeProgramas = data
 
       //GET EACH REF ON THE LISTA DE PROGRAMAS AND CREATE A NEW LIST WITH THE PROGRAMAS DATA
-
-      const montaLista = ()=>{
-
-        //FILTER 
-        let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
-          .sort(sts.sortPor("order"))
-          
-          
-          
-          if(listaFiltrada.length>0){
-
-                    let prog:any = this.selectedProgramaDeTv
-                    
-                    if(!this.prePosAvailable&&prog.anexos&&prog.anexos.prePos){
-                      this.prePosApi=prog.anexos.prePos
-                      this.prePosAvailable=true
-                      this.prePosCount=2
-                    }
-
-                    videoAdicionado = listaFiltrada[0]
-
-                    // if(videoAdicionado.tipo!="intervalos"&&!videoAdicionado.titulo.includes("Int")){
-                    //   this.previousAddedOrderIndex=99999       
-                    // } 
-
-                      let newProg:Object ={}
-                      let newProgList: Array<any> =[]
-
-                      if(videoAdicionado.cortesParaIntervalo.length){
-                        let cortes = videoAdicionado.cortesParaIntervalo
-                        this.intervalosCount = this.qtdeIntervalos = cortes.length
-                        let progModel = {
-                          "atracao":this.selectedProgramaDeTv.value,
-                          "tituloAtracao":videoAdicionado.tituloAtracao,
-                          "titulo":videoAdicionado.titulo,
-                          "volume":videoAdicionado.volume?videoAdicionado.volume:1,
-                          "horarioDeExibicao":"",
-                          "id":videoAdicionado._id,
-                          "idProgTotal":this.idProgTotal,
-                          "tipo":videoAdicionado.tipo
-                        }
-
-                        let inicio = 0
-                        if(videoAdicionado.corteInicio){
-                          inicio=videoAdicionado.corteInicio
-                        }
-
-                        let final = cortes[0]
-
-                        progModel['inicio']=inicio
-                        progModel['final']=final
-                        progModel['duracaoTotalDaAtracaoEmSegundos']=final-inicio
-                        newProgList.push(progModel)
-
-                        cortes.map((corte,index)=>{
-                          let prog =  {
-                            "atracao":this.selectedProgramaDeTv.value,
-                            "tituloAtracao":videoAdicionado.tituloAtracao,
-                            "titulo":videoAdicionado.titulo,
-                            "volume":videoAdicionado.volume?videoAdicionado.volume:1,
-                            "horarioDeExibicao":"",
-                            "id":videoAdicionado._id,
-                            "idProgTotal":this.idProgTotal,
-                            "tipo":videoAdicionado.tipo
-                          }
-                          
-                          if(index<cortes.length-1) {
-                            prog['inicio']=cortes[index]
-                            prog['final']=cortes[index+1]
-                            prog['duracaoTotalDaAtracaoEmSegundos']=cortes[index+1]-cortes[index]
-                            newProgList.push(prog)
-                          } else {
-                            let finalDoCorte = videoAdicionado.corteFinal?videoAdicionado.corteFinal:videoAdicionado.duracao
-                            prog['inicio']=cortes[index]
-                            prog['final']=finalDoCorte
-                            prog['duracaoTotalDaAtracaoEmSegundos']=finalDoCorte-cortes[index]
-                            newProgList.push(prog)
-                          }
-                        })
-                      } else {
-                        newProg = {
-                          "atracao":this.selectedProgramaDeTv.value,
-                          "tituloAtracao":videoAdicionado.tituloAtracao,
-                          "titulo":videoAdicionado.titulo,
-                          "volume":videoAdicionado.volume?videoAdicionado.volume:1,
-                          "horarioDeExibicao":"",
-                          "duracaoTotalDaAtracaoEmSegundos": videoAdicionado.duracao,
-                          "id":videoAdicionado._id,
-                          "idProgTotal":this.idProgTotal,
-                          "tipo":videoAdicionado.tipo
-                        }
-
-                        if(videoAdicionado.corteFinal){
-                          let corteFinal = videoAdicionado.corteFinal
-                          newProg['corteFinal']=corteFinal
-                          newProg['duracaoTotalDaAtracaoEmSegundos']=corteFinal
-                        }
-  
-                        if(videoAdicionado.corteInicio){
-                          let corteInicio = videoAdicionado.corteInicio
-                          let duracao = videoAdicionado.corteInicio
-                          newProg['corteInicio']=duracao-corteInicio
-                        }
-                      }
-
-                      let listInProcess = this.emProcessoDeUpdate ? this.listaParaUpdate : this.listaSemana[this.selectedDiaDaSemana]
-                      videoAdicionado.added=true
-                      this.updateOnMongoDB(videoAdicionado,"videoAdicionado")        
-
-                      this.indexToAdd = this.programaClicado ? this.programaClicado.indice+1 : listInProcess.length
-                      let newList
-                      if(newProgList.length>0){
-                        newList = [...listInProcess.slice(0,this.indexToAdd),
-                                   ...newProgList,...listInProcess.slice(this.indexToAdd)]
-                      } else {
-                        newList = [...listInProcess.slice(0,this.indexToAdd),
-                                   newProg,...listInProcess.slice(this.indexToAdd)]
-                      }
-                      if(!this.intervalosCount&&!this.prePosCount){
-                        this.clearInfoAtracao()
-                      }
-                      unsubscribe.unsubscribe()
-                      this.recalculaHorariosDeExibicao(newList)
-          } else {
-            this.resetAddedLista(listaDeProgramas, "programa")
-            unsubscribe.unsubscribe()
-          }
-
-      }
-      montaLista()
+      this.montaLista(data)
     });
 
-    } else if(!this.selectedDiaDaSemana){
-      this.alerta="Informe o dia da semana"
-    } else if(!this.programaClicado){
+     if(!this.programaClicado){
       this.alerta="Selecione programa a ser deletado"
     }
+  }
+  
+  montaLista = (data)=>{
+    let videoAdicionado
+
+    let listaDeProgramas = data
+
+    //FILTER 
+    let listaFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
+      .sort(sts.sortPor("order"))
+      
+      
+      
+      if(listaFiltrada.length>0){
+
+                let prog:any = this.selectedProgramaDeTv
+                
+                if(!this.prePosAvailable&&prog.anexos&&prog.anexos.prePos){
+                  this.prePosApi=prog.anexos.prePos
+                  this.prePosAvailable=true
+                  this.prePosCount=2
+                }
+
+                videoAdicionado = listaFiltrada[0]
+
+                // if(videoAdicionado.tipo!="intervalos"&&!videoAdicionado.titulo.includes("Int")){
+                //   this.previousAddedOrderIndex=99999       
+                // } 
+
+                  let newProg:Object ={}
+                  let newProgList: Array<any> =[]
+
+                  if(videoAdicionado.cortesParaIntervalo.length){
+                    let cortes = videoAdicionado.cortesParaIntervalo
+                    this.intervalosCount = this.qtdeIntervalos = cortes.length
+                    let progModel = {
+                      "atracao":this.selectedProgramaDeTv.value,
+                      "tituloAtracao":videoAdicionado.tituloAtracao,
+                      "titulo":videoAdicionado.titulo,
+                      "volume":videoAdicionado.volume?videoAdicionado.volume:1,
+                      "horarioDeExibicao":"",
+                      "id":videoAdicionado._id,
+                      "idProgTotal":this.idProgTotal,
+                      "tipo":videoAdicionado.tipo
+                    }
+
+                    let inicio = 0
+                    if(videoAdicionado.corteInicio){
+                      inicio=videoAdicionado.corteInicio
+                    }
+
+                    let final = cortes[0]
+
+                    progModel['inicio']=inicio
+                    progModel['final']=final
+                    progModel['duracaoTotalDaAtracaoEmSegundos']=final-inicio
+                    newProgList.push(progModel)
+
+                    cortes.map((corte,index)=>{
+                      let prog =  {
+                        "atracao":this.selectedProgramaDeTv.value,
+                        "tituloAtracao":videoAdicionado.tituloAtracao,
+                        "titulo":videoAdicionado.titulo,
+                        "volume":videoAdicionado.volume?videoAdicionado.volume:1,
+                        "horarioDeExibicao":"",
+                        "id":videoAdicionado._id,
+                        "idProgTotal":this.idProgTotal,
+                        "tipo":videoAdicionado.tipo
+                      }
+                      
+                      if(index<cortes.length-1) {
+                        prog['inicio']=cortes[index]
+                        prog['final']=cortes[index+1]
+                        prog['duracaoTotalDaAtracaoEmSegundos']=cortes[index+1]-cortes[index]
+                        newProgList.push(prog)
+                      } else {
+                        let finalDoCorte = videoAdicionado.corteFinal?videoAdicionado.corteFinal:videoAdicionado.duracao
+                        prog['inicio']=cortes[index]
+                        prog['final']=finalDoCorte
+                        prog['duracaoTotalDaAtracaoEmSegundos']=finalDoCorte-cortes[index]
+                        newProgList.push(prog)
+                      }
+                    })
+                  } else {
+                    newProg = {
+                      "atracao":this.selectedProgramaDeTv.value,
+                      "tituloAtracao":videoAdicionado.tituloAtracao,
+                      "titulo":videoAdicionado.titulo,
+                      "volume":videoAdicionado.volume?videoAdicionado.volume:1,
+                      "horarioDeExibicao":"",
+                      "duracaoTotalDaAtracaoEmSegundos": videoAdicionado.duracao,
+                      "id":videoAdicionado._id,
+                      "idProgTotal":this.idProgTotal,
+                      "tipo":videoAdicionado.tipo
+                    }
+
+                    if(videoAdicionado.corteFinal){
+                      let corteFinal = videoAdicionado.corteFinal
+                      newProg['corteFinal']=corteFinal
+                      newProg['duracaoTotalDaAtracaoEmSegundos']=corteFinal
+                    }
+
+                    if(videoAdicionado.corteInicio){
+                      let corteInicio = videoAdicionado.corteInicio
+                      let duracao = videoAdicionado.corteInicio
+                      newProg['corteInicio']=duracao-corteInicio
+                    }
+                  }
+
+                  let listInProcess = this.emProcessoDeUpdate ? this.listaParaUpdate : this.listaSemana[this.selectedDiaDaSemana]
+                  videoAdicionado.added=true
+                  this.updateOnMongoDB(videoAdicionado,"videoAdicionado")        
+
+                  this.indexToAdd = this.programaClicado ? this.programaClicado.indice+1 : listInProcess.length
+                  let newList
+                  if(newProgList.length>0){
+                    newList = [...listInProcess.slice(0,this.indexToAdd),
+                               ...newProgList,...listInProcess.slice(this.indexToAdd)]
+                  } else {
+                    newList = [...listInProcess.slice(0,this.indexToAdd),
+                               newProg,...listInProcess.slice(this.indexToAdd)]
+                  }
+                  if(!this.intervalosCount&&!this.prePosCount){
+                    this.clearInfoAtracao()
+                  }
+                  this.unsubscribeGetProgramasDeTv.unsubscribe()
+                  this.recalculaHorariosDeExibicao(newList)
+      } else {
+        this.resetAddedLista(listaDeProgramas, "programa")
+        this.unsubscribeGetProgramasDeTv.unsubscribe()
+      }
   }
 
   adicionarProgramaBloco(bloco): void {

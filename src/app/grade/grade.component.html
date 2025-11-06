@@ -1,117 +1,103 @@
-
-
 <div class="painel">
-    <div class="container-fluid"   [formGroup]="selectVideoForm" style="margin-bottom: 1rem;">
-        
-
-        <div class="row" >
- 
+    <div class="container-fluid" [formGroup]="selectVideoForm" style="margin-bottom: 1rem;">
+        <div class="row">
             <div class="col-4">
                 <h1 class="p-4">Grade</h1>
-               <div style="display: flex; gap: 10px 20px; margin: 10px 0;">
-                  <select class="select form-control" 
-                          formControlName="canaisFormControl" >
-                    <option value="">Canal </option>
-                    <option *ngFor="let canal of canais" [value]='canal._id'>
-                      <span>{{canal.emissora}}</span>
-                     </option>
-                  </select>
-                  <select class="select form-control" 
-                          formControlName="programaDeTvFormControl" >
-                    <option value="">Prog de TV </option>
-                    <option *ngFor="let programa of programaDeTvFiltered" [value]='programa.value'>
-                      <span>{{programa.titulo}}</span>
-                     </option>
-                  </select>
-               </div>
-               <div style="display: flex; gap: 10px 20px; margin: 10px 0;">
-                  <select class="select form-control" 
-                          formControlName="semanaFormControl" >
-                    <option value="">Dia da Semana</option>
-                    <option *ngFor="let dia of semanaSemBlocos" [value]='dia'>
-                      <span>{{dia | titlecase }}</span>
-                     </option>
-                  </select>
+                <div style="display: flex; gap: 10px 20px; margin: 10px 0;">
+                    <select class="select form-control" formControlName="canaisFormControl">
+                        <option value="">Canal </option>
+                        <option *ngFor="let canal of canais" [value]='canal._id'>
+                            <span>{{canal.emissora}}</span>
+                        </option>
+                    </select>
+                    <select class="select form-control" formControlName="programaDeTvFormControl">
+                        <option value="">Prog de TV </option>
+                        <option *ngFor="let programa of programaDeTvFiltered" [value]='programa.value'>
+                            <span>{{programa.titulo}}</span>
+                        </option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px 20px; margin: 10px 0;">
+                    <select class="select form-control" formControlName="semanaFormControl">
+                        <option value="">Dia da Semana</option>
+                        <option *ngFor="let dia of semanaSemBlocos" [value]='dia'>
+                            <span>{{dia | titlecase }}</span>
+                        </option>
+                    </select>
 
-                  <button class="btn btn-success" 
-                         (click)="toggleSemanaDestino()">
-                         <span style="font-weight:bolder">></span>
-                  </button>
+                    <button class="btn btn-success" (click)="toggleSemanaDestino()">
+                        <span style="font-weight:bolder">></span>
+                    </button>
+                    <select class="select form-control"
+                        [ngStyle]="{'visibility': exibeSemanaDestino ? 'visible' : 'hidden'}"
+                        formControlName="semanaDestinoFormControl">
+                        <option value="">Dia da Semana Destino</option>
+                        <option *ngFor="let dia of semana" [value]='dia'>
+                            <span>{{dia | titlecase }}</span>
+                        </option>
+                    </select>
+                </div>
+                <div style="margin-top: 10px; display: flex; gap: 10px 20px;">
+                    <button class="btn btn-primary" (click)="adicionarPrograma()">
+                        Add</button>
 
+                    <button class="btn btn-danger" (click)="removePrograma()">
+                        Del</button>
 
-                  <select class="select form-control"
-                          [ngStyle]="{'visibility': exibeSemanaDestino ? 'visible' : 'hidden'}"
-                          formControlName="semanaDestinoFormControl" >
-                          <option value="">Dia da Semana Destino</option>
-                    <option *ngFor="let dia of semana" [value]='dia'>
-                      <span>{{dia | titlecase }}</span>
-                     </option>
-                  </select>
-               </div>
-               
-               <div style="margin-top: 10px; display: flex; gap: 10px 20px;">
-                  <button class="btn btn-primary" (click)="adicionarPrograma()" >
-                          Add</button>
+                    <button class="btn btn-primary" (click)="subirLista()">
+                        Save</button>
 
-                  <button class="btn btn-danger" (click)="removePrograma()" >
-                          Del</button>
+                    <button class="btn btn-primary" (click)="getLista()">
+                        Get</button>
 
-                  <button class="btn btn-primary" (click)="subirLista()" >
-                          Save</button>
+                    <button class="btn btn-success" *ngIf="exibeSemanaDestino" (click)="replicaListaDaSemana()">
+                        Copy</button>
 
-                  <button class="btn btn-primary" (click)="getLista()" >
-                          Get</button>
+                    <button class="btn btn-success" (click)="updateListaDaSemana()">
+                        Update</button>
 
-                  <button class="btn btn-success" 
-                          *ngIf="exibeSemanaDestino"
-                          (click)="replicaListaDaSemana()" >
-                          Copy</button>
+                    <button class="btn btn-success" *ngIf="exibeSemanaDestino||emProcessoDeUpdate"
+                        (click)="replicaNext()">
+                        Next</button>
 
-                  <button class="btn btn-success" 
-                          (click)="updateListaDaSemana()" >
-                          Update</button>
-
-                  <button class="btn btn-success" 
-                          *ngIf="exibeSemanaDestino||emProcessoDeUpdate"
-                          (click)="replicaNext()" >
-                          Next</button>
-
-                  <button class="btn btn-primary" (click)="clearInfoAtracao()" >
-                          Clear</button>
-               </div>
+                    <button class="btn btn-primary" (click)="clearInfoAtracao()">
+                        Clear</button>
+                </div>
             </div>
             <div class="col-3 info-selected" *ngIf="getInfoClicado">
                 <p>Atração: <span>{{programaClicado.atracao}}</span></p>
-                <p style="max-height: 52.8px;">Arquivo: <span>{{programaClicado.titulo}}</span></p>  
-                <p>Tipo: <span>{{programaClicado.tipo}}</span></p>               
+                <p style="max-height: 52.8px;">Arquivo: <span>{{programaClicado.titulo}}</span></p>
+                <p>Tipo: <span>{{programaClicado.tipo}}</span></p>
             </div>
             <div class="col-3 info-selected" *ngIf="getInfoClicado">
                 <p>Horário de Exibição: <span>{{programaClicado.horarioDeExibicao}}</span></p>
-                <p>Ponto Inicio: <span>{{programaClicado.inicio  * 1000 | date:'mm:ss'}}</span></p>
-                <p>Ponto Final: <span>{{programaClicado.final  * 1000 | date:'mm:ss'}}</span></p>     
-                <p>Duração: <span>{{programaClicado.duracaoTotalDaAtracaoEmSegundos  * 1000 | date:'mm:ss' }}</span></p>                
+                <p>Ponto Inicio: <span>{{programaClicado.inicio * 1000 | date:'mm:ss'}}</span></p>
+                <p>Ponto Final: <span>{{programaClicado.final * 1000 | date:'mm:ss'}}</span></p>
+                <p>Duração: <span>{{programaClicado.duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
             </div>
             <div class="col-2 info-selected" *ngIf="getInfoBlocoClicado">
                 <p>Atração: <span>{{programaBlocoSelectionado.tituloAtracao}}</span></p>
-                <p style="max-height: 52.8px;">Arquivo: <span>{{programaBlocoSelectionado.arquivo}}</span></p> 
+                <p style="max-height: 52.8px;">Arquivo: <span>{{programaBlocoSelectionado.arquivo}}</span></p>
                 <p>Horário de Exibição: <span>{{programaBlocoSelectionado.horarioDeExibicao}}</span></p>
-                <p>Duração: <span>{{programaBlocoSelectionado.tempoTotal }}</span></p> 
+                <p>Duração: <span>{{programaBlocoSelectionado.tempoTotal }}</span></p>
             </div>
             <div class="col-2 info-selected" *ngIf="getInfoBlocoClicado">
                 <ul style="overflow-y:scroll; max-height: 180px;">
                     <li *ngFor="let bloco of programaBlocoSelectionado.blocos"
                         style="cursor:pointer;margin-bottom: 5px;"
-                        (click)="clickAtracaoFromBloco(bloco,programaBlocoSelectionado.dia,bloco.indice)">{{bloco.titulo}}</li>
+                        (click)="clickAtracaoFromBloco(bloco,programaBlocoSelectionado.dia,bloco.indice)">
+                        {{bloco.titulo}}
+                    </li>
                 </ul>
             </div>
             <div class="col-2 info-selected" *ngIf="getInfoFromBlocoClicado">
                 <p>Tipo: <span>{{programaClicado.tipo}}</span></p>
                 <p>Horário de Exibição: <span>{{programaClicado.horarioDeExibicao}}</span></p>
-                <p>Duração: <span>{{programaClicado.duracaoTotalDaAtracaoEmSegundos  * 1000 | date:'mm:ss' }}</span></p>    
-                <p>Ponto Inicio: <span>{{programaClicado.inicio  * 1000 | date:'mm:ss'}}</span></p>
-                <p>Ponto Final: <span>{{programaClicado.final  * 1000 | date:'mm:ss'}}</span></p>            
+                <p>Duração: <span>{{programaClicado.duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
+                <p>Ponto Inicio: <span>{{programaClicado.inicio * 1000 | date:'mm:ss'}}</span></p>
+                <p>Ponto Final: <span>{{programaClicado.final * 1000 | date:'mm:ss'}}</span></p>
             </div>
-         </div>
+        </div>
     </div>
     <div class="container-fluid" *ngFor="let dia of semana">
         <div class="row" *ngIf="listaSemana[dia]&&listaSemana[dia].length>0&&
@@ -119,7 +105,7 @@
             <div class="col-1" [ngStyle]="{'background': selectedDiaDaSemana==dia ? 'lightgreen' : 'white'}">
                 <p>Dia Da Semana</p>
                 <p>{{dia | titlecase }}</p>
-            </div>         
+            </div>
             <div class="col-11" style="overflow: auto;">
                 <div class="dozeHoras">
                     <div class="hora" *ngFor="let hora of horas; index as i">
@@ -128,32 +114,33 @@
                     <div class="hora" style="width: 180px !important;">6:00</div>
                 </div>
                 <div class="dozeHoras">
-                    <div class="atracao" [style]="getStyle(programa.duracaoTotalDaAtracaoEmSegundos,dia,i)" 
-                         *ngFor="let programa of listaSemana[dia]; index as i" (click)="clickAtracao(programa,dia,i)" >
-                         <p style="white-space: nowrap; overflow: hidden;">{{programa.tituloAtracao}}</p>
-                         <!-- <span>{{programa.titulo}} </span><br> -->
-                         <span>{{programa.horarioDeExibicao}}</span>
+                    <div class="atracao" [style]="getStyle(programa.duracaoTotalDaAtracaoEmSegundos,dia,i)"
+                        *ngFor="let programa of listaSemana[dia]; index as i" (click)="clickAtracao(programa,dia,i)">
+                        <p style="white-space: nowrap; overflow: hidden;">{{programa.tituloAtracao}}</p>
+                        <!-- <span>{{programa.titulo}} </span><br> -->
+                        <span>{{programa.horarioDeExibicao}}</span>
                     </div>
                 </div>
                 <div class="dozeHoras">
-                    <div class="atracao" [style]="getStyleBloco(programa.tempoTotalEmSegundos,dia,i)" 
-                         *ngFor="let programa of listaSemana[dia+'Bloco']; index as i" (click)="getInfoBlocoAtracao(programa,dia,i)" >
-                         <p style="padding:0;white-space: nowrap; overflow: hidden;">{{programa.tituloAtracao}}</p>
-                         <p style="padding:0;">{{programa.horarioDeExibicao}}</p>
-                         <span>{{programa.tempoTotal}}</span>
+                    <div class="atracao" [style]="getStyleBloco(programa.tempoTotalEmSegundos,dia,i)"
+                        *ngFor="let programa of listaSemana[dia+'Bloco']; index as i"
+                        (click)="getInfoBlocoAtracao(programa,dia,i)">
+                        <p style="padding:0;white-space: nowrap; overflow: hidden;">{{programa.tituloAtracao}}</p>
+                        <p style="padding:0;">{{programa.horarioDeExibicao}}</p>
+                        <span>{{programa.tempoTotal}}</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    
+
     <div class="container-fluid" *ngIf="listaParaUpdate&&listaParaUpdate.length>0">
-        <div class="row" >
-            <div class="col-1" [ngStyle]="{'background': selectedDiaDaSemana==dia ? 'lightgreen' : 'white'}">
+        <div class="row">
+            <div class="col-1" [ngStyle]="{'background': selectedDiaDaSemana==selectedDiaDaSemana ? 'lightgreen' : 'white'}">
                 <p>Dia Da Semana Em Update</p>
                 <p>{{selectedDiaDaSemana | titlecase }}</p>
-            </div>         
+            </div>
             <div class="col-11" style="overflow: auto;">
                 <div class="dozeHoras">
                     <div class="hora" *ngFor="let hora of horas">
@@ -161,11 +148,13 @@
                     </div>
                 </div>
                 <div class="dozeHoras">
-                    <div class="atracao" [style]="getStyle(programa.duracaoTotalDaAtracaoEmSegundos,selectedDiaDaSemana,i)" 
-                         *ngFor="let programa of listaParaUpdate; index as i" (click)="clickAtracao(programa,selectedDiaDaSemana,i)" >
-                         <p>{{programa.atracao}}</p>
-                         <!-- <span>{{programa.titulo}} </span><br> -->
-                         <span>{{programa.horarioDeExibicao}}</span>
+                    <div class="atracao"
+                        [style]="getStyle(programa.duracaoTotalDaAtracaoEmSegundos,selectedDiaDaSemana,i)"
+                        *ngFor="let programa of listaParaUpdate; index as i"
+                        (click)="clickAtracao(programa,selectedDiaDaSemana,i)">
+                        <p style="white-space: nowrap;">{{programa.atracao}}</p>
+                        <!-- <span>{{programa.titulo}} </span><br> -->
+                        <span>{{programa.horarioDeExibicao}}</span>
                     </div>
                 </div>
             </div>
