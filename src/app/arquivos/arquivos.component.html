@@ -14,8 +14,11 @@
 
                   <div class="row" >
                      <div class="col-5">
+                        <button class="btn btn-primary" type="button"  *ngIf="windowInnerWidth < 900" (click)="retreiveFromMongoDB()" >Get all</button>
+                        <button class="btn btn-primary" type="button"  *ngIf="windowInnerWidth < 900" (click)="playOnDemand()" >Play</button>
+                     
                        <!-- PROG -->
-                       <div class="btn-group">
+                       <div class="btn-group"  *ngIf="windowInnerWidth > 900" >
                           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" 
                                   aria-haspopup="true" aria-expanded="false">
                                   PROG
@@ -30,7 +33,7 @@
                           </div>
                        </div>
                         <!-- SELECT -->
-                       <div class="btn-group">
+                       <div class="btn-group"  *ngIf="windowInnerWidth > 900" >
                           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" 
                                   aria-haspopup="true" aria-expanded="false">
                                   SELECT
@@ -41,7 +44,7 @@
                           </div>
                        </div>
                         <!-- ORDER -->
-                       <div class="btn-group">
+                       <div class="btn-group"  *ngIf="windowInnerWidth > 900" >
                           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" 
                                   aria-haspopup="true" aria-expanded="false">
                                   ORDER
@@ -54,7 +57,7 @@
                           </div>
                        </div>
                         <!-- ADDED -->
-                       <div class="btn-group">
+                       <div class="btn-group"  *ngIf="windowInnerWidth > 900" >
                           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" 
                                   aria-haspopup="true" aria-expanded="false">
                                   ADDED
@@ -65,7 +68,7 @@
                              <button class="dropdown-item" type="button" (click)="setSub()" >Add Sub</button>
                           </div>
                        </div>
-                       <div  style="margin-top: 10px; display: flex; gap: 10px 20px;">
+                       <div  style="margin-top: 10px; display: flex; gap: 10px 20px;"  *ngIf="windowInnerWidth > 900" >
                           <button class="btn btn-primary" (click)="criarProgramaOnMongoDb()" >
                                   Criar</button>
                           <input style="width: 74%;" [formControl]="novoPrograma" type="text" placeholder="Nome do Programa" class="form-control">
@@ -74,7 +77,7 @@
 
                      <div class="col-4">
                         <div style="display: flex; gap: 10px 20px; margin: 10px 0;">
-                           <select class="select form-control" 
+                           <select class="select form-control"  *ngIf="windowInnerWidth > 900"
                                    formControlName="canaisFormControl" >
                              <option value="">Canal </option>
                              <option *ngFor="let canal of canais" [value]='canal._id'>
@@ -88,7 +91,7 @@
                                <span>{{tipo.titulo}}</span>
                               </option>
                            </select>
-                           <select class="select form-control" 
+                           <select class="select form-control" *ngIf="windowInnerWidth > 900"
                                    formControlName="programaDeTvFormControl" >
                              <option value="">Prog de TV </option>
                              <option *ngFor="let programa of programaDeTvFiltered" [value]='programa.value'>
@@ -106,7 +109,7 @@
                         </div>
                      </div>
 
-                     <div class="col-3">
+                     <div class="col-3" *ngIf="windowInnerWidth > 900">
                         <div class="row">
                           <button style="margin: 0.3em 1em;" class="btn btn-success" (click)="getNewFileOnDirectory()" >Get New on Dir</button>     
                           <button style="margin: 0 1em 0 2em;height: 90%;" class="btn btn-success" (click)="uploadUsingMongoDb(0)" >Upload</button>
