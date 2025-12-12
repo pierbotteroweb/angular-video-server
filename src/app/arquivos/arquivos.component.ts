@@ -30,6 +30,7 @@ export class ArquivosComponent implements OnInit {
   novoPrograma:FormControl
   buttonMode:string
   tituloAtracao:string
+  windowInnerWidth:number
   
   selectedVideos: VideoModel[];
   selectedCanal:string
@@ -88,6 +89,7 @@ export class ArquivosComponent implements OnInit {
   // get canaisFormControl() { return this.selectVideoForm('canaisFormControl') as FormControl}
 
   ngOnInit() {
+    this.windowInnerWidth = window.innerWidth
     this.webSocketService.connect('ws://thisisshuffletv:9091');
       // this.productService.getProductsSmall().then(data => this.products = data);
       // this.retrieve()
