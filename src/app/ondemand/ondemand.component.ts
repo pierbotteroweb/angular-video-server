@@ -293,8 +293,6 @@ export class OndemandComponent implements OnInit {
             this.url=this.baseUrl+this.horario+"/"
                       +encodeURI(filme.titulo)+"#t="
                       +(this.definePontoDePartida(filme))
-
-                      console.log("XXXXXXXXXXX", this.url)
             let infoDoFilmeAtual = {}
             infoDoFilmeAtual['cortesParaIntervalo'] = filme?.cortesParaIntervalo
             infoDoFilmeAtual['corteInicio'] = (filme?.corteInicio?filme.corteInicio:"0")
