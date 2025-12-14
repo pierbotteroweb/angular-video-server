@@ -11,8 +11,6 @@ import { MongodbService } from '../services/mongodb.service';
 import { sts } from 'shuffle-tv-services/lib'
 import { WebSocketService } from '../services/WebSocketService.service';
 
-
-
 @Component({
   selector: 'app-ondemand',
   templateUrl: './ondemand.component.html',
@@ -290,11 +288,13 @@ export class OndemandComponent implements OnInit {
             sts.updatePageTitle(this.nomeDoFilmeAtual)
             this.duracaoVideoSelecionado = filme.duracao
       
-            this.selectVideoForm.get(this.horario+"FormControl").setValue(data[0].idDoFilme)          
+            this.selectVideoForm.get(this.horario+"FormControl").setValue(data[0].idDoFilme)
       
             this.url=this.baseUrl+this.horario+"/"
                       +encodeURI(filme.titulo)+"#t="
-                      +(filme?.pontoDePartida?filme.pontoDePartida:"0")
+                      +(this.definePontoDePartida(filme))
+
+                      console.log("XXXXXXXXXXX", this.url)
             let infoDoFilmeAtual = {}
             infoDoFilmeAtual['cortesParaIntervalo'] = filme?.cortesParaIntervalo
             infoDoFilmeAtual['corteInicio'] = (filme?.corteInicio?filme.corteInicio:"0")
@@ -329,6 +329,25 @@ export class OndemandComponent implements OnInit {
         }
       }      
     )
+  }
+
+  definePontoDePartida(filme): string{
+
+            if(!filme?.pontoDePartida){
+              return "0"
+            }
+            
+            if(this.duracaoVideoSelecionado - filme.pontoDePartida < 3){
+
+              if(!filme?.corteInicio){
+                return "0"
+              }
+
+              return filme.corteInicio
+            }
+
+            return filme.pontoDePartida
+
   }
 
   carregandoListasDeVideosDoMongoDB(){
@@ -410,7 +429,14 @@ export class OndemandComponent implements OnInit {
       this["video"+[this.horario]].find(video=>{ 
         if(video._id==this.idDofilmeAtual){
             media=video
-            media['pontoDePartida']=this.videoElement.currentTime
+
+            let currentTime = this.videoElement.currentTime
+
+            if(this.duracaoVideoSelecionado - this.videoElement.currentTime < 20){
+              currentTime = 0
+            }
+
+            media['pontoDePartida']=currentTime
     
             this.updateOnMongoDB(media)
           }
