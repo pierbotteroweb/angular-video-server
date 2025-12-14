@@ -335,53 +335,8 @@ export class ArquivosComponent implements OnInit {
     }
   }
 
-  uploadUsingMongoDb(index){
-
-    if(index<this.videosToUpload.length){
-      let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('mimeTypeFormControl').value+"Upload"
-
-      let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
-      .pipe(
-        uploadProgress(progress=>{
-          this.progress=progress;
-        }),
-        filterResponse()
-      ).subscribe(
-        res=>{
-          let videoObj:any = {
-            canal:"",
-            duracao:"",
-            titulo:""
-          }
-      
-          this.mongodbService.createVideo(this.selectedmimeType,videoObj).subscribe((newItemRes:any)=>{
-            console.log("newItemRes",newItemRes)
-                
-            let videoObjUpdate:any = {
-              duracao:Math.round(res['message'].file.duration),
-              titulo:res['message'].file.name,
-              tipo:this.selectedmimeType
-            }
-
-            if(this.selectedCanal){
-              videoObjUpdate.canal=this.selectedCanal
-            }
-                  
-            if(this.selectedProgramaDeTv){
-              videoObjUpdate.programaDeTv=this.selectedProgramaDeTv
-              videoObjUpdate.tituloAtracao=this.tituloAtracao
-            }
-
-      
-            this.mongodbService.updateVideo(newItemRes._id,videoObjUpdate).subscribe((videoUpdated:any)=>{
-      
-              
-            this.uploadUsingMongoDb(index+1)
-            })
-          })
-        }
-      )
-    }
+  asembleUploadUrl(){
+    return "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('mimeTypeFormControl').value+"Upload"
   }
 
 
@@ -609,7 +564,7 @@ export class ArquivosComponent implements OnInit {
         console.log('Video updated sucessfully')
         if(index){
           console.log(index)
-          this.uploadUsingMongoDb(index)
+          // this.uploadUsingMongoDb(index)
         }
       })
       

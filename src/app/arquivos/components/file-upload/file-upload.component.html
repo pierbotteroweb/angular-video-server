@@ -1,0 +1,13 @@
+<div style="display: flex;">
+    <button style="margin: 0 1em 0 2em;height: 90%;" class="btn btn-success" (click)="uploadUsingMongoDb(0)" >Upload</button>
+    <div class="upload-block">
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="customFile" (change)="onUploadEventChange($event)" multiple />
+            <label for="customFile" class="custom-file-label" id="customFileLabel">Selecionar Arquivo</label>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" [style.width]="progress + '%'" aria-valuenow="25" aria-valuemin="0"
+                aria-valuemax="100">{{ progress }}%</div>
+        </div> 
+    </div>
+</div>
