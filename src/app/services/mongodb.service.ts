@@ -62,6 +62,11 @@ export class MongodbService {
     return this.http.post('http://thisisshuffletv:9091/api/update'+content.tipo, {'id':id,'content':content})
   }
 
+  updateMany(arquivosIds,content,tipo){
+    return this.http.post('http://thisisshuffletv:9091/api/updateMany'+tipo,
+            {'arquivosIds':arquivosIds,'content':content})
+  }
+
   createVideo(videoCollection,content){
     return this.http.post('http://thisisshuffletv:9091/api/create'+videoCollection, {'content':content})
   }

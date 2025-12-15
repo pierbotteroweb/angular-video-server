@@ -20,7 +20,7 @@
                 <div style="display: flex; gap: 10px 20px; margin: 10px 0;">
                     <select class="select form-control" formControlName="semanaFormControl">
                         <option value="">Dia da Semana</option>
-                        <option *ngFor="let dia of semanaSemBlocos" [value]='dia'>
+                        <option *ngFor="let dia of listaDeNomesDosDiasDaSemanaSemBlocos" [value]='dia'>
                             <span>{{dia | titlecase }}</span>
                         </option>
                     </select>
@@ -32,7 +32,7 @@
                         [ngStyle]="{'visibility': exibeSemanaDestino ? 'visible' : 'hidden'}"
                         formControlName="semanaDestinoFormControl">
                         <option value="">Dia da Semana Destino</option>
-                        <option *ngFor="let dia of semana" [value]='dia'>
+                        <option *ngFor="let dia of listaDeNomesDosDiasDaSemana" [value]='dia'>
                             <span>{{dia | titlecase }}</span>
                         </option>
                     </select>
@@ -99,8 +99,8 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid" *ngFor="let dia of semana">
-        <div class="row" *ngIf="listaSemana[dia]&&listaSemana[dia].length>0&&
+    <div class="container-fluid" *ngFor="let dia of listaDeNomesDosDiasDaSemana">
+        <div class="row" *ngIf="listaCanal[dia] && listaCanal[dia].length>0 &&
                                 (dia==selectedDiaDaSemana||dia==selectedDiaDestinoDaSemana)">
             <div class="col-1" [ngStyle]="{'background': selectedDiaDaSemana==dia ? 'lightgreen' : 'white'}">
                 <p>Dia Da Semana</p>
@@ -115,7 +115,7 @@
                 </div>
                 <div class="dozeHoras">
                     <div class="atracao" [style]="getStyle(programa.duracaoTotalDaAtracaoEmSegundos,dia,i)"
-                        *ngFor="let programa of listaSemana[dia]; index as i" (click)="clickAtracao(programa,dia,i)">
+                        *ngFor="let programa of listaCanal[dia]; index as i" (click)="clickAtracao(programa,dia,i)">
                         <p style="white-space: nowrap; overflow: hidden;">{{programa.tituloAtracao}}</p>
                         <!-- <span>{{programa.titulo}} </span><br> -->
                         <span>{{programa.horarioDeExibicao}}</span>
@@ -123,7 +123,7 @@
                 </div>
                 <div class="dozeHoras">
                     <div class="atracao" [style]="getStyleBloco(programa.tempoTotalEmSegundos,dia,i)"
-                        *ngFor="let programa of listaSemana[dia+'Bloco']; index as i"
+                        *ngFor="let programa of listaCanal[dia+'Bloco']; index as i"
                         (click)="getInfoBlocoAtracao(programa,dia,i)">
                         <p style="padding:0;white-space: nowrap; overflow: hidden;">{{programa.tituloAtracao}}</p>
                         <p style="padding:0;">{{programa.horarioDeExibicao}}</p>
