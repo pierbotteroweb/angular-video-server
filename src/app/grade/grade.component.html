@@ -75,17 +75,17 @@
                 <p>Ponto Final: <span>{{programaClicado.final * 1000 | date:'mm:ss'}}</span></p>
                 <p>Duração: <span>{{programaClicado.duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
             </div>
-            <div class="col-2 info-selected" *ngIf="getInfoBlocoClicado">
-                <p>Atração: <span>{{programaBlocoSelectionado.tituloAtracao}}</span></p>
-                <p style="max-height: 52.8px;">Arquivo: <span>{{programaBlocoSelectionado.arquivo}}</span></p>
-                <p>Horário de Exibição: <span>{{programaBlocoSelectionado.horarioDeExibicao}}</span></p>
-                <p>Duração: <span>{{programaBlocoSelectionado.tempoTotal }}</span></p>
+            <div class="col-2 info-selected" *ngIf="getInfoProgramaMontadoClicado">
+                <p>Atração: <span>{{programaMontadoSelectionado.tituloAtracao}}</span></p>
+                <p style="max-height: 52.8px;">Arquivo: <span>{{programaMontadoSelectionado.arquivo}}</span></p>
+                <p>Horário de Exibição: <span>{{programaMontadoSelectionado.horarioDeExibicao}}</span></p>
+                <p>Duração: <span>{{programaMontadoSelectionado.tempoTotal }}</span></p>
             </div>
-            <div class="col-2 info-selected" *ngIf="getInfoBlocoClicado">
+            <div class="col-2 info-selected" *ngIf="getInfoProgramaMontadoClicado">
                 <ul style="overflow-y:scroll; max-height: 180px;">
-                    <li *ngFor="let bloco of programaBlocoSelectionado.blocos"
+                    <li *ngFor="let bloco of programaMontadoSelectionado.blocos"
                         style="cursor:pointer;margin-bottom: 5px;"
-                        (click)="clickAtracaoFromProgramaMontado(bloco,programaBlocoSelectionado.dia,bloco.indice)">
+                        (click)="clickAtracaoFromProgramaMontado(bloco,programaMontadoSelectionado.dia,bloco.indice)">
                         {{bloco.titulo}}
                     </li>
                 </ul>

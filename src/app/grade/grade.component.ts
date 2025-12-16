@@ -448,12 +448,7 @@ export class GradeComponent implements OnInit {
   updateOnMongoDB(video,type):void {
 
     if(video.programaDeTv=="intCorujaoDois"){
-      // console.log("updateOnMongoDB ",video)
-      // console.log("updateOnMongoDB ",video.titulo)
-      // console.log("updateOnMongoDB ",video.added)
-      // console.log("updateOnMongoDB ",video.order)
     }
-    // console.log("Running updateOnMongoDB ",video)
     this.mongodbService.updateVideo(video._id,video).subscribe(() => {
       if(!video.added){
         this.listaParaDesuso[video.tipo].push(video.id)
@@ -464,8 +459,6 @@ export class GradeComponent implements OnInit {
 
   updateCanaisOnMongoDB(canal:Canal):void {
     this.mongodbService.updateCanais(canal).subscribe(() => {
-      console.log("lista Canal", this.listaCanal[this.selectedDiaDaSemana])
-      console.log('Canal updated successfully!');
       let listOfTypes = 
       [...new Set(this.listaCanal[this.selectedDiaDaSemana]
       .map((bloco:Bloco)=>bloco.tipo))]
@@ -720,35 +713,33 @@ export class GradeComponent implements OnInit {
                       if(listaDeProgramas.length>1){
                         this.resetAddedLista(listaDeProgramas.splice(1,listaDeProgramas.length),"blocos")                      
                       }
-                    }console.log("videoSendoAdicionado ",videoSendoAdicionado)
-
-                    if(videoSendoAdicionado.tipo=="intervalos") console.log("videoSendoAdicionado ",videoSendoAdicionado)
+                    }
 
                       let newProg:Object ={}
 
-                        newProg = {
-                          "atracao":bloco,
-                          "tituloAtracao":videoSendoAdicionado.tituloAtracao,
-                          "titulo":videoSendoAdicionado.titulo,
-                          "volume":videoSendoAdicionado.volume?videoSendoAdicionado.volume:1,
-                          "horarioDeExibicao":"",
-                          "duracaoTotalDaAtracaoEmSegundos": videoSendoAdicionado.duracao,
-                          "id":videoSendoAdicionado._id,
-                          "idProgTotal":this.idProgTotal,
-                          "tipo":videoSendoAdicionado.tipo
-                        }
+                      newProg = {
+                        "atracao":bloco,
+                        "tituloAtracao":videoSendoAdicionado.tituloAtracao,
+                        "titulo":videoSendoAdicionado.titulo,
+                        "volume":videoSendoAdicionado.volume?videoSendoAdicionado.volume:1,
+                        "horarioDeExibicao":"",
+                        "duracaoTotalDaAtracaoEmSegundos": videoSendoAdicionado.duracao,
+                        "id":videoSendoAdicionado._id,
+                        "idProgTotal":this.idProgTotal,
+                        "tipo":videoSendoAdicionado.tipo
+                      }
 
-                        if(videoSendoAdicionado.corteFinal){
-                          let corteFinal = videoSendoAdicionado.corteFinal
-                          newProg['corteFinal']=corteFinal
-                          newProg['duracaoTotalDaAtracaoEmSegundos']=corteFinal
-                        }
-  
-                        if(videoSendoAdicionado.corteInicio){
-                          let corteInicio = videoSendoAdicionado.corteInicio
-                          let duracao = videoSendoAdicionado.corteInicio
-                          newProg['corteInicio']=duracao-corteInicio
-                        }
+                      if(videoSendoAdicionado.corteFinal){
+                        let corteFinal = videoSendoAdicionado.corteFinal
+                        newProg['corteFinal']=corteFinal
+                        newProg['duracaoTotalDaAtracaoEmSegundos']=corteFinal
+                      }
+
+                      if(videoSendoAdicionado.corteInicio){
+                        let corteInicio = videoSendoAdicionado.corteInicio
+                        let duracao = videoSendoAdicionado.corteInicio
+                        newProg['corteInicio']=duracao-corteInicio
+                      }
                       videoSendoAdicionado.added=true
                       this.updateOnMongoDB(videoSendoAdicionado,"videoSendoAdicionado")
                       unsubscribe.unsubscribe()
@@ -836,13 +827,11 @@ export class GradeComponent implements OnInit {
 
   getLista(){
       this.listaCanal = this.canais.find(canal=>canal.emissora==this.selectedCanal)
-      console.log(this.selectedDiaDaSemana)
       if(this.selectedDiaDaSemana&&!this.listaCanal[this.selectedDiaDaSemana]) this.addDiasDeSemanaNoCanal()
       this.getListaDeProgramasDeTvFromMongodb()
   }
 
   addDiasDeSemanaNoCanal(){
-    console.log("????")
     this.listaDeNomesDosDiasDaSemana.map((dia:DiaDaSemana)=>{
       this.listaCanal[dia]=[]
     })
@@ -883,6 +872,7 @@ export class GradeComponent implements OnInit {
   }
 
   getInfoProgramaMontado(info,dia,index){
+
     this.getInfoClicado=false
     this.getInfoProgramaMontadoClicado=true
     this.getInfoFromProgramaMontadoClicado=false
