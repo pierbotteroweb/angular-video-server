@@ -9,13 +9,13 @@ export interface Canal {
     sexta: Bloco,
     sabado: Bloco,
     domingo: Bloco,
-    segundaBloco: Bloco,
-    tercaBloco: Bloco,
-    quartaBloco: Bloco,
-    quintaBloco: Bloco,
-    sextaBloco: Bloco,
-    sabadoBloco: Bloco,
-    domingoBloco: Bloco,
+    segundaProgramaMontado: Bloco,
+    tercaProgramaMontado: Bloco,
+    quartaProgramaMontado: Bloco,
+    quintaProgramaMontado: Bloco,
+    sextaProgramaMontado: Bloco,
+    sabadoProgramaMontado: Bloco,
+    domingoProgramaMontado: Bloco,
 }
 
 export interface Bloco {
@@ -30,6 +30,36 @@ export interface Bloco {
     tipo: TipoDePrograma,
 }
 
+export interface ProgramasPorBloco {
+    bloco1?:number,
+    bloco2?:number,
+    bloco3?:number,
+    bloco4?:number,
+    bloco5?:number,
+    bloco6?:number,
+}
+
+export interface Programa {
+    titulo: string,
+    tipo: TipoDePrograma,
+    value: string,
+    canal: Emissora,
+    anexos: Anexos,
+
+}
+
+export interface Anexos {
+    prePos: string,
+    intervalo: string,
+    blocosAmount: number,
+    bloco1?: string[],
+    bloco2?: string[],
+    bloco3?: string[],
+    bloco4?: string[],
+    bloco5?: string[],
+    bloco6?: string[]
+}
+
 export interface ListaParaDesuso {
     originais: string[],
     intervalos: string[],
@@ -40,8 +70,7 @@ export interface ListaParaDesuso {
     movies: string[],
 }
 
-
-
 export type TipoDePrograma = 'originais' | 'intervalos' | 'dublado' | 'madrugada' | 'noite' | 'novelas' | 'movies'
+export type Emissora = 'Cultura' | 'Sbt' | 'Globo' | 'Record' | 'Gazeta' | 'Manchete' | 'Bandeirantes' | 'Mtv'
 export type DiaDaSemana = 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta' | 'sabado' | 'domingo'
-export type DiaDaSemanaBloco = 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta' | 'sabado' | 'domingo' | 'segundaBloco' | 'tercaBloco' | 'quartaBloco' | 'quintaBloco' | 'sextaBloco' | 'sabadoBloco' | 'domingoBloco'
+export type DiaDaSemanaProgramaMontado = 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta' | 'sabado' | 'domingo' | 'segundaProgramaMontado' | 'tercaProgramaMontado' | 'quartaProgramaMontado' | 'quintaProgramaMontado' | 'sextaProgramaMontado' | 'sabadoProgramaMontado' | 'domingoProgramaMontado'
