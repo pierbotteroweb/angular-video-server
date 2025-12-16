@@ -30,6 +30,27 @@ export interface Bloco {
     tipo: TipoDePrograma,
 }
 
+export interface Programa {
+    titulo: string,
+    tipo: TipoDePrograma,
+    value: string,
+    canal: Emissora,
+    anexos: Anexos,
+
+}
+
+export interface Anexos {
+    prePos: string,
+    intervalo: string,
+    blocosAmount: number,
+    bloco1?: string[],
+    bloco2?: string[],
+    bloco3?: string[],
+    bloco4?: string[],
+    bloco5?: string[],
+    bloco6?: string[]
+}
+
 export interface ListaParaDesuso {
     originais: string[],
     intervalos: string[],
@@ -40,8 +61,7 @@ export interface ListaParaDesuso {
     movies: string[],
 }
 
-
-
 export type TipoDePrograma = 'originais' | 'intervalos' | 'dublado' | 'madrugada' | 'noite' | 'novelas' | 'movies'
+export type Emissora = 'Cultura' | 'Sbt' | 'Globo' | 'Record' | 'Gazeta' | 'Manchete' | 'Bandeirantes' | 'Mtv'
 export type DiaDaSemana = 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta' | 'sabado' | 'domingo'
 export type DiaDaSemanaBloco = 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta' | 'sabado' | 'domingo' | 'segundaBloco' | 'tercaBloco' | 'quartaBloco' | 'quintaBloco' | 'sextaBloco' | 'sabadoBloco' | 'domingoBloco'

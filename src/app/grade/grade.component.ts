@@ -5,7 +5,7 @@ import { EMPTY, Subject } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 import { FirebaseService } from '../services/firebase.service';
 import { sts } from 'shuffle-tv-services/lib'
-import { Bloco, Canal, DiaDaSemana, DiaDaSemanaBloco, ListaParaDesuso, TipoDePrograma } from './types/types';
+import { Bloco, Canal, DiaDaSemana, DiaDaSemanaBloco, ListaParaDesuso, Programa, TipoDePrograma } from './types/types';
 import { concatMap } from 'rxjs/operators';
 
 @Component({
@@ -14,17 +14,9 @@ import { concatMap } from 'rxjs/operators';
   styleUrls: ['./grade.component.scss']
 })
 export class GradeComponent implements OnInit {
-  programaDeTv: { id: string; 
-                  titulo: string; 
-                  duracao: string; 
-                  canal?: string;  
-                  value?: string; }[];
+  programaDeTv: Programa[];
 
-  programaDeTvFiltered: { id: string; 
-                          titulo: string; 
-                          duracao: string; 
-                          canal?: string; 
-                          value?: string; }[];
+  programaDeTvFiltered: Programa[];
 
   selectedProgramaDeTv: any;
   selectedProgramaDeTvBlocos: any;
