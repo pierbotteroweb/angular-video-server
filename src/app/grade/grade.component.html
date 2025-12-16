@@ -20,7 +20,7 @@
                 <div style="display: flex; gap: 10px 20px; margin: 10px 0;">
                     <select class="select form-control" formControlName="semanaFormControl">
                         <option value="">Dia da Semana</option>
-                        <option *ngFor="let dia of listaDeNomesDosDiasDaSemanaSemBlocos" [value]='dia'>
+                        <option *ngFor="let dia of listaDeNomesDosDiasDaSemanaSemProgramaMontado" [value]='dia'>
                             <span>{{dia | titlecase }}</span>
                         </option>
                     </select>
@@ -85,12 +85,12 @@
                 <ul style="overflow-y:scroll; max-height: 180px;">
                     <li *ngFor="let bloco of programaBlocoSelectionado.blocos"
                         style="cursor:pointer;margin-bottom: 5px;"
-                        (click)="clickAtracaoFromBloco(bloco,programaBlocoSelectionado.dia,bloco.indice)">
+                        (click)="clickAtracaoFromProgramaMontado(bloco,programaBlocoSelectionado.dia,bloco.indice)">
                         {{bloco.titulo}}
                     </li>
                 </ul>
             </div>
-            <div class="col-2 info-selected" *ngIf="getInfoFromBlocoClicado">
+            <div class="col-2 info-selected" *ngIf="getInfoFromProgramaMontadoClicado">
                 <p>Tipo: <span>{{programaClicado.tipo}}</span></p>
                 <p>Horário de Exibição: <span>{{programaClicado.horarioDeExibicao}}</span></p>
                 <p>Duração: <span>{{programaClicado.duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
@@ -121,15 +121,17 @@
                         <span>{{programa.horarioDeExibicao}}</span>
                     </div>
                 </div>
+                <!-- ABAIXO O TEMPLATE DO BLOCO QUE VAI SER PROGRAMA MONTADO -->
                 <div class="dozeHoras">
-                    <div class="atracao" [style]="getStyleBloco(programa.tempoTotalEmSegundos,dia,i)"
-                        *ngFor="let programa of listaCanal[dia+'Bloco']; index as i"
-                        (click)="getInfoBlocoAtracao(programa,dia,i)">
-                        <p style="padding:0;white-space: nowrap; overflow: hidden;">{{programa.tituloAtracao}}</p>
-                        <p style="padding:0;">{{programa.horarioDeExibicao}}</p>
-                        <span>{{programa.tempoTotal}}</span>
+                    <div class="atracao" [style]="getStyleProgramaMontado(programaMontado.tempoTotalEmSegundos,dia,i)"
+                        *ngFor="let programaMontado of listaCanal[dia+'ProgramaMontado']; index as i"
+                        (click)="getInfoProgramaMontado(programaMontado,dia,i)">
+                        <p style="padding:0;white-space: nowrap; overflow: hidden;">{{programaMontado.tituloAtracao}}</p>
+                        <p style="padding:0;">{{programaMontado.horarioDeExibicao}}</p>
+                        <span>{{programaMontado.tempoTotal}}</span>
                     </div>
                 </div>
+                <!-- ACIMA O TEMPLATE DO BLOCO QUE VAI SER PROGRAMA MONTADO -->
             </div>
         </div>
     </div>

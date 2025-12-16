@@ -9,13 +9,13 @@ export interface Canal {
     sexta: Bloco,
     sabado: Bloco,
     domingo: Bloco,
-    segundaBloco: Bloco,
-    tercaBloco: Bloco,
-    quartaBloco: Bloco,
-    quintaBloco: Bloco,
-    sextaBloco: Bloco,
-    sabadoBloco: Bloco,
-    domingoBloco: Bloco,
+    segundaProgramaMontado: Bloco,
+    tercaProgramaMontado: Bloco,
+    quartaProgramaMontado: Bloco,
+    quintaProgramaMontado: Bloco,
+    sextaProgramaMontado: Bloco,
+    sabadoProgramaMontado: Bloco,
+    domingoProgramaMontado: Bloco,
 }
 
 export interface Bloco {
@@ -73,4 +73,4 @@ export interface ListaParaDesuso {
 export type TipoDePrograma = 'originais' | 'intervalos' | 'dublado' | 'madrugada' | 'noite' | 'novelas' | 'movies'
 export type Emissora = 'Cultura' | 'Sbt' | 'Globo' | 'Record' | 'Gazeta' | 'Manchete' | 'Bandeirantes' | 'Mtv'
 export type DiaDaSemana = 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta' | 'sabado' | 'domingo'
-export type DiaDaSemanaBloco = 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta' | 'sabado' | 'domingo' | 'segundaBloco' | 'tercaBloco' | 'quartaBloco' | 'quintaBloco' | 'sextaBloco' | 'sabadoBloco' | 'domingoBloco'
+export type DiaDaSemanaProgramaMontado = 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta' | 'sabado' | 'domingo' | 'segundaProgramaMontado' | 'tercaProgramaMontado' | 'quartaProgramaMontado' | 'quintaProgramaMontado' | 'sextaProgramaMontado' | 'sabadoProgramaMontado' | 'domingoProgramaMontado'
