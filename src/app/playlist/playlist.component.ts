@@ -236,8 +236,6 @@ export class PlaylistComponent {
         this.arrayNumerosCanais=this.fullCanaisCollection.map(canal=>canal.canal).sort(sts.sortNumbers())
         this.getSelectedChanelFromFirebase()
         this.getSelectedChannelFromMongoDB()
-        // localStorage.setItem('data',JSON.stringify(data))
-        // this.selectCanal("5","Globo")
     },err=>{
         console.log("Error ========",err)
     });

@@ -5,7 +5,7 @@ import { EMPTY, Subject } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 import { FirebaseService } from '../services/firebase.service';
 import { sts } from 'shuffle-tv-services/lib'
-import { Bloco, Canal, DiaDaSemana, DiaDaSemanaBloco, ListaParaDesuso, Programa, TipoDePrograma } from './types/types';
+import { Bloco, Canal, DiaDaSemana, DiaDaSemanaBloco, ListaParaDesuso, Programa, ProgramasPorBloco, TipoDePrograma } from './types/types';
 import { concatMap } from 'rxjs/operators';
 
 @Component({
@@ -45,11 +45,11 @@ export class GradeComponent implements OnInit {
   indexToAdd:number;
   lengthListaFinal:number;
 
-  listaBlocos:Array<any>=[];
+  listaAnexosBloco:Array<string>=[];
   listaProgramasBlocos:Array<any>=[];
   blocosAmount:number;
   programasBlocosCount:number;
-  programasPorBloco:Object;
+  programasPorBloco:ProgramasPorBloco;
 
   spyListaAdicionada: Subject<any>;
   spyListaReplicada: Subject<any>;
@@ -478,13 +478,8 @@ export class GradeComponent implements OnInit {
           concatMap(() => {
       
             if (this.listaParaDesuso[tipo].length===0) {
-              console.log(`Nenhum item para desuso no tipo ${tipo}`);
-              return EMPTY; // ✅ mantém o fluxo vivo
+              return EMPTY;
             }
-            console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-            console.log("tipo", tipo);
-            console.log("listaParaDesuso[tipo]", this.listaParaDesuso);
-            console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 
             return this.mongodbService.updateMany(
               this.listaParaDesuso[tipo],
@@ -539,21 +534,21 @@ export class GradeComponent implements OnInit {
     }
     // GET UNSUBSCRIBABLE LIST OF PROGRAMS ACCORDING TO SELECTED PROGRAMA DE TV
 
-    if(this.selectedProgramaDeTv.anexos?.blocosAmount&&this.listaBlocos.length==0){
+    if(this.selectedProgramaDeTv.anexos?.blocosAmount&&this.listaAnexosBloco.length==0){
       this.programasPorBloco={}
       this.blocosAmount=this.selectedProgramaDeTv.anexos.blocosAmount
       this.selectedProgramaDeTvBlocos=this.selectedProgramaDeTv
       for(let i=0;i<this.blocosAmount;i++){
-        this.selectedProgramaDeTv.anexos["bloco"+(i+1)].map((prog,index)=>{
-          this.listaBlocos.push(prog)
+        this.selectedProgramaDeTv.anexos["bloco"+(i+1)].map((valueProgramaBloco:string,index)=>{
+          this.listaAnexosBloco.push(valueProgramaBloco)
           this.programasPorBloco["bloco"+(i+1)]=index+1
         })
       }
-      this.programasBlocosCount=this.listaBlocos.length
+      this.programasBlocosCount=this.listaAnexosBloco.length
     }
 
     if(this.selectedProgramaDeTv.tipo!=="intervalos"
-     &&!this.listaBlocos.includes(this.selectedProgramaDeTv.value)){
+     &&!this.listaAnexosBloco.includes(this.selectedProgramaDeTv.value)){
       this.idProgTotal =  this.selectedProgramaDeTv.value+new Date().valueOf()
     }
 
@@ -816,13 +811,13 @@ export class GradeComponent implements OnInit {
     }
     
     const getAllBlocos = async () => {
-      return Promise.all(this.listaBlocos.map(bloco => asyncFunctionThatCallsFunction(bloco)))
+      return Promise.all(this.listaAnexosBloco.map(bloco => asyncFunctionThatCallsFunction(bloco)))
     }
     
     getAllBlocos().then(data => {
         // this.adicionarPrograma()
         this.programasBlocosCount=0
-        this.listaBlocos=[]
+        this.listaAnexosBloco=[]
         this.organizaProgramasBlocos()
     }) 
   }
@@ -980,7 +975,7 @@ export class GradeComponent implements OnInit {
         if(listaOriginal){
         let listaDiaReduzida = [...new Set(listaOriginal.map(prog=>prog.idProgTotal))]
 
-        let listaBlocos = listaDiaReduzida.map((progId:any)=>{
+        let listaAnexosBloco = listaDiaReduzida.map((progId:any)=>{
           let obj:any = {}
           let progInfo = listaOriginal.find(prog=>prog.idProgTotal==progId&&prog.tipo!=="intervalos")
           if(progInfo&&progInfo.atracao){
@@ -999,7 +994,7 @@ export class GradeComponent implements OnInit {
           obj.tempoTotal = sts.toTime(obj.tempoTotalEmSegundos)
           return obj
         })
-        this.canais[indexOfCanal][diaDaSemana+"Bloco"]=listaBlocos}
+        this.canais[indexOfCanal][diaDaSemana+"Bloco"]=listaAnexosBloco}
       })
 
         this.listaCanal = this.canais[indexOfCanal][this.listaDeNomesDosDiasDaSemana[this.selectedDiaDaSemana]]

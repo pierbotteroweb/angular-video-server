@@ -30,6 +30,15 @@ export interface Bloco {
     tipo: TipoDePrograma,
 }
 
+export interface ProgramasPorBloco {
+    bloco1?:number,
+    bloco2?:number,
+    bloco3?:number,
+    bloco4?:number,
+    bloco5?:number,
+    bloco6?:number,
+}
+
 export interface Programa {
     titulo: string,
     tipo: TipoDePrograma,
