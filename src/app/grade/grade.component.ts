@@ -1087,9 +1087,8 @@ export class GradeComponent implements OnInit {
     
     let IndexCurrentProgramaMontado = listaCanalProgramaMontado.indexOf(currentProgramaMontado)
 
-    let listaAteCurrent = currentProgramaMontado
+    let listaAteCurrent = listaCanalProgramaMontado.slice(0, IndexCurrentProgramaMontado)
 
-    listaAteCurrent = [...listaAteCurrent].splice(0,IndexCurrentProgramaMontado)
 
     this.getInfoProgramaMontado(currentProgramaMontado,diaDaSemanaValue,IndexCurrentProgramaMontado)
 
