@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { CommonService } from 'src/services/common.service';
 import { EMPTY, Subject } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 import { FirebaseService } from '../services/firebase.service';
 import { sts } from 'shuffle-tv-services/lib'
-import { Bloco, Canal, DiaDaSemana, DiaDaSemanaProgramaMontado, ListaParaDesuso, Programa, ProgramasPorBloco, TipoDePrograma } from './types/types';
+import { Bloco, Canal, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, ListaParaDesuso, Programa, ProgramasPorBloco, TipoDePrograma } from './types/types';
 import { concatMap } from 'rxjs/operators';
 
 @Component({
@@ -18,18 +17,18 @@ export class GradeComponent implements OnInit {
 
   programaDeTvFiltered: Programa[];
 
-  selectedProgramaDeTv: any;
-  selectedProgramaDeTvBlocos: any;
-  selectedCanal: string = "Globo";
+  selectedProgramaDeTv: Programa;
+  selectedProgramaDeTvBlocos: Programa;
+  selectedCanal: Emissora = "Globo";
   selectedDiaDaSemana: DiaDaSemana;
   selectedDiaDestinoDaSemana: DiaDaSemana;
 
 
   listaCanal:Bloco[];
-  listaOrigemReduzida: Array<any>;
+  listaOrigemReduzida: Array<string>;
   listaParaUpdate: any;
   listaDeIntervalosAdicionados: Array<any>;
-  idProgTotal: any;
+  idProgMontado: string;
 
   alerta:String;
   exibeSemanaDestino:boolean;
@@ -70,8 +69,7 @@ export class GradeComponent implements OnInit {
     "movies":[],
   };
 
-  constructor(private commonServices: CommonService,
-              private firebaseService: FirebaseService,
+  constructor(private firebaseService: FirebaseService,
               private mongodbService: MongodbService,
               private formBuilder: FormBuilder) { 
                 this.selectVideoForm = this.formBuilder.group({
@@ -196,12 +194,12 @@ export class GradeComponent implements OnInit {
       })
       
       let novaListaCanal = this.listaCanal[this.selectedDiaDaSemana]
-                    .filter(prog=>prog.idProgTotal!==this.programaMontadoSelectionado.blocos[0].idProgTotal)
+                    .filter(prog=>prog.idProgMontado!==this.programaMontadoSelectionado.blocos[0].idProgMontado)
 
       this.recalculaHorariosDeExibicao(novaListaCanal)
 
       let novaListaCanalProgramaMontado = this.listaCanal[this.selectedDiaDaSemana+'ProgramaMontado']
-                    .filter(prog=>prog.idProgTotal!==this.programaMontadoSelectionado.blocos[0].idProgTotal)
+                    .filter(prog=>prog.idProgMontado!==this.programaMontadoSelectionado.blocos[0].idProgMontado)
       
       this.listaCanal[this.selectedDiaDaSemana+'ProgramaMontado'] = novaListaCanalProgramaMontado
 
@@ -219,9 +217,9 @@ export class GradeComponent implements OnInit {
     let listaParaORganizar = this.emProcessoDeUpdate ? this.listaParaUpdate : this.listaCanal[this.selectedDiaDaSemana]
     let lengthListaParaOrganizar = listaParaORganizar.length
     
-    let indexInicioAdicionados=listaParaORganizar.find(prog=>prog.idProgTotal==this.idProgTotal).indice
+    let indexInicioAdicionados=listaParaORganizar.find(prog=>prog.idProgMontado==this.idProgMontado).indice
 
-    let indexFinalAdicionados=listaParaORganizar.reverse().find(prog=>prog.idProgTotal==this.idProgTotal).indice
+    let indexFinalAdicionados=listaParaORganizar.reverse().find(prog=>prog.idProgMontado==this.idProgMontado).indice
 
     listaParaORganizar.reverse()
 
@@ -256,19 +254,19 @@ export class GradeComponent implements OnInit {
     let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaCanal[this.selectedDiaDaSemana]
     let lengthListaParaOrganizar = listaParaORganizar.length
     
-    let indexInicioAdicionados=listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgTotal==this.idProgTotal))
+    let indexInicioAdicionados=listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgMontado==this.idProgMontado))
 
     // listaParaORganizar.reverse()
 
         
-    let listaAdicionados = listaParaORganizar.filter(prog=>prog.idProgTotal==this.idProgTotal)
+    let listaAdicionados = listaParaORganizar.filter(prog=>prog.idProgMontado==this.idProgMontado)
 
     let indexFinalAdicionados=indexInicioAdicionados+listaAdicionados.length-2
     let listaPreAdicionados = listaParaORganizar.slice(0,indexInicioAdicionados)
     
     let listaAadicionadosPrograma = listaAdicionados.filter(prog=>!prog.atracao.includes("prePos"))
     let listaAadicionadosPrepos = listaAdicionados.filter(prog=>prog.atracao.includes("prePos"))
-    let listaPosAdicionados = listaParaORganizar.slice(indexFinalAdicionados+1,lengthListaParaOrganizar).filter(prog=>prog.idProgTotal!=this.idProgTotal)
+    let listaPosAdicionados = listaParaORganizar.slice(indexFinalAdicionados+1,lengthListaParaOrganizar).filter(prog=>prog.idProgMontado!=this.idProgMontado)
 
     let listaFinal = [...listaPreAdicionados,
                      listaAadicionadosPrepos[0],
@@ -287,11 +285,11 @@ export class GradeComponent implements OnInit {
 
     let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaCanal[this.selectedDiaDaSemana]
 
-    let indexAdicionadosInicio = listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgTotal==this.idProgTotal))
+    let indexAdicionadosInicio = listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgMontado==this.idProgMontado))
 
     let listaPreAdicionados = listaParaORganizar.slice(0,indexAdicionadosInicio)
 
-    let listaAdicionados=listaParaORganizar.filter(prog=>prog.idProgTotal==this.idProgTotal)
+    let listaAdicionados=listaParaORganizar.filter(prog=>prog.idProgMontado==this.idProgMontado)
 
     let listaPosAdicionados = listaParaORganizar.slice(indexAdicionadosInicio+listaAdicionados.length,listaParaORganizar.length)
 
@@ -513,7 +511,7 @@ export class GradeComponent implements OnInit {
 
     let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
                      this.listaCanal[this.selectedDiaDaSemana]
-    let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.idProgTotal==this.idProgTotal))
+    let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.idProgMontado==this.idProgMontado))
     let info = listaAtual[indexToSelect]
     this.clickAtracao(info,this.selectedDiaDaSemana,indexToSelect)
     this.selectVideoForm.get('programaDeTvFormControl').setValue(prePosApi)
@@ -544,7 +542,7 @@ export class GradeComponent implements OnInit {
 
     if(this.selectedProgramaDeTv.tipo!=="intervalos"
      &&!this.listaAnexosBloco.includes(this.selectedProgramaDeTv.value)){
-      this.idProgTotal =  this.selectedProgramaDeTv.value+new Date().valueOf()
+      this.idProgMontado =  this.selectedProgramaDeTv.value+new Date().valueOf()
     }
 
     
@@ -599,7 +597,7 @@ export class GradeComponent implements OnInit {
                       "volume":videoSendoAdicionado.volume?videoSendoAdicionado.volume:1,
                       "horarioDeExibicao":"",
                       "id":videoSendoAdicionado._id,
-                      "idProgTotal":this.idProgTotal,
+                      "idProgMontado":this.idProgMontado,
                       "tipo":videoSendoAdicionado.tipo
                     }
 
@@ -623,7 +621,7 @@ export class GradeComponent implements OnInit {
                         "volume":videoSendoAdicionado.volume?videoSendoAdicionado.volume:1,
                         "horarioDeExibicao":"",
                         "id":videoSendoAdicionado._id,
-                        "idProgTotal":this.idProgTotal,
+                        "idProgMontado":this.idProgMontado,
                         "tipo":videoSendoAdicionado.tipo
                       }
                       
@@ -649,7 +647,7 @@ export class GradeComponent implements OnInit {
                       "horarioDeExibicao":"",
                       "duracaoTotalDaAtracaoEmSegundos": videoSendoAdicionado.duracao,
                       "id":videoSendoAdicionado._id,
-                      "idProgTotal":this.idProgTotal,
+                      "idProgMontado":this.idProgMontado,
                       "tipo":videoSendoAdicionado.tipo
                     }
 
@@ -725,7 +723,7 @@ export class GradeComponent implements OnInit {
                         "horarioDeExibicao":"",
                         "duracaoTotalDaAtracaoEmSegundos": videoSendoAdicionado.duracao,
                         "id":videoSendoAdicionado._id,
-                        "idProgTotal":this.idProgTotal,
+                        "idProgMontado":this.idProgMontado,
                         "tipo":videoSendoAdicionado.tipo
                       }
 
@@ -762,7 +760,7 @@ export class GradeComponent implements OnInit {
 
       this.programasReplicadosCount--
       let programaParaReplicar = this.listaCanal[this.selectedDiaDaSemana]
-                            .find(prog=>prog.idProgTotal==
+                            .find(prog=>prog.idProgMontado==
                             this.listaOrigemReduzida[this.programasReplicadosCount]&&
                             prog.tipo!=="intervalos").atracao
   
@@ -927,13 +925,13 @@ export class GradeComponent implements OnInit {
     this.programaClicado=""
     if(this.selectedDiaDestinoDaSemana){
       this.listaCanal[this.selectedDiaDestinoDaSemana]=[]
-      let listaOrigem = this.listaCanal[this.selectedDiaDaSemana] 
-      this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.idProgTotal))]
+      let listaOrigem:Bloco[] = this.listaCanal[this.selectedDiaDaSemana] 
+      this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.idProgMontado))]
       this.listaOrigemReduzida.reverse()
       this.selectVideoForm.get('semanaFormControl').setValue(this.selectedDiaDestinoDaSemana)
       this.programasReplicadosCount = this.listaOrigemReduzida.length-1
       let programToSelect = listaOrigem
-                            .find(prog=>prog.idProgTotal==
+                            .find(prog=>prog.idProgMontado==
                             this.listaOrigemReduzida[this.programasReplicadosCount]&&
                             prog.tipo!=="intervalos").atracao
       this.selectVideoForm.get('programaDeTvFormControl').setValue(programToSelect)
@@ -945,12 +943,12 @@ export class GradeComponent implements OnInit {
     this.emProcessoDeUpdate=true
     this.programaClicado=""
     this.listaParaUpdate=[]
-    let listaOrigem = this.listaCanal[this.selectedDiaDaSemana] 
-    this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.idProgTotal))]
+    let listaOrigem:Bloco[] = this.listaCanal[this.selectedDiaDaSemana] 
+    this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.idProgMontado))]
     this.listaOrigemReduzida.reverse()
     this.programasReplicadosCount = this.listaOrigemReduzida.length-1
     let programToSelect = listaOrigem
-                          .find(prog=>prog.idProgTotal==
+                          .find(prog=>prog.idProgMontado==
                           this.listaOrigemReduzida[this.programasReplicadosCount]&&
                           prog.tipo!=="intervalos").atracao
     this.selectVideoForm.get('programaDeTvFormControl').setValue(programToSelect)
@@ -965,16 +963,16 @@ export class GradeComponent implements OnInit {
       this.listaDeNomesDosDiasDaSemana.map((diaDaSemana:DiaDaSemana)=>{
         let listaOriginal:any = canal[diaDaSemana]
         if(listaOriginal){
-        let listaDiaReduzida = [...new Set(listaOriginal.map(prog=>prog.idProgTotal))]
+        let listaDiaReduzida = [...new Set(listaOriginal.map(prog=>prog.idProgMontado))]
 
         let listaAnexosBloco = listaDiaReduzida.map((progId:any)=>{
           let obj:any = {}
-          let progInfo = listaOriginal.find(prog=>prog.idProgTotal==progId&&prog.tipo!=="intervalos")
+          let progInfo = listaOriginal.find(prog=>prog.idProgMontado==progId&&prog.tipo!=="intervalos")
           if(progInfo&&progInfo.atracao){
             obj.atracao = progInfo.atracao
-            obj.idProgTotal = progInfo.idProgTotal
+            obj.idProgMontado = progInfo.idProgMontado
           }
-          let blocos = listaOriginal.filter(prog2=>prog2.idProgTotal==progId)
+          let blocos = listaOriginal.filter(prog2=>prog2.idProgMontado==progId)
           
           obj.horarioDeExibicao = blocos[0].horarioDeExibicao
           obj.blocos = blocos

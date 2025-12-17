@@ -26,7 +26,7 @@ export interface Bloco {
     horarioDeExibicao: string,
     duracaoTotalDaAtracaoEmSegundos: number,
     id: string,
-    idProgTotal: string,
+    idProgMontado: string,
     tipo: TipoDePrograma,
 }
 
@@ -41,6 +41,7 @@ export interface ProgramasPorBloco {
 
 export interface Programa {
     titulo: string,
+    prePos?: boolean,
     tipo: TipoDePrograma,
     value: string,
     canal: Emissora,
