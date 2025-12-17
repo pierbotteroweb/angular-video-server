@@ -1,14 +1,14 @@
 <video preload="auto" crossorigin="anonymous" (ended)="proximo()" mousevolume class="video desktop-only"
-       [ngClass]="{'video--object-fit-contain': viewport < 2.3}" 
+       [ngClass]="{'video--object-fit-contain': viewport > 1.8}" 
        *ngIf="exibirVideo && this.windowInnerWidth>500" autoplay>
   <source [src]=urlMediaPath [type]="mimeType">
   Your browser does not support the video tag.
 </video>
 
 <span *ngIf="exibirVideo && this.windowInnerWidth>500 && exibeNumCanal" 
-  class="numCanal" [ngStyle]="{'right': viewport < 2.3 ? '25%' : '15%'}">
+  class="numCanal" [ngStyle]="{'right': viewport > 1.8 ? '25%' : '15%'}">
   {{numCanal}}</span>
-
+  
 <app-sidebars
   [viewport]="viewport"
   [arrayNumerosCanais]="arrayNumerosCanais"
