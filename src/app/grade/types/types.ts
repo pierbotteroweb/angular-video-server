@@ -18,6 +18,23 @@ export interface Canal {
     domingoProgramaMontado: Bloco,
 }
 
+export interface Arquivo {
+    added: boolean,
+    canal: Emissora,
+    corteFinal: number,
+    corteInicio: number,
+    cortesParaIntervalo: number[],
+    duracao: number,
+    emUso: boolean,
+    volume?: number,
+    order: number,
+    programaDeTv: string,
+    tipo: TipoDePrograma,
+    titulo: string,
+    tituloAtracao: string,
+    _id: string,
+}
+
 export interface Bloco {
     atracao: string,
     tituloAtracao: string,
@@ -26,6 +43,7 @@ export interface Bloco {
     horarioDeExibicao: string,
     duracaoTotalDaAtracaoEmSegundos: number,
     id: string,
+    indice?:number,
     idProgMontado: string,
     tipo: TipoDePrograma,
 }
@@ -59,6 +77,12 @@ export interface Anexos {
     bloco4?: string[],
     bloco5?: string[],
     bloco6?: string[]
+}
+
+export interface intPrePosInfo {
+    intAmount:number,
+    intervaloApi?:string,
+    prePosApi?:string
 }
 
 export interface ListaParaDesuso {
