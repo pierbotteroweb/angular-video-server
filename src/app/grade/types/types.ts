@@ -44,6 +44,7 @@ export interface Bloco {
     duracaoTotalDaAtracaoEmSegundos: number,
     id: string,
     indice?:number,
+    dia?:number,
     idProgMontado: string,
     tipo: TipoDePrograma,
 }
@@ -79,7 +80,7 @@ export interface Anexos {
     bloco6?: string[]
 }
 
-export interface intPrePosInfo {
+export interface InfoIntPrePos {
     intAmount:number,
     intervaloApi?:string,
     prePosApi?:string
