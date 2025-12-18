@@ -4,7 +4,7 @@ import { EMPTY, Subject } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 import { FirebaseService } from '../services/firebase.service';
 import { sts } from 'shuffle-tv-services/lib'
-import { Bloco, Canal, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, ListaParaDesuso, Programa, ProgramasPorBloco, TipoDePrograma } from './types/types';
+import { Arquivo, Bloco, Canal, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, intPrePosInfo, ListaParaDesuso, Programa, ProgramasPorBloco, TipoDePrograma } from './types/types';
 import { concatMap } from 'rxjs/operators';
 
 @Component({
@@ -46,13 +46,11 @@ export class GradeComponent implements OnInit {
   indexToAdd:number;
   lengthListaFinal:number;
 
-  //  ESSAS VARIAVEIS NAO SAO RELACIONADAS COM A MUDANCA DE BLOCO PARA PROGRAMA MONTADO
   listaAnexosBloco:Array<string>=[];
-  listaProgramasBlocos:Array<any>=[];
+  listaProgramasBlocos:Array<Bloco>=[];
   blocosAmount:number;
   programasBlocosCount:number;
   programasPorBloco:ProgramasPorBloco;
-  //  ESSAS VARIAVEIS NAO SAO RELACIONADAS COM A MUDANCA DE BLOCO PARA PROGRAMA MONTADO
 
   spyListaAdicionada: Subject<any>;
   spyListaReplicada: Subject<any>;
@@ -173,14 +171,11 @@ export class GradeComponent implements OnInit {
   removePrograma(){
     if(this.selectedDiaDaSemana&&this.programaClicado){
       let indexToRemove = this.programaClicado.indice+1
-      let blocoRemoved:Bloco = this.canal[this.selectedDiaDaSemana][this.programaClicado.indice]
+      let arquivoSendoRemovido:Arquivo = this.listaCanal[this.selectedDiaDaSemana][this.programaClicado.indice]
       this.alerta="Item Removido"
       setTimeout(()=>{this.alerta=""},1000)
-      let itemRemoved = {
-        id:blocoRemoved.id,
-        added:false
-      }
-      this.updateOnMongoDB(itemRemoved,"itemRemoved")
+      arquivoSendoRemovido.added=false
+      this.updateArquivoOnMongoDB(arquivoSendoRemovido)
 
       if(this.canal[this.selectedDiaDaSemana].length>1){
         let novaListaCanal:Bloco[] = [...this.canal[this.selectedDiaDaSemana].slice(0,indexToRemove-1),
@@ -192,9 +187,9 @@ export class GradeComponent implements OnInit {
 
     } else if(this.programaMontadoSelectionado){
 
-      this.programaMontadoSelectionado.blocos.map(prog=>{
-        prog.added=false
-        this.updateOnMongoDB(prog,"prog")
+      this.programaMontadoSelectionado.blocos.map((arquivo:Arquivo)=>{
+        arquivo.added=false
+        this.updateArquivoOnMongoDB(arquivo)
       })
       
       let novablocosDiaDaSemana = this.canal[this.selectedDiaDaSemana]
@@ -379,23 +374,23 @@ export class GradeComponent implements OnInit {
     },1000)
   }
 
-  recalculaHorariosDeExibicao(novablocosDiaDaSemana){
-    let diaDaSemana = this.selectedDiaDestinoDaSemana?
+  recalculaHorariosDeExibicao(novaListaCanal:Bloco[]){
+    let diaDaSemana:DiaDaSemana = this.selectedDiaDestinoDaSemana?
     this.selectedDiaDestinoDaSemana:this.selectedDiaDaSemana
 
     novablocosDiaDaSemana[0]['horarioDeExibicao']="06:30:00"
     
-    if(novablocosDiaDaSemana.length>=1){
-      novablocosDiaDaSemana.map((prog,index)=>{
+    if(novaListaCanal.length>=1){
+      novaListaCanal.map((bloco:Bloco,index)=>{
         if(index>0){
-          let progAnterior = novablocosDiaDaSemana[index-1]
-          prog.indice = index
-          prog.horarioDeExibicao= 
-            sts.toTime(progAnterior.duracaoTotalDaAtracaoEmSegundos
-            +sts.toSeconds(progAnterior.horarioDeExibicao))
+          let blocoAnterior:Bloco = novaListaCanal[index-1]
+          bloco.indice = index
+          bloco.horarioDeExibicao= 
+            sts.toTime(blocoAnterior.duracaoTotalDaAtracaoEmSegundos
+            +sts.toSeconds(blocoAnterior.horarioDeExibicao))
         }
       })
-    } 
+    }
 
     if(this.emProcessoDeUpdate){
       this.listaParaUpdate= novablocosDiaDaSemana
@@ -405,7 +400,7 @@ export class GradeComponent implements OnInit {
 
     if(this.selectedProgramaDeTv){
     
-      let intervaloApi
+      let intervaloApi:string
   
       if(this.selectedProgramaDeTv.tipo=="intervalos"&&this.selectedProgramaDeTv.prePos==false){
         intervaloApi = this.selectedProgramaDeTv.value
@@ -414,9 +409,10 @@ export class GradeComponent implements OnInit {
       }
   
       if(this.intervalosCount){
-        let intInfo = {}
-        intInfo['intAmount'] = this.intervalosCount
-        intInfo['intervaloApi'] = intervaloApi
+        let intInfo:intPrePosInfo = {
+          intAmount: this.intervalosCount,
+          intervaloApi: intervaloApi
+        }
   
         this.spyListaAdicionada.next(intInfo)
       } else if(this.qtdeIntervalos){
@@ -428,9 +424,10 @@ export class GradeComponent implements OnInit {
         this.organizaIntervalos()
       } else if(novablocosDiaDaSemana.length==this.lengthListaFinal&&this.prePosAvailable){
         if(this.prePosCount>0){
-          let prePosInfo = {}
-          prePosInfo['intAmount'] = this.prePosCount
-          prePosInfo['prePosApi'] = this.prePosApi
+          let prePosInfo:intPrePosInfo = {
+          intAmount: this.prePosCount,
+          prePosApi: this.prePosApi
+        }
           this.spyListaAdicionada.next(prePosInfo)
         } else {
           this.selectVideoForm.get('programaDeTvFormControl')
@@ -447,13 +444,13 @@ export class GradeComponent implements OnInit {
 
   }
 
-  updateOnMongoDB(video,type):void {
+  updateArquivoOnMongoDB(arquivo):void {
 
-    if(video.programaDeTv=="intCorujaoDois"){
+    if(arquivo.programaDeTv=="intCorujaoDois"){
     }
-    this.mongodbService.updateVideo(video._id,video).subscribe(() => {
-      if(!video.added){
-        this.listaParaDesuso[video.tipo].push(video.id)
+    this.mongodbService.updateVideo(arquivo._id,arquivo).subscribe(() => {
+      if(!arquivo.added){
+        this.listaParaDesuso[arquivo.tipo].push(arquivo.id)
       }
     });
     
@@ -670,7 +667,7 @@ export class GradeComponent implements OnInit {
 
                   let listInProcess:Array<Canal> = this.emProcessoDeUpdate ? this.listaParaUpdate : this.canal[this.selectedDiaDaSemana]
                   videoSendoAdicionado.added=true
-                  this.updateOnMongoDB(videoSendoAdicionado,"videoSendoAdicionado")        
+                  this.updateArquivoOnMongoDB(videoSendoAdicionado)        
 
                   this.indexToAdd = this.programaClicado ? this.programaClicado.indice+1 : listInProcess.length
                   let novaListaCanal
@@ -692,60 +689,56 @@ export class GradeComponent implements OnInit {
       }
   }
 
-  adicionarProgramaBloco(bloco): void {
+  adicionarProgramaBloco(blocoId): void {
     
     let unsubscribe=
-    this.mongodbService.getProgramasDeTv("dublado",bloco)
-    .subscribe((data:any ) => {
-      let videoSendoAdicionado
-
-      let listaDeProgramas = data
+    this.mongodbService.getProgramasDeTv("dublado",blocoId)
+    .subscribe((listaDeArquivos:Arquivo[] ) => {
+      let arquivoSendoAdicionado:Arquivo
 
       //GET EACH REF ON THE LISTA DE PROGRAMAS AND CREATE A NEW LIST WITH THE PROGRAMAS DATA
 
       const montaLista = ()=>{
 
         //FILTER 
-        let listaDeProgramasFiltrada = listaDeProgramas.filter(video=>video.order&&!video.added)
+        let listaDeArquivosFiltrada:Arquivo[] = listaDeArquivos.filter((arquivo:Arquivo)=>arquivo.order&&!arquivo.added)
           .sort(sts.sortPor("order"))
-                    if(listaDeProgramasFiltrada.length>0){
-                      videoSendoAdicionado = listaDeProgramasFiltrada[0]
+                    if(listaDeArquivosFiltrada.length>0){
+                      arquivoSendoAdicionado = listaDeArquivosFiltrada[0]
                     } else{
-                      videoSendoAdicionado = listaDeProgramas[0]
-                      if(listaDeProgramas.length>1){
-                        this.resetAddedLista(listaDeProgramas.splice(1,listaDeProgramas.length),"blocos")                      
+                      arquivoSendoAdicionado = listaDeArquivos[0]
+                      if(listaDeArquivos.length>1){
+                        this.resetAddedLista(listaDeArquivos.splice(1,listaDeArquivos.length),"blocos")                      
                       }
                     }
 
-                      let newProg:Object ={}
-
-                      newProg = {
-                        "atracao":bloco,
-                        "tituloAtracao":videoSendoAdicionado.tituloAtracao,
-                        "titulo":videoSendoAdicionado.titulo,
-                        "volume":videoSendoAdicionado.volume?videoSendoAdicionado.volume:1,
+                      let novoBloco:Bloco = {
+                        "atracao":blocoId,
+                        "tituloAtracao":arquivoSendoAdicionado.tituloAtracao,
+                        "titulo":arquivoSendoAdicionado.titulo,
+                        "volume":arquivoSendoAdicionado.volume?arquivoSendoAdicionado.volume:1,
                         "horarioDeExibicao":"",
-                        "duracaoTotalDaAtracaoEmSegundos": videoSendoAdicionado.duracao,
-                        "id":videoSendoAdicionado._id,
+                        "duracaoTotalDaAtracaoEmSegundos": arquivoSendoAdicionado.duracao,
+                        "id":arquivoSendoAdicionado._id,
                         "idProgMontado":this.idProgMontado,
-                        "tipo":videoSendoAdicionado.tipo
+                        "tipo":arquivoSendoAdicionado.tipo
                       }
 
-                      if(videoSendoAdicionado.corteFinal){
-                        let corteFinal = videoSendoAdicionado.corteFinal
-                        newProg['corteFinal']=corteFinal
-                        newProg['duracaoTotalDaAtracaoEmSegundos']=corteFinal
+                      if(arquivoSendoAdicionado.corteFinal){
+                        let corteFinal:number = arquivoSendoAdicionado.corteFinal
+                        novoBloco['corteFinal']=corteFinal
+                        novoBloco['duracaoTotalDaAtracaoEmSegundos']=corteFinal
                       }
 
-                      if(videoSendoAdicionado.corteInicio){
-                        let corteInicio = videoSendoAdicionado.corteInicio
-                        let duracao = videoSendoAdicionado.corteInicio
-                        newProg['corteInicio']=duracao-corteInicio
+                      if(arquivoSendoAdicionado.corteInicio){
+                        let corteInicio:number = arquivoSendoAdicionado.corteInicio
+                        let duracao:number = arquivoSendoAdicionado.corteInicio
+                        novoBloco['corteInicio']=duracao-corteInicio
                       }
-                      videoSendoAdicionado.added=true
-                      this.updateOnMongoDB(videoSendoAdicionado,"videoSendoAdicionado")
+                      arquivoSendoAdicionado.added=true
+                      this.updateArquivoOnMongoDB(arquivoSendoAdicionado)
                       unsubscribe.unsubscribe()
-                      this.listaProgramasBlocos.push(newProg)
+                      this.listaProgramasBlocos.push(novoBloco)
             unsubscribe.unsubscribe()
       }
       montaLista()
@@ -763,20 +756,20 @@ export class GradeComponent implements OnInit {
     } else {
 
       this.programasReplicadosCount--
-      let programaParaReplicar = this.canal[this.selectedDiaDaSemana]
-                            .find(prog=>prog.idProgMontado==
-                            this.listaOrigemReduzida[this.programasReplicadosCount]&&
-                            prog.tipo!=="intervalos").atracao
+      let programaParaReplicar = this.listaCanal[this.selectedDiaDaSemana]
+                            .find((bloco:Bloco)=>bloco.idProgMontado==
+                            this.listaIdsProgramaMontado[this.programasReplicadosCount]&&
+                            bloco.tipo!=="intervalos").atracao
   
       this.spyListaReplicada.next(programaParaReplicar)
     }
   }
 
   resetAddedLista(lista,type){
-    const functionThatReturnsAPromise = video => { //a function that returns a promise
+    const functionThatReturnsAPromise = video => {
       
       video.added=false
-      this.updateOnMongoDB(video,"video")
+      this.updateArquivoOnMongoDB(video)
       return Promise.resolve('ok')
     }
     
@@ -928,16 +921,16 @@ export class GradeComponent implements OnInit {
   replicaListaDaSemana(){
     this.programaClicado=""
     if(this.selectedDiaDestinoDaSemana){
-      this.canal[this.selectedDiaDestinoDaSemana]=[]
-      let listaOrigem:Bloco[] = this.canal[this.selectedDiaDaSemana] 
-      this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.idProgMontado))]
-      this.listaOrigemReduzida.reverse()
+      this.listaCanal[this.selectedDiaDestinoDaSemana]=[]
+      let listaOrigem:Bloco[] = this.listaCanal[this.selectedDiaDaSemana] 
+      this.listaIdsProgramaMontado = [...new Set(listaOrigem.map(prog=>prog.idProgMontado))]
+      this.listaIdsProgramaMontado.reverse()
       this.selectVideoForm.get('semanaFormControl').setValue(this.selectedDiaDestinoDaSemana)
-      this.programasReplicadosCount = this.listaOrigemReduzida.length-1
-      let programToSelect = listaOrigem
-                            .find(prog=>prog.idProgMontado==
-                            this.listaOrigemReduzida[this.programasReplicadosCount]&&
-                            prog.tipo!=="intervalos").atracao
+      this.programasReplicadosCount = this.listaIdsProgramaMontado.length-1
+      let programToSelect:string = listaOrigem
+                            .find((bloco:Bloco)=>bloco.idProgMontado==
+                            this.listaIdsProgramaMontado[this.programasReplicadosCount]&&
+                            bloco.tipo!=="intervalos").atracao
       this.selectVideoForm.get('programaDeTvFormControl').setValue(programToSelect)
       this.adicionarPrograma()
     }
@@ -947,13 +940,13 @@ export class GradeComponent implements OnInit {
     this.emProcessoDeUpdate=true
     this.programaClicado=""
     this.listaParaUpdate=[]
-    let listaOrigem:Bloco[] = this.canal[this.selectedDiaDaSemana] 
-    this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.idProgMontado))]
-    this.listaOrigemReduzida.reverse()
-    this.programasReplicadosCount = this.listaOrigemReduzida.length-1
+    let listaOrigem:Bloco[] = this.listaCanal[this.selectedDiaDaSemana] 
+    this.listaIdsProgramaMontado = [...new Set(listaOrigem.map(prog=>prog.idProgMontado))]
+    this.listaIdsProgramaMontado.reverse()
+    this.programasReplicadosCount = this.listaIdsProgramaMontado.length-1
     let programToSelect = listaOrigem
                           .find(prog=>prog.idProgMontado==
-                          this.listaOrigemReduzida[this.programasReplicadosCount]&&
+                          this.listaIdsProgramaMontado[this.programasReplicadosCount]&&
                           prog.tipo!=="intervalos").atracao
     this.selectVideoForm.get('programaDeTvFormControl').setValue(programToSelect)
     this.adicionarPrograma()
