@@ -4,7 +4,7 @@ import { EMPTY, Subject } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 import { FirebaseService } from '../services/firebase.service';
 import { sts } from 'shuffle-tv-services/lib'
-import { Arquivo, Bloco, Canal, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, intPrePosInfo, ListaParaDesuso, Programa, ProgramasPorBloco, TipoDePrograma } from './types/types';
+import { Arquivo, Bloco, Canal, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, InfoIntPrePos, ListaParaDesuso, Programa, ProgramasPorBloco, TipoDePrograma } from './types/types';
 import { concatMap } from 'rxjs/operators';
 
 @Component({
@@ -49,8 +49,8 @@ export class GradeComponent implements OnInit {
   programasBlocosCount:number;
   programasPorBloco:ProgramasPorBloco;
 
-  spyListaAdicionada: Subject<any>;
-  spyListaReplicada: Subject<any>;
+  spyListaAdicionada: Subject<InfoIntPrePos>;
+  spyListaReplicada: Subject<string>;
 
   getInfoClicado:boolean;
   getInfoProgramaMontadoClicado:boolean;
@@ -95,7 +95,7 @@ export class GradeComponent implements OnInit {
 
     this.exibeSemanaDestino=false
     this.spyListaAdicionada = new Subject()
-    this.spyListaAdicionada.subscribe((info)=>{
+    this.spyListaAdicionada.subscribe((info:InfoIntPrePos)=>{
       if(this.intervalosCount){
         setTimeout(()=>{
           this.addIntervalo((info.intAmount+2),info.intervaloApi)
@@ -107,9 +107,9 @@ export class GradeComponent implements OnInit {
 
     
     this.spyListaReplicada = new Subject()
-    this.spyListaReplicada.subscribe((programa)=>{
+    this.spyListaReplicada.subscribe((programaDeTvValue)=>{
       if(this.programasReplicadosCount>=0){
-        this.selectVideoForm.get('programaDeTvFormControl').setValue(programa)
+        this.selectVideoForm.get('programaDeTvFormControl').setValue(programaDeTvValue)
         this.adicionarPrograma()
       }
     })
@@ -407,7 +407,7 @@ export class GradeComponent implements OnInit {
       }
   
       if(this.intervalosCount){
-        let intInfo:intPrePosInfo = {
+        let intInfo:InfoIntPrePos = {
           intAmount: this.intervalosCount,
           intervaloApi: intervaloApi
         }
@@ -422,7 +422,7 @@ export class GradeComponent implements OnInit {
         this.organizaIntervalos()
       } else if(novaListaCanal.length==this.lengthListaFinal&&this.prePosAvailable){
         if(this.prePosCount>0){
-          let prePosInfo:intPrePosInfo = {
+          let prePosInfo:InfoIntPrePos = {
           intAmount: this.prePosCount,
           prePosApi: this.prePosApi
         }
