@@ -5,7 +5,7 @@ import { MongodbService } from '../services/mongodb.service';
 import { FirebaseService } from '../services/firebase.service';
 import { sts } from 'shuffle-tv-services/lib'
 import { Anexos, Arquivo, Bloco, BlocoMontado, Canal, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, InfoIntPrePos, ListaParaDesuso, Programa, ProgramasPorBloco, TipoDePrograma } from './types/types';
-import { concatMap } from 'rxjs/operators';
+import { concatMap, take, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-grade',
@@ -55,7 +55,6 @@ export class GradeComponent implements OnInit {
   getInfoClicado:boolean;
   getInfoProgramaMontadoClicado:boolean;
   getInfoFromProgramaMontadoClicado:boolean;
-  unsubscribeGetProgramasDeTv:Subscription;
   listaParaDesuso:ListaParaDesuso = {
     "dublado":[],
     "intervalos":[],
@@ -68,7 +67,7 @@ export class GradeComponent implements OnInit {
 
   constructor(private firebaseService: FirebaseService,
               private mongodbService: MongodbService,
-              private formBuilder: FormBuilder) { 
+              private formBuilder: FormBuilder) {
                 this.selectVideoForm = this.formBuilder.group({
                   semanaFormControl:[""],
                   semanaDestinoFormControl:[""],
@@ -87,6 +86,8 @@ export class GradeComponent implements OnInit {
   listaDeNomesDosDiasDaSemanaSemProgramaMontado:Array<DiaDaSemana>
   horas:string[] = []
   canais: Canal[]
+  destroy$ = new Subject();
+
 
   ngOnInit(): void {
 
@@ -95,7 +96,8 @@ export class GradeComponent implements OnInit {
 
     this.exibeSemanaDestino=false
     this.spyListaAdicionada = new Subject()
-    this.spyListaAdicionada.subscribe((info:InfoIntPrePos)=>{
+    this.spyListaAdicionada.pipe(takeUntil(this.destroy$))
+    .subscribe((info:InfoIntPrePos)=>{
       if(this.intervalosCount){
         setTimeout(()=>{
           this.addIntervalo((info.intAmount+2),info.intervaloApi)
@@ -107,7 +109,8 @@ export class GradeComponent implements OnInit {
 
     
     this.spyListaReplicada = new Subject()
-    this.spyListaReplicada.subscribe((programaDeTvValue)=>{
+    this.spyListaReplicada.pipe(takeUntil(this.destroy$))
+    .subscribe((programaDeTvValue)=>{
       if(this.programasReplicadosCount>=0){
         this.selectVideoForm.get('programaDeTvFormControl').setValue(programaDeTvValue)
         this.adicionarPrograma()
@@ -119,20 +122,26 @@ export class GradeComponent implements OnInit {
     this.getCanaisFromMongoDB()
     
     this.selectVideoForm.get('semanaDestinoFormControl')
-    .valueChanges.subscribe(value=>{
+    .valueChanges
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(value=>{
       this.alerta=""
       this.selectedDiaDestinoDaSemana=value
     })
 
     this.selectVideoForm.get('semanaFormControl')
-    .valueChanges.subscribe(value=>{
+    .valueChanges
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(value=>{
       this.alerta=""
       this.selectedDiaDaSemana=value
     })
 
 
     this.selectVideoForm.get('canaisFormControl')
-    .valueChanges.subscribe(value=>{
+    .valueChanges
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(value=>{
       this.alerta=""
       this.selectedCanal=this.canais.filter(canal=>canal._id==value)[0].emissora
       this.filterProgramaDeTV(this.selectedCanal)
@@ -140,7 +149,9 @@ export class GradeComponent implements OnInit {
     })
 
     this.selectVideoForm.get('programaDeTvFormControl')
-    .valueChanges.subscribe(value=>{
+    .valueChanges
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(value=>{
       this.alerta=""
       this.selectedProgramaDeTv=this.programaDeTv.filter(prog=>prog.value==value)[0]
     })
@@ -155,14 +166,14 @@ export class GradeComponent implements OnInit {
   }
 
   getCanaisFromMongoDB(){
-    let unsubscribe=
-    this.mongodbService.getCanais().subscribe((canais:Canal[] )=>{ 
+    this.mongodbService.getCanais()
+    .pipe(take(1))    
+    .subscribe((canais:Canal[] )=>{ 
       this.canais = canais.sort(sts.sortPor("canal"))
       this.displaySelectedCanalInfo()
       this.canais.map(canal=>{
         this.gerarListasDeProgramasMontados(canal.emissora)
       })
-      unsubscribe.unsubscribe()
     })
   }
   
@@ -444,7 +455,9 @@ export class GradeComponent implements OnInit {
 
   updateArquivoOnMongoDB(arquivo):void {
 
-    this.mongodbService.updateVideo(arquivo._id,arquivo).subscribe(() => {
+    this.mongodbService.updateVideo(arquivo._id,arquivo)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(() => {
       if(!arquivo.added){
         this.listaParaDesuso[arquivo.tipo].push(arquivo.id)
       }
@@ -453,7 +466,9 @@ export class GradeComponent implements OnInit {
   }
 
   updateCanaisOnMongoDB(canal:Canal):void {
-    this.mongodbService.updateCanais(canal).subscribe(() => {
+    this.mongodbService.updateCanais(canal)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(() => {
       let listOfTypes = 
       [...new Set(this.canal[this.selectedDiaDaSemana]
       .map((bloco:Bloco)=>bloco.tipo))]
@@ -478,6 +493,7 @@ export class GradeComponent implements OnInit {
             );
           })
         )
+        .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
             console.log("items removed");
@@ -542,11 +558,9 @@ export class GradeComponent implements OnInit {
       this.idProgMontado =  this.selectedProgramaDeTv.value+new Date().valueOf()
     }
 
-    
-    this.unsubscribeGetProgramasDeTv =
     this.mongodbService.getProgramasDeTv(this.selectedProgramaDeTv.tipo,this.selectedProgramaDeTv.value)
+    .pipe(takeUntil(this.destroy$))
     .subscribe((listaDeProgramas:any ) => {
-      console.log("listaDeProgramas",listaDeProgramas)
 
       //GET EACH REF ON THE LISTA DE PROGRAMAS AND CREATE A NEW LIST WITH THE PROGRAMAS DATA
       this.montaLista(listaDeProgramas)
@@ -609,9 +623,6 @@ export class GradeComponent implements OnInit {
 
                     progModel['inicio']=inicio
                     progModel['final']=final
-                    progModel['duracaoTotalDaAtracaoEmSegundos']=final-inicio
-                    console.log("newProgList.push(progModel)",newProgList)
-                    console.log("newProgList.push(progModel)",progModel)
                     newProgList.push(progModel)
 
                     cortes.map((corte,index)=>{
@@ -683,18 +694,16 @@ export class GradeComponent implements OnInit {
                   if(!this.intervalosCount&&!this.prePosCount){
                     this.clearInfoBloco()
                   }
-                  this.unsubscribeGetProgramasDeTv.unsubscribe()
                   this.recalculaHorariosDeExibicao(novaListaCanal)
       } else {
         this.resetAddedLista(listaDeProgramas, "programa")
-        this.unsubscribeGetProgramasDeTv.unsubscribe()
       }
   }
 
   adicionarProgramaBloco(blocoId): void {
     
-    let unsubscribe=
     this.mongodbService.getProgramasDeTv("dublado",blocoId)
+    .pipe(takeUntil(this.destroy$))
     .subscribe((listaDeArquivos:Arquivo[] ) => {
       let arquivoSendoAdicionado:Arquivo
 
@@ -739,9 +748,7 @@ export class GradeComponent implements OnInit {
                       }
                       arquivoSendoAdicionado.added=true
                       this.updateArquivoOnMongoDB(arquivoSendoAdicionado)
-                      unsubscribe.unsubscribe()
                       this.listaProgramasBlocos.push(novoBloco)
-            unsubscribe.unsubscribe()
       }
       montaLista()
     });
@@ -835,14 +842,13 @@ export class GradeComponent implements OnInit {
   }
 
   getListaDeProgramasDeTvFromMongodb(){
-    let unsubscribe = 
-    this.mongodbService.getListaDeProgramasDeTv().subscribe((data:any)=>{
+    this.mongodbService.getListaDeProgramasDeTv()
+    .pipe(take(1))
+    .subscribe((data:any)=>{
       if(this.selectedCanal){            
        data = [...data.filter(prog=>{ return prog.canal==this.selectedCanal})]
       }
       this.programaDeTvFiltered=this.programaDeTv=data.sort(sts.sortPorTitulo())
-      unsubscribe.unsubscribe()
-
     })
   }
 
@@ -946,10 +952,6 @@ export class GradeComponent implements OnInit {
     this.listaIdsProgramaMontado = [...new Set(listaOrigem.map(prog=>prog.idProgMontado))].filter(prog=>prog)
     this.listaIdsProgramaMontado.reverse()
     this.programasReplicadosCount = this.listaIdsProgramaMontado.length-1
-    console.log("updateListaDaSemana")
-    console.log("listaOrigem",listaOrigem)
-    console.log("this.listaIdsProgramaMontado",this.listaIdsProgramaMontado)
-    console.log("this.programasReplicadosCount",this.programasReplicadosCount)
     let programToSelect = listaOrigem
                           .find(prog=>prog.idProgMontado==
                           this.listaIdsProgramaMontado[this.programasReplicadosCount]&&
@@ -1093,6 +1095,12 @@ export class GradeComponent implements OnInit {
       document.getElementsByClassName("col-11")[0].scrollLeft = valueToScroll
     },100)
   }
+
+  ngOnDestroy(){
+    this.destroy$.next()
+    this.destroy$.complete()
+  }
+
   
 }
 
