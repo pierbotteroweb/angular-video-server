@@ -61,5 +61,5 @@ foi alterada para
 - Nome da variavel listaDeNomesDosDiasDaSemanaSemBlocos alterado para listaDeNomesDosDiasDaSemanaSemProgramaMontado
 - Funcao gerarListasDeBlocos renomeada para gerarListasDeProgramasMontados e todos os termos associados a bloco renomeados para programaMontado, incluindo a referencia a mudanca feita a collection canais.
 - Funcao getInfoBlocoAtracao renomear apara getInfoProgramaMontado
-- Funcao clickAtracaoFromBloco renomeada para clickAtracaoFromProgramaMontado
+- Funcao clickAtracaoFromBloco renomeada para clickBlocoFromProgramaMontado
 - Termos usados no metodo removePrograma renomeados

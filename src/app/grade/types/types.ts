@@ -9,13 +9,13 @@ export interface Canal {
     sexta: Bloco[],
     sabado: Bloco[],
     domingo: Bloco[],
-    segundaProgramaMontado: Bloco[],
-    tercaProgramaMontado: Bloco[],
-    quartaProgramaMontado: Bloco[],
-    quintaProgramaMontado: Bloco[],
-    sextaProgramaMontado: Bloco[],
-    sabadoProgramaMontado: Bloco[],
-    domingoProgramaMontado: Bloco[],
+    segundaProgramaMontado: BlocoMontado[],
+    tercaProgramaMontado: BlocoMontado[],
+    quartaProgramaMontado: BlocoMontado[],
+    quintaProgramaMontado: BlocoMontado[],
+    sextaProgramaMontado: BlocoMontado[],
+    sabadoProgramaMontado: BlocoMontado[],
+    domingoProgramaMontado: BlocoMontado[],
 }
 
 export interface Arquivo {
@@ -35,7 +35,7 @@ export interface Arquivo {
     _id: string,
 }
 
-export interface Bloco {
+export interface BlocoBase {
     atracao: string,
     tituloAtracao: string,
     titulo: string,
@@ -43,10 +43,31 @@ export interface Bloco {
     horarioDeExibicao: string,
     duracaoTotalDaAtracaoEmSegundos: number,
     id: string,
-    indice?:number,
-    dia?:number,
     idProgMontado: string,
     tipo: TipoDePrograma,
+}
+
+export interface BlocoUI {
+    inicio?:number,
+    final?:number,
+    indice?:number,
+    added?:false,
+    dia?:DiaDaSemana
+}
+
+export type Bloco = BlocoBase & Partial<BlocoUI>;
+
+export interface BlocoMontado {
+    atracao: string,
+    idProgMontado: string,
+    horarioDeExibicao: string,
+    arquivo: string,
+    blocos: Bloco[],
+    tituloAtracao: string,
+    tempoTotalEmSegundos: string,
+    indice?:number,
+    dia?:DiaDaSemana,
+    tempoTotal: string,
 }
 
 export interface ProgramasPorBloco {
