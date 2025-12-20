@@ -64,7 +64,7 @@ export interface BlocoMontado {
     arquivo: string,
     blocos: Bloco[],
     tituloAtracao: string,
-    tempoTotalEmSegundos: string,
+    tempoTotalEmSegundos: number,
     indice?:number,
     dia?:DiaDaSemana,
     tempoTotal: string,
