@@ -12,7 +12,7 @@
                     </select>
                     <select class="select form-control" formControlName="programaDeTvFormControl">
                         <option value="">Prog de TV </option>
-                        <option *ngFor="let programa of programaDeTvFiltered" [value]='programa.value'>
+                        <option *ngFor="let programa of programaDeTv" [value]='programa.value'>
                             <span>{{programa.titulo}}</span>
                         </option>
                     </select>

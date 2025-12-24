@@ -6,6 +6,7 @@ import { FirebaseService } from '../services/firebase.service';
 import { sts } from 'shuffle-tv-services/lib'
 import { Anexos, Arquivo, Bloco, BlocoMontado, Canal, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, InfoIntPrePos, ListaParaDesuso, Programa, ProgramasPorBloco, TipoDePrograma } from './types/types';
 import { concatMap, take, takeUntil } from 'rxjs/operators';
+import { GradeService } from '../services/grade.service';
 
 @Component({
   selector: 'app-grade',
@@ -14,9 +15,6 @@ import { concatMap, take, takeUntil } from 'rxjs/operators';
 })
 export class GradeComponent implements OnInit {
   programaDeTv: Programa[];
-
-  programaDeTvFiltered: Programa[];
-
   selectedProgramaDeTv: Programa;
   selectedProgramaDeTvBlocos: Programa;
   selectedCanal: Emissora = "Globo";
@@ -30,7 +28,7 @@ export class GradeComponent implements OnInit {
   idProgMontado: string;
 
   alerta:String;
-  exibeSemanaDestino:boolean;
+  exibeSemanaDestino:boolean = false;
   emProcessoDeUpdate:boolean;
 
   intervalosCount:number;
@@ -67,6 +65,7 @@ export class GradeComponent implements OnInit {
 
   constructor(private firebaseService: FirebaseService,
               private mongodbService: MongodbService,
+              private gradeService: GradeService,
               private formBuilder: FormBuilder) {
                 this.selectVideoForm = this.formBuilder.group({
                   semanaFormControl:[""],
@@ -83,18 +82,37 @@ export class GradeComponent implements OnInit {
   novoPrograma:FormControl
   duracaoEstimada:FormControl
   listaDeNomesDosDiasDaSemana:Array<DiaDaSemanaProgramaMontado>
-  listaDeNomesDosDiasDaSemanaSemProgramaMontado:Array<DiaDaSemana>
+  listaDeNomesDosDiasDaSemanaSemProgramaMontado:Array<DiaDaSemana> = ["segunda","terca","quarta","quinta","sexta","sabado","domingo"]
   horas:string[] = []
   canais: Canal[]
   destroy$ = new Subject();
 
 
   ngOnInit(): void {
+    this.populateListasDeDiasDaSemana()
 
-    this.listaDeNomesDosDiasDaSemanaSemProgramaMontado = ["segunda","terca","quarta","quinta","sexta","sabado","domingo"]
-    this.listaDeNomesDosDiasDaSemana =  ["segunda","terca","quarta","quinta","sexta","sabado","domingo", "segundaProgramaMontado","tercaProgramaMontado","quartaProgramaMontado","quintaProgramaMontado","sextaProgramaMontado","sabadoProgramaMontado","domingoProgramaMontado"]
+    this.initiateSpyListaAdicionada()
 
-    this.exibeSemanaDestino=false
+    this.initiateSpyListaReplicada()
+
+    this.getCanaisFromMongoDB()
+
+    this.handleFomrsControlValueChanges()
+
+    this.initiateCanalSelectionFlow()
+
+    this.setHorasOrder()
+  }
+
+  populateListasDeDiasDaSemana():void{
+    this.listaDeNomesDosDiasDaSemana =  [
+      ...this.listaDeNomesDosDiasDaSemanaSemProgramaMontado,
+      ...this.listaDeNomesDosDiasDaSemanaSemProgramaMontado.map(
+        (diaDaSemana:DiaDaSemana)=>
+          `${diaDaSemana}ProgramaMontado` as DiaDaSemanaProgramaMontado)]
+  }
+
+  initiateSpyListaAdicionada():void{
     this.spyListaAdicionada = new Subject()
     this.spyListaAdicionada.pipe(takeUntil(this.destroy$))
     .subscribe((info:InfoIntPrePos)=>{
@@ -106,8 +124,9 @@ export class GradeComponent implements OnInit {
         this.addPrePos(info.prePosApi)
       }
     })
+  }
 
-    
+  initiateSpyListaReplicada():void{    
     this.spyListaReplicada = new Subject()
     this.spyListaReplicada.pipe(takeUntil(this.destroy$))
     .subscribe((programaDeTvValue)=>{
@@ -117,9 +136,28 @@ export class GradeComponent implements OnInit {
       }
     })
 
+  }
 
-    this.getListaDeProgramasDeTvFromMongodb()
-    this.getCanaisFromMongoDB()
+  setHorasOrder():void{
+
+    for(let hora=6;hora<24;hora++){
+      this.horas.push(`${hora}:00`)
+    }
+
+    for(let hora=0;hora<6;hora++){
+      this.horas.push(`${hora}:00`)
+    }    
+
+  }
+
+  initiateCanalSelectionFlow(){
+    
+    this.gradeService.listaDeProgramasDoCanal$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(lista=> this.programaDeTv = lista)
+  }
+
+  handleFomrsControlValueChanges():void{
     
     this.selectVideoForm.get('semanaDestinoFormControl')
     .valueChanges
@@ -143,8 +181,12 @@ export class GradeComponent implements OnInit {
     .pipe(takeUntil(this.destroy$))
     .subscribe(value=>{
       this.alerta=""
-      this.selectedCanal=this.canais.filter(canal=>canal._id==value)[0].emissora
-      this.filterProgramaDeTV(this.selectedCanal)
+      let canalFound:Canal = this.canais.find(canal=>canal._id==value)
+      if(!canalFound){
+        return 
+      }
+      this.selectedCanal=canalFound.emissora
+      this.gradeService.getListaDeProgramasDeTvFromMongodb(this.selectedCanal)
       this.getLista()
     })
 
@@ -156,13 +198,6 @@ export class GradeComponent implements OnInit {
       this.selectedProgramaDeTv=this.programaDeTv.filter(prog=>prog.value==value)[0]
     })
 
-    for(let hora=6;hora<24;hora++){
-      this.horas.push(`${hora}:00`)
-    }
-
-    for(let hora=0;hora<6;hora++){
-      this.horas.push(`${hora}:00`)
-    }    
   }
 
   getCanaisFromMongoDB(){
@@ -263,9 +298,6 @@ export class GradeComponent implements OnInit {
     let lengthListaParaOrganizar = listaParaORganizar.length
     
     let indexInicioAdicionados=listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgMontado==this.idProgMontado))
-
-    // listaParaORganizar.reverse()
-
         
     let listaAdicionados = listaParaORganizar.filter(prog=>prog.idProgMontado==this.idProgMontado)
 
@@ -830,30 +862,15 @@ export class GradeComponent implements OnInit {
   }
 
   getLista(){
-      this.canal = this.canais.find(canal=>canal.emissora==this.selectedCanal)
-      if(this.selectedDiaDaSemana&&!this.canal[this.selectedDiaDaSemana]) this.addDiasDeSemanaNoCanal()
-      this.getListaDeProgramasDeTvFromMongodb()
+      this.listaCanal = this.canais.find(canal=>canal.emissora==this.selectedCanal)
+      if (!this.listaCanal) return;
+      if(this.selectedDiaDaSemana&&!this.listaCanal[this.selectedDiaDaSemana]) this.addDiasDeSemanaNoCanal()
   }
 
   addDiasDeSemanaNoCanal(){
     this.listaDeNomesDosDiasDaSemana.map((dia:DiaDaSemana)=>{
       this.canal[dia]=[]
     })
-  }
-
-  getListaDeProgramasDeTvFromMongodb(){
-    this.mongodbService.getListaDeProgramasDeTv()
-    .pipe(take(1))
-    .subscribe((data:any)=>{
-      if(this.selectedCanal){            
-       data = [...data.filter(prog=>{ return prog.canal==this.selectedCanal})]
-      }
-      this.programaDeTvFiltered=this.programaDeTv=data.sort(sts.sortPorTitulo())
-    })
-  }
-
-  filterProgramaDeTV(canal){
-      this.programaDeTvFiltered=this.programaDeTv.filter(prog=> prog.canal== canal)
   }
 
   getStyle(width,dia,index?){
