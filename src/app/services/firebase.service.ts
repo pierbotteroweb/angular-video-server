@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/compat/firestore';
-import { Subject } from 'rxjs';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import Media from '../models/media.model';
 
 @Injectable({
@@ -42,19 +41,6 @@ export class FirebaseService {
     this.intervalosRef = db.collection(this.intervalos);
     this.canaisRef = db.collection(this.canais);
   }
-  
-  camelize(str) {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
-      return index === 0 ? word.toLowerCase() : word.toUpperCase();
-    }).replace(/\s+/g, '');
-  }
-
-  // getSeletorDeCanal():AngularFirestoreCollection<Media>{
-  //   return this.db.collection("/seletorDeCanal",ref=>ref.onSnapshot(snap=>{
-  //       console.log(snap)
-  //     })
-  //   )
-  // }
 
   getSeletorDeCanal():any{
     return this.db.collection("seletorDeCanal")
@@ -78,82 +64,8 @@ export class FirebaseService {
     }
   }
 
-  getListFromfirestore(mimeType:string,tipoDeLista?:any,data?:any): AngularFirestoreCollection<Media> {
-    if(tipoDeLista=="canal"){
-      return this.db.collection(mimeType, ref=>
-        ref.where("canal","==",data)
-      ) 
-    }else if(tipoDeLista=="programa"){
-      return this.db.collection(data)
-    } else if(tipoDeLista=="canais") {
-      return this.db.collection(tipoDeLista)
-    }
-  }
-
-  create(mimeType:string,media: Media): any {
-    return this[mimeType+"Ref"].add({ ...media })
-  }
-
-  createNewCollection(newCollection):any{
-    let colectionroute = "/"+newCollection.value
-    let collectionRef: AngularFirestoreCollection<any>=this.db.collection(colectionroute)
-    let media = {ref:"Teste"}
-    // console.log(media.titulo.ref)
-    collectionRef.add({ ...media }).then(data=>{      
-      console.log("Coleção criada com sucesso")
-    })
-  }  
-
-  createNewProgDeTVCollection(newProgDeTVCollection):any{
-    let colectionroute = "/"+newProgDeTVCollection.value
-    let collectionRef: AngularFirestoreCollection<any>=this.db.collection(colectionroute)
-    let media = {ref:"Teste"}
-    // console.log(media.titulo.ref)
-    collectionRef.add({ ...media }).then(data=>{      
-      return this.db.collection("/programasDeTv").add({ ...newProgDeTVCollection })
-    })
-  }  
-
-  addItemToRefCollection(refCollection,itemCollection,itemRef):any{
-    let media = {ref:this.db.doc(itemCollection+"/"+ itemRef).ref}
-    // console.log(media.titulo.ref)
-    return this.db.collection("/"+refCollection).add({ ...media })
-  }
-
   update(mimeType:string,id: string, media: any): Promise<void> {
-    console.log("mimeType",mimeType)
-    console.log("id",id)
-    console.log("media",media)
     return this[mimeType.replace("Filmes","")+"Ref"].doc(id).update(media);
-  }
-
-  delete(mimeType:string,id: string): Promise<void> {
-    return this[mimeType+"Ref"].doc(id).delete();
-  }
-
-  deleteRef(refCollection,refId) {
-    console.log("refCollection",refCollection)
-    console.log("refId",refId)
-    let collectionRef: AngularFirestoreCollection<any>=this.db.collection(refCollection)
-    collectionRef.doc(refId).ref.get().then(res=>{
-      res.ref.get().then(res2=>{
-        let dados = res2.data()
-        console.log(dados)
-        if(dados.ref=="Teste"){          
-          this.db.collection("/"+refCollection).doc(refId).delete();
-        } else {
-
-          let mimeType = dados.ref.path.split("/")[0]
-          let idDadoOriginal = dados.ref.path.split("/")[1]
-          let media = {programaDeTv:""}
-          this.update(mimeType,idDadoOriginal,media).then(data=>{
-            this.db.collection("/"+refCollection).doc(refId).delete();
-          })
-
-        }
-
-      })
-    })
   }
   
 }
