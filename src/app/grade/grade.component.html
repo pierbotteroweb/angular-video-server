@@ -56,24 +56,21 @@
                     <button class="btn btn-success" (click)="updateListaDaSemana()">
                         Update</button>
 
-                    <button class="btn btn-success" *ngIf="exibeSemanaDestino||emProcessoDeUpdate"
+                    <button class="btn btn-success" *ngIf="exibeSemanaDestino||gd.getListaParaUpdate()"
                         (click)="replicaNext()">
                         Next</button>
-
-                    <button class="btn btn-primary" (click)="clearInfoBloco()">
-                        Clear</button>
                 </div>
             </div>
-            <div class="col-3 info-selected" *ngIf="blocoClicado">
-                <p>Atração: <span>{{blocoClicado.atracao}}</span></p>
-                <p style="max-height: 52.8px;">Arquivo: <span>{{blocoClicado.titulo}}</span></p>
-                <p>Tipo: <span>{{blocoClicado.tipo}}</span></p>
+            <div class="col-3 info-selected" *ngIf="gd.getBlocoClicado()">
+                <p>Atração: <span>{{gd.getBlocoClicado().atracao}}</span></p>
+                <p style="max-height: 52.8px;">Arquivo: <span>{{gd.getBlocoClicado().titulo}}</span></p>
+                <p>Tipo: <span>{{gd.getBlocoClicado().tipo}}</span></p>
             </div>
-            <div class="col-3 info-selected" *ngIf="blocoClicado">
-                <p>Horário de Exibição: <span>{{blocoClicado.horarioDeExibicao}}</span></p>
-                <p>Ponto Inicio: <span>{{blocoClicado.inicio * 1000 | date:'mm:ss'}}</span></p>
-                <p>Ponto Final: <span>{{blocoClicado.final * 1000 | date:'mm:ss'}}</span></p>
-                <p>Duração: <span>{{blocoClicado.duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
+            <div class="col-3 info-selected" *ngIf="gd.getBlocoClicado()">
+                <p>Horário de Exibição: <span>{{gd.getBlocoClicado().horarioDeExibicao}}</span></p>
+                <p>Ponto Inicio: <span>{{gd.getBlocoClicado().inicio * 1000 | date:'mm:ss'}}</span></p>
+                <p>Ponto Final: <span>{{gd.getBlocoClicado().final * 1000 | date:'mm:ss'}}</span></p>
+                <p>Duração: <span>{{gd.getBlocoClicado().duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
             </div>
             <div class="col-2 info-selected" *ngIf="programaMontadoSelectionado">
                 <p>Atração: <span>{{programaMontadoSelectionado.tituloAtracao}}</span></p>
@@ -91,18 +88,18 @@
                 </ul>
             </div>
             <div class="col-2 info-selected" *ngIf="getInfoFromProgramaMontadoClicado">
-                <p>Tipo: <span>{{blocoClicado.tipo}}</span></p>
-                <p>Horário de Exibição: <span>{{blocoClicado.horarioDeExibicao}}</span></p>
-                <p>Duração: <span>{{blocoClicado.duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
-                <p>Ponto Inicio: <span>{{blocoClicado.inicio * 1000 | date:'mm:ss'}}</span></p>
-                <p>Ponto Final: <span>{{blocoClicado.final * 1000 | date:'mm:ss'}}</span></p>
+                <p>Tipo: <span>{{gd.getBlocoClicado().tipo}}</span></p>
+                <p>Horário de Exibição: <span>{{gd.getBlocoClicado().horarioDeExibicao}}</span></p>
+                <p>Duração: <span>{{gd.getBlocoClicado().duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
+                <p>Ponto Inicio: <span>{{gd.getBlocoClicado().inicio * 1000 | date:'mm:ss'}}</span></p>
+                <p>Ponto Final: <span>{{gd.getBlocoClicado().final * 1000 | date:'mm:ss'}}</span></p>
             </div>
         </div>
     </div>
     <div class="container-fluid" *ngFor="let diaDaSemana of listaDeNomesDosDiasDaSemana">
-        <div class="row" *ngIf="listaCanal?.[diaDaSemana]?.length > 0 &&
-                                (diaDaSemana == selectedDiaDaSemana || diaDaSemana == selectedDiaDestinoDaSemana)">
-            <div class="col-1" [ngStyle]="{'background': selectedDiaDaSemana==diaDaSemana ? 'lightgreen' : 'white'}">
+        <div class="row" *ngIf="gd.getListaCanal()?.[diaDaSemana]?.length > 0 &&
+                                (diaDaSemana == gd.getSelectedDiaDaSemana() || diaDaSemana == selectedDiaDestinoDaSemana)">
+            <div class="col-1" [ngStyle]="{'background': gd.getSelectedDiaDaSemana()==diaDaSemana ? 'lightgreen' : 'white'}">
                 <p>Dia Da Semana</p>
                 <p>{{diaDaSemana | titlecase }}</p>
             </div>
@@ -115,7 +112,7 @@
                 </div>
                 <div class="dozeHoras">
                     <div class="atracao" [style]="getStyle(bloco.duracaoTotalDaAtracaoEmSegundos,diaDaSemana,i)"
-                        *ngFor="let bloco of listaCanal[diaDaSemana]; index as i" (click)="clickBloco(bloco,diaDaSemana,i)">
+                        *ngFor="let bloco of gd.getListaCanal()[diaDaSemana]; index as i" (click)="clickBloco(bloco,diaDaSemana,i)">
                         <p style="white-space: nowrap; overflow: hidden;">{{bloco.tituloAtracao}}</p>
                         <!-- <span>{{programa.titulo}} </span><br> -->
                         <span>{{bloco.horarioDeExibicao}}</span>
@@ -124,7 +121,7 @@
                 <!-- ABAIXO O TEMPLATE DO BLOCO QUE VAI SER PROGRAMA MONTADO -->
                 <div class="dozeHoras">
                     <div class="atracao" [style]="getStyleProgramaMontado(programaMontado.tempoTotalEmSegundos,diaDaSemana,i)"
-                        *ngFor="let programaMontado of listaCanal[diaDaSemana+'ProgramaMontado']; index as i"
+                        *ngFor="let programaMontado of gd.getListaCanal()[diaDaSemana+'ProgramaMontado']; index as i"
                         (click)="getInfoProgramaMontado(programaMontado,diaDaSemana,i)">
                         <p style="padding:0;white-space: nowrap; overflow: hidden;">{{programaMontado.tituloAtracao}}</p>
                         <p style="padding:0;">{{programaMontado.horarioDeExibicao}}</p>
@@ -137,11 +134,11 @@
     </div>
 
 
-    <div class="container-fluid" *ngIf="listaParaUpdate&&listaParaUpdate.length>0">
+    <div class="container-fluid" *ngIf="gd.getListaParaUpdate()&&gd.getListaParaUpdate().length>0">
         <div class="row">
-            <div class="col-1" [ngStyle]="{'background': selectedDiaDaSemana==selectedDiaDaSemana ? 'lightgreen' : 'white'}">
+            <div class="col-1" [ngStyle]="{'background': gd.getSelectedDiaDaSemana()==gd.getSelectedDiaDaSemana() ? 'lightgreen' : 'white'}">
                 <p>Dia Da Semana Em Update</p>
-                <p>{{selectedDiaDaSemana | titlecase }}</p>
+                <p>{{gd.getSelectedDiaDaSemana() | titlecase }}</p>
             </div>
             <div class="col-11" style="overflow: auto;">
                 <div class="dozeHoras">
@@ -151,9 +148,9 @@
                 </div>
                 <div class="dozeHoras">
                     <div class="atracao"
-                        [style]="getStyle(programa.duracaoTotalDaAtracaoEmSegundos,selectedDiaDaSemana,i)"
-                        *ngFor="let programa of listaParaUpdate; index as i"
-                        (click)="clickBloco(programa,selectedDiaDaSemana,i)">
+                        [style]="getStyle(programa.duracaoTotalDaAtracaoEmSegundos,gd.getSelectedDiaDaSemana(),i)"
+                        *ngFor="let programa of gd.getListaParaUpdate(); index as i"
+                        (click)="clickBloco(programa,gd.getSelectedDiaDaSemana(),i)">
                         <p style="white-space: nowrap;">{{programa.atracao}}</p>
                         <!-- <span>{{programa.titulo}} </span><br> -->
                         <span>{{programa.horarioDeExibicao}}</span>
