@@ -9,13 +9,13 @@ export interface Canal {
     sexta: Bloco[],
     sabado: Bloco[],
     domingo: Bloco[],
-    segundaProgramaMontado: BlocoMontado[],
-    tercaProgramaMontado: BlocoMontado[],
-    quartaProgramaMontado: BlocoMontado[],
-    quintaProgramaMontado: BlocoMontado[],
-    sextaProgramaMontado: BlocoMontado[],
-    sabadoProgramaMontado: BlocoMontado[],
-    domingoProgramaMontado: BlocoMontado[],
+    segundaProgramaMontado: ProgramaMontado[],
+    tercaProgramaMontado: ProgramaMontado[],
+    quartaProgramaMontado: ProgramaMontado[],
+    quintaProgramaMontado: ProgramaMontado[],
+    sextaProgramaMontado: ProgramaMontado[],
+    sabadoProgramaMontado: ProgramaMontado[],
+    domingoProgramaMontado: ProgramaMontado[],
 }
 
 export interface Arquivo {
@@ -57,7 +57,7 @@ export interface BlocoUI {
 
 export type Bloco = BlocoBase & Partial<BlocoUI>;
 
-export interface BlocoMontado {
+export interface ProgramaMontado {
     atracao: string,
     idProgMontado: string,
     horarioDeExibicao: string,

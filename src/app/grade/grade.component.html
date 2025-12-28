@@ -61,22 +61,22 @@
                         Next</button>
                 </div>
             </div>
-            <div class="col-3 info-selected" *ngIf="gd.getBlocoClicado()">
-                <p>Atração: <span>{{gd.getBlocoClicado().atracao}}</span></p>
-                <p style="max-height: 52.8px;">Arquivo: <span>{{gd.getBlocoClicado().titulo}}</span></p>
-                <p>Tipo: <span>{{gd.getBlocoClicado().tipo}}</span></p>
+            <div class="col-3 info-selected" *ngIf="gd.getBlocoClicado() as info">
+                <p>Atração: <span>{{info.atracao}}</span></p>
+                <p style="max-height: 52.8px;">Arquivo: <span>{{info.titulo}}</span></p>
+                <p>Tipo: <span>{{info.tipo}}</span></p>
             </div>
-            <div class="col-3 info-selected" *ngIf="gd.getBlocoClicado()">
-                <p>Horário de Exibição: <span>{{gd.getBlocoClicado().horarioDeExibicao}}</span></p>
-                <p>Ponto Inicio: <span>{{gd.getBlocoClicado().inicio * 1000 | date:'mm:ss'}}</span></p>
-                <p>Ponto Final: <span>{{gd.getBlocoClicado().final * 1000 | date:'mm:ss'}}</span></p>
-                <p>Duração: <span>{{gd.getBlocoClicado().duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
+            <div class="col-3 info-selected" *ngIf="gd.getBlocoClicado() as info">
+                <p>Horário de Exibição: <span>{{info.horarioDeExibicao}}</span></p>
+                <p>Ponto Inicio: <span>{{info.inicio * 1000 | date:'mm:ss'}}</span></p>
+                <p>Ponto Final: <span>{{info.final * 1000 | date:'mm:ss'}}</span></p>
+                <p>Duração: <span>{{info.duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
             </div>
-            <div class="col-2 info-selected" *ngIf="programaMontadoSelectionado">
-                <p>Atração: <span>{{programaMontadoSelectionado.tituloAtracao}}</span></p>
-                <p style="max-height: 52.8px;">Arquivo: <span>{{programaMontadoSelectionado.arquivo}}</span></p>
-                <p>Horário de Exibição: <span>{{programaMontadoSelectionado.horarioDeExibicao}}</span></p>
-                <p>Duração: <span>{{programaMontadoSelectionado.tempoTotal }}</span></p>
+            <div class="col-2 info-selected" *ngIf="programaMontadoSelectionado as info">
+                <p>Atração: <span>{{info.tituloAtracao}}</span></p>
+                <p style="max-height: 52.8px;">Arquivo: <span>{{info.arquivo}}</span></p>
+                <p>Horário de Exibição: <span>{{info.horarioDeExibicao}}</span></p>
+                <p>Duração: <span>{{info.tempoTotal }}</span></p>
             </div>
             <div class="col-2 info-selected" *ngIf="programaMontadoSelectionado">
                 <ul style="overflow-y:scroll; max-height: 180px;">
@@ -87,12 +87,12 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-2 info-selected" *ngIf="getInfoFromProgramaMontadoClicado">
-                <p>Tipo: <span>{{gd.getBlocoClicado().tipo}}</span></p>
-                <p>Horário de Exibição: <span>{{gd.getBlocoClicado().horarioDeExibicao}}</span></p>
-                <p>Duração: <span>{{gd.getBlocoClicado().duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
-                <p>Ponto Inicio: <span>{{gd.getBlocoClicado().inicio * 1000 | date:'mm:ss'}}</span></p>
-                <p>Ponto Final: <span>{{gd.getBlocoClicado().final * 1000 | date:'mm:ss'}}</span></p>
+            <div class="col-2 info-selected" *ngIf="gd.getBlocoClicado() as info">
+                <p>Tipo: <span>{{info.tipo}}</span></p>
+                <p>Horário de Exibição: <span>{{info.horarioDeExibicao}}</span></p>
+                <p>Duração: <span>{{info.duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
+                <p>Ponto Inicio: <span>{{info.inicio * 1000 | date:'mm:ss'}}</span></p>
+                <p>Ponto Final: <span>{{info.final * 1000 | date:'mm:ss'}}</span></p>
             </div>
         </div>
     </div>
@@ -111,22 +111,21 @@
                     <div class="hora" style="width: 180px !important;">6:00</div>
                 </div>
                 <div class="dozeHoras">
-                    <div class="atracao" [style]="getStyle(bloco.duracaoTotalDaAtracaoEmSegundos,diaDaSemana,i)"
-                        *ngFor="let bloco of gd.getListaCanal()[diaDaSemana]; index as i" (click)="clickBloco(bloco,diaDaSemana,i)">
-                        <p style="white-space: nowrap; overflow: hidden;">{{bloco.tituloAtracao}}</p>
-                        <!-- <span>{{programa.titulo}} </span><br> -->
-                        <span>{{bloco.horarioDeExibicao}}</span>
-                    </div>
+                    <app-bloco 
+                            *ngFor="let bloco of gd.getListaCanal()[diaDaSemana]; index as i" 
+                            (click)="clickBloco(bloco,diaDaSemana,i)"
+                            [bloco]="bloco" 
+                            [blocoIsSelected]="blocoIsSelected(diaDaSemana,i)">
+                    </app-bloco>
                 </div>
                 <!-- ABAIXO O TEMPLATE DO BLOCO QUE VAI SER PROGRAMA MONTADO -->
                 <div class="dozeHoras">
-                    <div class="atracao" [style]="getStyleProgramaMontado(programaMontado.tempoTotalEmSegundos,diaDaSemana,i)"
+                    <app-programa-montado
                         *ngFor="let programaMontado of gd.getListaCanal()[diaDaSemana+'ProgramaMontado']; index as i"
-                        (click)="getInfoProgramaMontado(programaMontado,diaDaSemana,i)">
-                        <p style="padding:0;white-space: nowrap; overflow: hidden;">{{programaMontado.tituloAtracao}}</p>
-                        <p style="padding:0;">{{programaMontado.horarioDeExibicao}}</p>
-                        <span>{{programaMontado.tempoTotal}}</span>
-                    </div>
+                        (click)="getInfoProgramaMontado(programaMontado,diaDaSemana,i)"
+                        [programaMontado]="programaMontado"
+                        [programaMontadoIsSelected]="programaMontadoIsSelected(diaDaSemana,i)"
+                    ></app-programa-montado>
                 </div>
                 <!-- ACIMA O TEMPLATE DO BLOCO QUE VAI SER PROGRAMA MONTADO -->
             </div>
@@ -147,14 +146,12 @@
                     </div>
                 </div>
                 <div class="dozeHoras">
-                    <div class="atracao"
-                        [style]="getStyle(programa.duracaoTotalDaAtracaoEmSegundos,gd.getSelectedDiaDaSemana(),i)"
-                        *ngFor="let programa of gd.getListaParaUpdate(); index as i"
-                        (click)="clickBloco(programa,gd.getSelectedDiaDaSemana(),i)">
-                        <p style="white-space: nowrap;">{{programa.atracao}}</p>
-                        <!-- <span>{{programa.titulo}} </span><br> -->
-                        <span>{{programa.horarioDeExibicao}}</span>
-                    </div>
+                    <app-bloco 
+                            *ngFor="let bloco of gd.getListaParaUpdate(); index as i" 
+                            (click)="clickBloco(bloco,gd.getSelectedDiaDaSemana(),i)"
+                            [bloco]="bloco" 
+                            [blocoIsSelected]="blocoIsSelected(diaDaSemana,i)">
+                    </app-bloco>
                 </div>
             </div>
         </div>
