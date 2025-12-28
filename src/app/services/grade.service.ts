@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { Bloco, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, Programa } from '../grade/types/types';
 import { MongodbService } from './mongodb.service';
 import { take, takeUntil } from 'rxjs/operators';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { from, Observable, Subject } from 'rxjs';
 import { sts } from 'shuffle-tv-services/lib'
 import { GradeDataService } from './grade-data.service';
+import { DIAS_DA_SEMANA } from '../grade/grade.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -25,12 +26,19 @@ export class GradeService {
     })
   }
   
-  populateListasDeDiasDaSemana(listaDeNomesDosDiasDaSemanaSemProgramaMontado):DiaDaSemana[]{
+  populateListasDeDiasDaSemana(listaDeNomesDosDiasDaSemanaSemProgramaMontado):DiaDaSemanaProgramaMontado[]{
+
+    let listaDeNomesDosDiasDaSemana$:Observable<DiaDaSemana> = from(DIAS_DA_SEMANA)
+
+    let listaDeNomesDosDiasDaSemana:DiaDaSemanaProgramaMontado[]=[]
+
+    listaDeNomesDosDiasDaSemana$.subscribe((dia:DiaDaSemana)=>
+      {listaDeNomesDosDiasDaSemana.push(`${dia}ProgramaMontado`)
+    })
+
     return  [
       ...listaDeNomesDosDiasDaSemanaSemProgramaMontado,
-      ...listaDeNomesDosDiasDaSemanaSemProgramaMontado.map(
-        (diaDaSemana:DiaDaSemana)=>
-          `${diaDaSemana}ProgramaMontado` as DiaDaSemanaProgramaMontado)]
+      ...listaDeNomesDosDiasDaSemana]
   }
     
   montaLista = (listaDeProgramasFiltrada)=>{
