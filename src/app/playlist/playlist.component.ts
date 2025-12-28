@@ -1,10 +1,11 @@
 import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
 import { CommonService } from 'src/services/common.service';
 import { FirebaseService } from '../services/firebase.service';
-import { Subject } from 'rxjs';
+import { fromEvent, Observable, Subject } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { MongodbService } from '../services/mongodb.service';
 import { sts } from 'shuffle-tv-services/lib'
+import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-playlist',
   templateUrl: './playlist.component.html',
@@ -12,13 +13,9 @@ import { sts } from 'shuffle-tv-services/lib'
 })
 export class PlaylistComponent {
   constructor(
-    @Inject(DOCUMENT) private document: any,
     private commonServices: CommonService,
     private firebaseService: FirebaseService,
     private mongodbService: MongodbService) { }
-
-
-    
 
   fullCanaisCollection:any
   urlMediaPath:any
@@ -43,6 +40,8 @@ export class PlaylistComponent {
   unsubscribe:any
   arrayNumerosCanais:Array<any>
   viewport: number
+  keyboardEvents$: Observable<KeyboardEvent>
+  destroy$ = new Subject()
 
   @ViewChild ('player') player: ElementRef;
 
@@ -55,7 +54,12 @@ export class PlaylistComponent {
         this.getLista(canal)
     })
     this.keyboardSetup()
-}
+  }
+
+  ngOnDestroy(){
+    this.destroy$.next()
+    this.destroy$.complete()
+  }
 
   changeChannel(channel){
     this.selectedCanal=channel
@@ -73,8 +77,6 @@ export class PlaylistComponent {
     this.mongodbService.getSeletorDeCanal()
     .subscribe(data=>{
       let canal = data[0].canal.toString()
-      console.log("getSelectedChannelFromMongoDB data",canal)
-      console.log("getSelectedChannelFromMongoDB data",typeof(canal))
       this.selectedCanal = canal
       switch (canal){
         case "2":  
@@ -156,7 +158,10 @@ export class PlaylistComponent {
   keyboardSetup(){
     let enteredDigitsString =""
 
-    this.document.addEventListener('keydown',event=>{
+    this.keyboardEvents$ = fromEvent<KeyboardEvent>(document,'keydown')
+    this.keyboardEvents$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(event=>{
       let stringsToRemoveArrows = ["Arrow","Page"]
       let stringsToRemoveNumbers = ["Digit","Numpad"]
       if(stringsToRemoveArrows.find(i=>event.code.includes(i))){
@@ -172,7 +177,7 @@ export class PlaylistComponent {
           enteredDigitsString=""
         },2000)
       }
-    }) 
+    })
   }
 
   switchEventChannel(eventCode:any){

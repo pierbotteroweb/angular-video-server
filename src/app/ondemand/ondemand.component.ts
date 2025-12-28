@@ -6,10 +6,11 @@ import { DOCUMENT } from '@angular/common';
 import { CommonService } from 'src/services/common.service';
 import { FirebaseService } from '../services/firebase.service';
 import { UploadVideoService } from '../services/upload-video.service';
-import { map } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { MongodbService } from '../services/mongodb.service';
 import { sts } from 'shuffle-tv-services/lib'
 import { WebSocketService } from '../services/WebSocketService.service';
+import { fromEvent, Observable, Subject, timer } from 'rxjs';
 
 @Component({
   selector: 'app-ondemand',
@@ -80,6 +81,9 @@ export class OndemandComponent implements OnInit {
   filteredvideomovies:any
   filteredvideodvds:any
   filteredvideonovelas:any
+  keyboardEvents$:Observable<KeyboardEvent>
+  timeBarUpdate$:Observable<number>
+  destroy$ = new Subject()
 
   requests:any = [
     {request:"listaNoite",horario:"noiteFilmes"},
@@ -220,7 +224,12 @@ export class OndemandComponent implements OnInit {
         this.filterProgramaDeTV(this.selectedCanal)
       }
     })
-  } 
+  }
+
+  ngOnDestroy(){
+    this.destroy$.next()
+    this.destroy$.complete()    
+  }
 
   filterProgramaDeTV(canal){
       this.programaDeTvFiltered=this.programaDeTv.filter(prog=> prog.canal== canal)
@@ -448,7 +457,11 @@ export class OndemandComponent implements OnInit {
 
   avancaERecuaTempoVideoPorTeclado(){
 
-    this.document.addEventListener('keydown',event=>{
+    this.keyboardEvents$ = fromEvent<KeyboardEvent>(document,'keydown')
+
+    this.keyboardEvents$.pipe(
+          takeUntil(this.destroy$)
+        ).subscribe(event=>{
       switch (event.code){
         case "Space":
             this.clickPauseMovie()
@@ -511,13 +524,15 @@ export class OndemandComponent implements OnInit {
           this.selecionaPontoPorTeclado("+")
             break
       }
-    }) 
+    })
 
   }
 
-  timeBarUpdate(){          
-    
-    setTimeout(()=>{
+  timeBarUpdate(){
+
+    this.timeBarUpdate$ = timer(500)
+
+    this.timeBarUpdate$.subscribe(time=>{
       this.updateAVElements()        
       this.videoElement.addEventListener('volumechange',event=>{
         this.audiovolumebar.setValue(event.target['volume']*100)  
@@ -534,8 +549,8 @@ export class OndemandComponent implements OnInit {
       this.videoElement.addEventListener('timeupdate',(event)=>{
         this.videobar.setValue((this.videoElement.currentTime/this.duracaoVideoSelecionado)*100)
       })
-
-    },500)
+      
+    })
   }
   
   adicionaPontoDeCorte(){

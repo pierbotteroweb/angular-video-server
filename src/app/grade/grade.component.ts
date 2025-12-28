@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { EMPTY, Subject, Subscription } from 'rxjs';
+import { EMPTY, Observable, of, Subject, Subscription } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 import { FirebaseService } from '../services/firebase.service';
 import { sts } from 'shuffle-tv-services/lib'
@@ -62,6 +62,7 @@ export class GradeComponent implements OnInit {
                 })
                }
   programaMontadoSelectionado:ProgramaMontado | null = null;
+  dadosExibidosDeProgramaMontadoClicado$: Observable<ProgramaMontado>
   selectVideoForm :FormGroup
   novoPrograma:FormControl
   duracaoEstimada:FormControl
@@ -865,10 +866,12 @@ export class GradeComponent implements OnInit {
     this.gd.setBlocoClicado(null)
     if(this.programaMontadoSelectionado==info){
       this.programaMontadoSelectionado=null
+      this.dadosExibidosDeProgramaMontadoClicado$ = of(null)
     }else{
       info.indice=index
       info.dia=dia
-      this.programaMontadoSelectionado = info      
+      this.programaMontadoSelectionado = info
+      this.dadosExibidosDeProgramaMontadoClicado$ = of(info)
       this.gd.setSelectedDiaDaSemana(dia)
     }
   }
