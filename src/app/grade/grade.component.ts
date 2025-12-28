@@ -24,7 +24,9 @@ export class GradeComponent implements OnInit {
   selectedDiaDestinoDaSemana: DiaDaSemana;
 
 
-  listaCanal:Bloco[];
+  canais: Canal[];
+  canal: Canal;
+  blocosDiaDaSemana:Bloco[];
   listaOrigemReduzida: Array<string>;
   listaParaUpdate: any;
   listaDeIntervalosAdicionados: Array<any>;
@@ -89,7 +91,6 @@ export class GradeComponent implements OnInit {
   listaDeNomesDosDiasDaSemana:Array<DiaDaSemanaProgramaMontado>
   listaDeNomesDosDiasDaSemanaSemProgramaMontado:Array<DiaDaSemana>
   horas:any = []
-  canais: Array<any>
 
   ngOnInit(): void {
 
@@ -172,18 +173,21 @@ export class GradeComponent implements OnInit {
   removePrograma(){
     if(this.selectedDiaDaSemana&&this.programaClicado){
       let indexToRemove = this.programaClicado.indice+1
-      let itemRemoved = this.listaCanal[this.selectedDiaDaSemana][this.programaClicado.indice]
+      let blocoRemoved:Bloco = this.canal[this.selectedDiaDaSemana][this.programaClicado.indice]
       this.alerta="Item Removido"
       setTimeout(()=>{this.alerta=""},1000)
-      itemRemoved.added=false
+      let itemRemoved = {
+        id:blocoRemoved.id,
+        added:false
+      }
       this.updateOnMongoDB(itemRemoved,"itemRemoved")
 
-      if(this.listaCanal[this.selectedDiaDaSemana].length>1){
-        let novaListaCanal:Bloco[] = [...this.listaCanal[this.selectedDiaDaSemana].slice(0,indexToRemove-1),
-                       ...this.listaCanal[this.selectedDiaDaSemana].slice(indexToRemove)] 
+      if(this.canal[this.selectedDiaDaSemana].length>1){
+        let novaListaCanal:Bloco[] = [...this.canal[this.selectedDiaDaSemana].slice(0,indexToRemove-1),
+                       ...this.canal[this.selectedDiaDaSemana].slice(indexToRemove)] 
         this.recalculaHorariosDeExibicao(novaListaCanal)
       }else{
-        this.listaCanal[this.selectedDiaDaSemana]=[]
+        this.canal[this.selectedDiaDaSemana]=[]
       }
 
     } else if(this.programaMontadoSelectionado){
@@ -193,15 +197,15 @@ export class GradeComponent implements OnInit {
         this.updateOnMongoDB(prog,"prog")
       })
       
-      let novaListaCanal = this.listaCanal[this.selectedDiaDaSemana]
+      let novablocosDiaDaSemana = this.canal[this.selectedDiaDaSemana]
                     .filter(prog=>prog.idProgMontado!==this.programaMontadoSelectionado.blocos[0].idProgMontado)
 
-      this.recalculaHorariosDeExibicao(novaListaCanal)
+      this.recalculaHorariosDeExibicao(novablocosDiaDaSemana)
 
-      let novaListaCanalProgramaMontado = this.listaCanal[this.selectedDiaDaSemana+'ProgramaMontado']
+      let novaListaCanalProgramaMontado = this.canal[this.selectedDiaDaSemana+'ProgramaMontado']
                     .filter(prog=>prog.idProgMontado!==this.programaMontadoSelectionado.blocos[0].idProgMontado)
       
-      this.listaCanal[this.selectedDiaDaSemana+'ProgramaMontado'] = novaListaCanalProgramaMontado
+      this.canal[this.selectedDiaDaSemana+'ProgramaMontado'] = novaListaCanalProgramaMontado
 
 
     } else if(!this.programaClicado){
@@ -214,7 +218,7 @@ export class GradeComponent implements OnInit {
   }
 
   organizaIntervalos(){
-    let listaParaORganizar = this.emProcessoDeUpdate ? this.listaParaUpdate : this.listaCanal[this.selectedDiaDaSemana]
+    let listaParaORganizar = this.emProcessoDeUpdate ? this.listaParaUpdate : this.canal[this.selectedDiaDaSemana]
     let lengthListaParaOrganizar = listaParaORganizar.length
     
     let indexInicioAdicionados=listaParaORganizar.find(prog=>prog.idProgMontado==this.idProgMontado).indice
@@ -251,7 +255,7 @@ export class GradeComponent implements OnInit {
   }
 
   organizaPrePos(){
-    let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaCanal[this.selectedDiaDaSemana]
+    let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.canal[this.selectedDiaDaSemana]
     let lengthListaParaOrganizar = listaParaORganizar.length
     
     let indexInicioAdicionados=listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgMontado==this.idProgMontado))
@@ -283,7 +287,7 @@ export class GradeComponent implements OnInit {
 
   organizaProgramasBlocos(){
 
-    let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.listaCanal[this.selectedDiaDaSemana]
+    let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.canal[this.selectedDiaDaSemana]
 
     let indexAdicionadosInicio = listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgMontado==this.idProgMontado))
 
@@ -375,16 +379,16 @@ export class GradeComponent implements OnInit {
     },1000)
   }
 
-  recalculaHorariosDeExibicao(novaListaCanal){
+  recalculaHorariosDeExibicao(novablocosDiaDaSemana){
     let diaDaSemana = this.selectedDiaDestinoDaSemana?
     this.selectedDiaDestinoDaSemana:this.selectedDiaDaSemana
 
-    novaListaCanal[0]['horarioDeExibicao']="06:30:00"
+    novablocosDiaDaSemana[0]['horarioDeExibicao']="06:30:00"
     
-    if(novaListaCanal.length>=1){
-      novaListaCanal.map((prog,index)=>{
+    if(novablocosDiaDaSemana.length>=1){
+      novablocosDiaDaSemana.map((prog,index)=>{
         if(index>0){
-          let progAnterior = novaListaCanal[index-1]
+          let progAnterior = novablocosDiaDaSemana[index-1]
           prog.indice = index
           prog.horarioDeExibicao= 
             sts.toTime(progAnterior.duracaoTotalDaAtracaoEmSegundos
@@ -394,9 +398,9 @@ export class GradeComponent implements OnInit {
     } 
 
     if(this.emProcessoDeUpdate){
-      this.listaParaUpdate= novaListaCanal
+      this.listaParaUpdate= novablocosDiaDaSemana
     } else {
-      this.listaCanal[diaDaSemana]=novaListaCanal
+      this.canal[diaDaSemana]=novablocosDiaDaSemana
     }
 
     if(this.selectedProgramaDeTv){
@@ -416,13 +420,13 @@ export class GradeComponent implements OnInit {
   
         this.spyListaAdicionada.next(intInfo)
       } else if(this.qtdeIntervalos){
-        this.lengthListaFinal = novaListaCanal.length
+        this.lengthListaFinal = novablocosDiaDaSemana.length
         if(!this.prePosAvailable){
           this.selectVideoForm.get('programaDeTvFormControl')
           .setValue(sts.lowerCaseFirstChar(this.selectedProgramaDeTv.value.replace("int","")))
         }
         this.organizaIntervalos()
-      } else if(novaListaCanal.length==this.lengthListaFinal&&this.prePosAvailable){
+      } else if(novablocosDiaDaSemana.length==this.lengthListaFinal&&this.prePosAvailable){
         if(this.prePosCount>0){
           let prePosInfo = {}
           prePosInfo['intAmount'] = this.prePosCount
@@ -458,11 +462,11 @@ export class GradeComponent implements OnInit {
   updateCanaisOnMongoDB(canal:Canal):void {
     this.mongodbService.updateCanais(canal).subscribe(() => {
       let listOfTypes = 
-      [...new Set(this.listaCanal[this.selectedDiaDaSemana]
+      [...new Set(this.canal[this.selectedDiaDaSemana]
       .map((bloco:Bloco)=>bloco.tipo))]
 
       listOfTypes.forEach((tipo:TipoDePrograma)=>{
-        let idsDeArquivosDoMesmoTipo = [...new Set(this.listaCanal[this.selectedDiaDaSemana]
+        let idsDeArquivosDoMesmoTipo = [...new Set(this.canal[this.selectedDiaDaSemana]
         .filter((bloco:Bloco)=>bloco.tipo == tipo).map((bloco:Bloco)=>bloco.id))]
 
         this.mongodbService
@@ -498,7 +502,7 @@ export class GradeComponent implements OnInit {
 
   addIntervalo(intAmount,intApi){
     let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
-                     this.listaCanal[this.selectedDiaDaSemana]
+                     this.canal[this.selectedDiaDaSemana]
     let info = listaAtual[this.indexToAdd]
     this.clickAtracao(info,this.selectedDiaDaSemana,this.indexToAdd)
     this.selectVideoForm.get('programaDeTvFormControl').setValue(intApi)
@@ -510,7 +514,7 @@ export class GradeComponent implements OnInit {
     this.lengthListaFinal++
 
     let listaAtual = this.emProcessoDeUpdate ? this.listaParaUpdate:
-                     this.listaCanal[this.selectedDiaDaSemana]
+                     this.canal[this.selectedDiaDaSemana]
     let indexToSelect = listaAtual.indexOf(listaAtual.find(prog=>prog.idProgMontado==this.idProgMontado))
     let info = listaAtual[indexToSelect]
     this.clickAtracao(info,this.selectedDiaDaSemana,indexToSelect)
@@ -664,7 +668,7 @@ export class GradeComponent implements OnInit {
                     }
                   }
 
-                  let listInProcess:Array<Canal> = this.emProcessoDeUpdate ? this.listaParaUpdate : this.listaCanal[this.selectedDiaDaSemana]
+                  let listInProcess:Array<Canal> = this.emProcessoDeUpdate ? this.listaParaUpdate : this.canal[this.selectedDiaDaSemana]
                   videoSendoAdicionado.added=true
                   this.updateOnMongoDB(videoSendoAdicionado,"videoSendoAdicionado")        
 
@@ -753,13 +757,13 @@ export class GradeComponent implements OnInit {
 
     if(this.programasReplicadosCount==0&&this.emProcessoDeUpdate){
       
-      this.listaCanal[this.selectedDiaDaSemana] = this.listaParaUpdate
+      this.canal[this.selectedDiaDaSemana] = this.listaParaUpdate
       this.listaParaUpdate=[]
       this.emProcessoDeUpdate=false
     } else {
 
       this.programasReplicadosCount--
-      let programaParaReplicar = this.listaCanal[this.selectedDiaDaSemana]
+      let programaParaReplicar = this.canal[this.selectedDiaDaSemana]
                             .find(prog=>prog.idProgMontado==
                             this.listaOrigemReduzida[this.programasReplicadosCount]&&
                             prog.tipo!=="intervalos").atracao
@@ -814,24 +818,24 @@ export class GradeComponent implements OnInit {
   }
 
   subirLista(){
-    localStorage.setItem('data',JSON.stringify(this.listaCanal))
+    localStorage.setItem('data',JSON.stringify(this.canal))
     let canal:Canal =  this.canais.filter((canal:Canal)=>canal.emissora==this.selectedCanal)[0]
     this.updateCanaisOnMongoDB(canal)
     this.listaDeNomesDosDiasDaSemana.map((dia:DiaDaSemana)=>{
-      if(this.listaCanal[dia]){
+      if(this.canal[dia]){
       }
     })
   }
 
   getLista(){
-      this.listaCanal = this.canais.find(canal=>canal.emissora==this.selectedCanal)
-      if(this.selectedDiaDaSemana&&!this.listaCanal[this.selectedDiaDaSemana]) this.addDiasDeSemanaNoCanal()
+      this.canal = this.canais.find(canal=>canal.emissora==this.selectedCanal)
+      if(this.selectedDiaDaSemana&&!this.canal[this.selectedDiaDaSemana]) this.addDiasDeSemanaNoCanal()
       this.getListaDeProgramasDeTvFromMongodb()
   }
 
   addDiasDeSemanaNoCanal(){
     this.listaDeNomesDosDiasDaSemana.map((dia:DiaDaSemana)=>{
-      this.listaCanal[dia]=[]
+      this.canal[dia]=[]
     })
   }
 
@@ -924,8 +928,8 @@ export class GradeComponent implements OnInit {
   replicaListaDaSemana(){
     this.programaClicado=""
     if(this.selectedDiaDestinoDaSemana){
-      this.listaCanal[this.selectedDiaDestinoDaSemana]=[]
-      let listaOrigem:Bloco[] = this.listaCanal[this.selectedDiaDaSemana] 
+      this.canal[this.selectedDiaDestinoDaSemana]=[]
+      let listaOrigem:Bloco[] = this.canal[this.selectedDiaDaSemana] 
       this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.idProgMontado))]
       this.listaOrigemReduzida.reverse()
       this.selectVideoForm.get('semanaFormControl').setValue(this.selectedDiaDestinoDaSemana)
@@ -943,7 +947,7 @@ export class GradeComponent implements OnInit {
     this.emProcessoDeUpdate=true
     this.programaClicado=""
     this.listaParaUpdate=[]
-    let listaOrigem:Bloco[] = this.listaCanal[this.selectedDiaDaSemana] 
+    let listaOrigem:Bloco[] = this.canal[this.selectedDiaDaSemana] 
     this.listaOrigemReduzida = [...new Set(listaOrigem.map(prog=>prog.idProgMontado))]
     this.listaOrigemReduzida.reverse()
     this.programasReplicadosCount = this.listaOrigemReduzida.length-1
@@ -987,7 +991,7 @@ export class GradeComponent implements OnInit {
         this.canais[indexOfCanal][diaDaSemana+"ProgramaMontado"]=listaAnexosBloco}
       })
 
-        this.listaCanal = this.canais[indexOfCanal][this.listaDeNomesDosDiasDaSemana[this.selectedDiaDaSemana]]
+        this.canal = this.canais[indexOfCanal][this.listaDeNomesDosDiasDaSemana[this.selectedDiaDaSemana]]
   }
 
   displaySelectedCanalInfo(){
@@ -1102,5 +1106,10 @@ export class GradeComponent implements OnInit {
 
 // listaCanal: Corresponde a um ITEM de um document da colection Canais. Esse ITEM é um array de Blocos,
 // Esse ITEM tem nome de um dia da semana sem a string "Bloco" no nome. Por exemplo "terca".
+// MAS...  esse nome náo faz sentido, porque dá a ideia de que existe uma lista associada a um canal,
+// quando na verdade existe um OBJETO associado a um canal. E esse objeto do tipo Canal, tem propeiedades
+// com nomes de dias da semana. Entao se a gente falar DIA, sempre vai ser um DIA associado a uma propriedade
+// de Canais. Entao, se a gente chamar blocosDiaDaSemana, vai ficar claro que é uma lista de blocos associada a 
+// um dia da semana que é uma propriedade de um canal. Entáo vamos chamar de blocosDiaDaSemana
 
-// novaListaCanal: essa é a listaCanal recalculada apos um bloco ser adicionado ou removido.
+// novablocosDiaDaSemana: essa é a lista blocosDiaDaSemana recalculada apos um bloco ser adicionado ou removido.

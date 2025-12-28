@@ -100,7 +100,7 @@
         </div>
     </div>
     <div class="container-fluid" *ngFor="let dia of listaDeNomesDosDiasDaSemana">
-        <div class="row" *ngIf="listaCanal[dia] && listaCanal[dia].length>0 &&
+        <div class="row" *ngIf="canal[dia] && canal[dia].length>0 &&
                                 (dia==selectedDiaDaSemana||dia==selectedDiaDestinoDaSemana)">
             <div class="col-1" [ngStyle]="{'background': selectedDiaDaSemana==dia ? 'lightgreen' : 'white'}">
                 <p>Dia Da Semana</p>
@@ -115,7 +115,7 @@
                 </div>
                 <div class="dozeHoras">
                     <div class="atracao" [style]="getStyle(programa.duracaoTotalDaAtracaoEmSegundos,dia,i)"
-                        *ngFor="let programa of listaCanal[dia]; index as i" (click)="clickAtracao(programa,dia,i)">
+                        *ngFor="let programa of canal[dia]; index as i" (click)="clickAtracao(programa,dia,i)">
                         <p style="white-space: nowrap; overflow: hidden;">{{programa.tituloAtracao}}</p>
                         <!-- <span>{{programa.titulo}} </span><br> -->
                         <span>{{programa.horarioDeExibicao}}</span>
@@ -124,7 +124,7 @@
                 <!-- ABAIXO O TEMPLATE DO BLOCO QUE VAI SER PROGRAMA MONTADO -->
                 <div class="dozeHoras">
                     <div class="atracao" [style]="getStyleProgramaMontado(programaMontado.tempoTotalEmSegundos,dia,i)"
-                        *ngFor="let programaMontado of listaCanal[dia+'ProgramaMontado']; index as i"
+                        *ngFor="let programaMontado of canal[dia+'ProgramaMontado']; index as i"
                         (click)="getInfoProgramaMontado(programaMontado,dia,i)">
                         <p style="padding:0;white-space: nowrap; overflow: hidden;">{{programaMontado.tituloAtracao}}</p>
                         <p style="padding:0;">{{programaMontado.horarioDeExibicao}}</p>
