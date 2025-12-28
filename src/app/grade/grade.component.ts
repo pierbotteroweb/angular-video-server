@@ -4,7 +4,7 @@ import { EMPTY, Subject, Subscription } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 import { FirebaseService } from '../services/firebase.service';
 import { sts } from 'shuffle-tv-services/lib'
-import { Arquivo, Bloco, BlocoMontado, Canal, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, InfoIntPrePos, ListaParaDesuso, Programa, ProgramasPorBloco, TipoDePrograma } from './types/types';
+import { Arquivo, Bloco, ProgramaMontado, Canal, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, InfoIntPrePos, ListaParaDesuso, Programa, ProgramasPorBloco, TipoDePrograma } from './types/types';
 import { concatMap, take, takeUntil } from 'rxjs/operators';
 import { GradeService } from '../services/grade.service';
 import { DIAS_DA_SEMANA } from './grade.constants';
@@ -61,7 +61,7 @@ export class GradeComponent implements OnInit {
                   programaDeTvFormControl:[""]
                 })
                }
-  programaMontadoSelectionado:BlocoMontado | null = null;
+  programaMontadoSelectionado:ProgramaMontado | null = null;
   selectVideoForm :FormGroup
   novoPrograma:FormControl
   duracaoEstimada:FormControl
@@ -836,6 +836,16 @@ export class GradeComponent implements OnInit {
     }
   }
 
+  blocoIsSelected(dia,index?){
+    return this.gd.getBlocoClicado()&&(this.gd.getBlocoClicado().indice==index)&&(this.gd.getBlocoClicado().dia==dia)
+  }
+
+  programaMontadoIsSelected(dia,index?){
+    return this.programaMontadoSelectionado&&
+      (this.programaMontadoSelectionado.indice==index)&&
+      (this.programaMontadoSelectionado.dia==dia)
+  }
+
   getStyleProgramaMontado(width,dia,index?){
     if(this.programaMontadoSelectionado&&
       (this.programaMontadoSelectionado.indice==index)&&
@@ -846,7 +856,7 @@ export class GradeComponent implements OnInit {
     }
   }
 
-  getInfoProgramaMontado(info:BlocoMontado,dia:DiaDaSemana,index:number){
+  getInfoProgramaMontado(info:ProgramaMontado,dia:DiaDaSemana,index:number){
 
     this.getInfoClicado=false
     this.getInfoProgramaMontadoClicado=true
