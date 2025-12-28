@@ -23,13 +23,13 @@ export class ObservablesComponent implements OnInit {
   constructor(@Inject(DOCUMENT) private document: any) { }
 
   ngOnInit(): void {
-    // this.observableOfExample()
-    // this.observableFromExample()
-    // this.observableNewExample()
-    // this.observableIntervalExample()
-    // this.observableTimerExample()
-    // this.observableFromEventExample()
-    // this.observableSubjectExample()
+    this.observableOfExample()
+    this.observableFromExample()
+    this.observableNewExample()
+    this.observableIntervalExample()
+    this.observableTimerExample()
+    this.observableFromEventExample()
+    this.observableSubjectExample()
     this.observableBehaviorSubjectExample()
   }
 

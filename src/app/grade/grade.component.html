@@ -72,12 +72,14 @@
                 <p>Ponto Final: <span>{{info.final * 1000 | date:'mm:ss'}}</span></p>
                 <p>Duração: <span>{{info.duracaoTotalDaAtracaoEmSegundos * 1000 | date:'mm:ss' }}</span></p>
             </div>
-            <div class="col-2 info-selected" *ngIf="programaMontadoSelectionado as info">
-                <p>Atração: <span>{{info.tituloAtracao}}</span></p>
-                <p style="max-height: 52.8px;">Arquivo: <span>{{info.arquivo}}</span></p>
-                <p>Horário de Exibição: <span>{{info.horarioDeExibicao}}</span></p>
-                <p>Duração: <span>{{info.tempoTotal }}</span></p>
-            </div>
+            <ng-container *ngIf="dadosExibidosDeProgramaMontadoClicado$ | async as info">
+                <div class="col-2 info-selected">
+                    <p>Atração: <span>{{info.tituloAtracao}}</span></p>
+                    <p style="max-height: 52.8px;">Arquivo: <span>{{info.arquivo}}</span></p>
+                    <p>Horário de Exibição: <span>{{info.horarioDeExibicao}}</span></p>
+                    <p>Duração: <span>{{info.tempoTotal }}</span></p>
+                </div>
+            </ng-container>
             <div class="col-2 info-selected" *ngIf="programaMontadoSelectionado">
                 <ul style="overflow-y:scroll; max-height: 180px;">
                     <li *ngFor="let bloco of programaMontadoSelectionado.blocos"
@@ -131,8 +133,6 @@
             </div>
         </div>
     </div>
-
-
     <div class="container-fluid" *ngIf="gd.getListaParaUpdate()&&gd.getListaParaUpdate().length>0">
         <div class="row">
             <div class="col-1" [ngStyle]="{'background': gd.getSelectedDiaDaSemana()==gd.getSelectedDiaDaSemana() ? 'lightgreen' : 'white'}">
