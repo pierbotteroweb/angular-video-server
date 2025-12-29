@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Bloco, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, ListaParaDesuso, Programa } from '../grade/types/types';
+import { Bloco, Canal, DiaDaSemana, DiaDaSemanaProgramaMontado, Emissora, ListaParaDesuso, Programa } from '../grade/types/types';
 import { take } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { sts } from 'shuffle-tv-services/lib'
@@ -11,6 +11,37 @@ export class GradeDataService {
 
   constructor() { }
 
+    // LISTA DE CANAIS CORRESPONDENTE A TODA COLECTION CANAIS
+    // FORMADA POR UMA LISTA DE OBJETOS DO TIPO CANAL
+    private canais = new BehaviorSubject<Canal[]>([])
+
+    canais$ = this.canais.asObservable()
+
+    setCanais(canais:Canal[]):void{
+      this.canais.next(canais)
+    }
+
+    getCanais():(Canal[]){
+      return this.canais.getValue()
+    }
+
+
+    // OBJETO CANAL CORRESPONDENTE A UM DOCUMENT DA COLECTION
+    // CANAIS, QUE TME COMO PROPRIEDADE EMISSORA, CANAL, E OS DIAS
+    // DA SEMANA NORMAL E PROGRAMAMONTADO. ESSES DOIS ULTIMOS
+    // TEM COMO VALOR LISTAS DE BLOCOS
+    private canal = new BehaviorSubject<Canal>(null)
+
+    canal$ = this.canal.asObservable()
+
+    setCanal(canal:Canal):void{
+      this.canal.next(canal)
+    }
+
+    getCanal():(Canal){
+      return this.canal.getValue()
+    }
+
     // LISTA DE PROGRAMAS DE TV DE UM CANAL ESPECIFICO
     // PROGRAMA: TELA QUENTE (CANAL GLOBO)
     private listaDeProgramasDoCanal = new BehaviorSubject<Programa[]>([])
@@ -20,6 +51,20 @@ export class GradeDataService {
     setListaDeProgramasDoCanal(lista:Programa[]):void{
       this.listaDeProgramasDoCanal.next(lista)
     }
+  
+    // LISTA DE BLOCOS DE UMA PRIPRIEDADE DIA DA SEMANA DE UM CANAL ESPECIFICO
+    private blocosDiaDaSemana = new BehaviorSubject<Bloco[]>(null)
+  
+    blocosDiaDaSemana$ = this.blocosDiaDaSemana.asObservable()
+  
+    setBlocosDiaDaSemana(listaDeBlocos:Bloco[]):void{
+      this.blocosDiaDaSemana.next(listaDeBlocos)
+    }
+  
+    getBlocosDiaDaSemana():Bloco[]{
+      return this.blocosDiaDaSemana.getValue()
+    }
+  
   
     // DIA DA SEMANA SELECIONADO NA GRADE (EX: SEGUNDA)
     private selectedDiaDaSemana = new BehaviorSubject<DiaDaSemana>("segunda")
@@ -172,20 +217,6 @@ export class GradeDataService {
     getListaParaUpdate():Bloco[]{
       return this.listaParaUpdate.getValue()
     }
-  
-    // LISTA DE BLOCOS DE UM CANAL ESPECIFICO
-    private listaCanal = new BehaviorSubject<Bloco[]>(null)
-  
-    listaCanal$ = this.listaCanal.asObservable()
-  
-    setListaCanal(lista:Bloco[]):void{
-      this.listaCanal.next(lista)
-    }
-  
-    getListaCanal():Bloco[]{
-      return this.listaCanal.getValue()
-    }
-  
     // INFORMA INDICE DA LISTA SENDO MONTADA
     // ONDE BLOCO PRECISA SER ENCAIXADO
     private indexToAdd = new BehaviorSubject<number>(0)

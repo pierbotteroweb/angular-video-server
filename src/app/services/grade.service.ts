@@ -136,7 +136,7 @@ export class GradeService {
         }
       }
 
-      let listInProcess:Bloco[] = this.gradeData.getEmProcessoDeUpdate() ? this.gradeData.getListaParaUpdate() : this.gradeData.getListaCanal()[this.gradeData.getSelectedDiaDaSemana()]
+      let listInProcess:Bloco[] = this.gradeData.getEmProcessoDeUpdate() ? this.gradeData.getListaParaUpdate() : this.gradeData.getCanal()[this.gradeData.getSelectedDiaDaSemana()]
       videoSendoAdicionado.added=true
       this.updateArquivoOnMongoDB(videoSendoAdicionado)        
 

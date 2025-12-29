@@ -6,7 +6,7 @@
                 <div style="display: flex; gap: 10px 20px; margin: 10px 0;">
                     <select class="select form-control" formControlName="canaisFormControl">
                         <option value="">Canal </option>
-                        <option *ngFor="let canal of canais" [value]='canal._id'>
+                        <option *ngFor="let canal of gd.getCanais()" [value]='canal._id'>
                             <span>{{canal.emissora}}</span>
                         </option>
                     </select>
@@ -99,7 +99,7 @@
         </div>
     </div>
     <div class="container-fluid" *ngFor="let diaDaSemana of listaDeNomesDosDiasDaSemana">
-        <div class="row" *ngIf="gd.getListaCanal()?.[diaDaSemana]?.length > 0 &&
+        <div class="row" *ngIf="gd.getCanal()?.[diaDaSemana]?.length > 0 &&
                                 (diaDaSemana == gd.getSelectedDiaDaSemana() || diaDaSemana == selectedDiaDestinoDaSemana)">
             <div class="col-1" [ngStyle]="{'background': gd.getSelectedDiaDaSemana()==diaDaSemana ? 'lightgreen' : 'white'}">
                 <p>Dia Da Semana</p>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="dozeHoras">
                     <app-bloco 
-                            *ngFor="let bloco of gd.getListaCanal()[diaDaSemana]; index as i" 
+                            *ngFor="let bloco of gd.getCanal()[diaDaSemana]; index as i" 
                             (click)="clickBloco(bloco,diaDaSemana,i)"
                             [bloco]="bloco" 
                             [blocoIsSelected]="blocoIsSelected(diaDaSemana,i)">
@@ -123,7 +123,7 @@
                 <!-- ABAIXO O TEMPLATE DO BLOCO QUE VAI SER PROGRAMA MONTADO -->
                 <div class="dozeHoras">
                     <app-programa-montado
-                        *ngFor="let programaMontado of gd.getListaCanal()[diaDaSemana+'ProgramaMontado']; index as i"
+                        *ngFor="let programaMontado of gd.getCanal()[diaDaSemana+'ProgramaMontado']; index as i"
                         (click)="getInfoProgramaMontado(programaMontado,diaDaSemana,i)"
                         [programaMontado]="programaMontado"
                         [programaMontadoIsSelected]="programaMontadoIsSelected(diaDaSemana,i)"
