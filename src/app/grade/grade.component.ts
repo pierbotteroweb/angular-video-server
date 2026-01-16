@@ -73,8 +73,8 @@ export class GradeComponent implements OnInit {
 
   constructor(private firebaseService: FirebaseService,
               private mongodbService: MongodbService,
-              private formBuilder: FormBuilder) { 
-                this.selectVideoForm = this.formBuilder.group({
+              private formBuilder: FormBuilder) {
+    this.selectVideoForm = this.formBuilder.group({
                   semanaFormControl:[""],
                   semanaDestinoFormControl:[""],
                   canaisFormControl:[""],
@@ -287,17 +287,17 @@ export class GradeComponent implements OnInit {
 
   organizaProgramasBlocos(){
 
-    let listaParaORganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.canal[this.selectedDiaDaSemana]
+    let blocosParaOrganizar = this.emProcessoDeUpdate? this.listaParaUpdate : this.canal[this.selectedDiaDaSemana]
 
-    let indexAdicionadosInicio = listaParaORganizar.indexOf(listaParaORganizar.find(prog=>prog.idProgMontado==this.idProgMontado))
+    let indexesBlocosParaOrganizar = blocosParaOrganizar.indexOf(blocosParaOrganizar.find(bloco=>bloco.idProgMontado == this.idProgMontado))
 
-    let listaPreAdicionados = listaParaORganizar.slice(0,indexAdicionadosInicio)
+    let primeiraParteBlocosParaOrganizar = blocosParaOrganizar.slice(0,indexesBlocosParaOrganizar)
 
-    let listaAdicionados=listaParaORganizar.filter(prog=>prog.idProgMontado==this.idProgMontado)
+    let segundaParteBlocosParaOrganizar = blocosParaOrganizar.filter(prog=>prog.idProgMontado==this.idProgMontado)
 
-    let listaPosAdicionados = listaParaORganizar.slice(indexAdicionadosInicio+listaAdicionados.length,listaParaORganizar.length)
+    let terceiraParteBlocosParaOrganizar = blocosParaOrganizar.slice(indexesBlocosParaOrganizar + segundaParteBlocosParaOrganizar.length,blocosParaOrganizar.length)
 
-    let indexIntervaloBloco1=listaAdicionados.indexOf(listaAdicionados.find(prog=>prog.atracao==this.selectedProgramaDeTvBlocos.anexos.intervalo))
+    let indexIntervaloBloco1=segundaParteBlocosParaOrganizar.indexOf(segundaParteBlocosParaOrganizar.find(bloco=>bloco.atracao==this.selectedProgramaDeTvBlocos.anexos.intervalo))
 
     let indexIntervaloBloco2=indexIntervaloBloco1+2
     let indexIntervaloBloco3=indexIntervaloBloco2+2
@@ -305,27 +305,27 @@ export class GradeComponent implements OnInit {
     let indexIntervaloBloco5=indexIntervaloBloco4+2
     let indexIntervaloBloco6=indexIntervaloBloco5+2
 
-    let listaBlocoPreAdicionados = listaAdicionados.slice(0,indexIntervaloBloco1)
+    let blocosPreAdicionados = segundaParteBlocosParaOrganizar.slice(0,indexIntervaloBloco1)
     
     let listaBlocoIntermediariosAdicionados1 = []
     if(this.selectedProgramaDeTvBlocos.anexos.bloco2){
-      listaBlocoIntermediariosAdicionados1 = listaAdicionados.slice(indexIntervaloBloco1,indexIntervaloBloco2)
+      listaBlocoIntermediariosAdicionados1 = segundaParteBlocosParaOrganizar.slice(indexIntervaloBloco1,indexIntervaloBloco2)
     }
     let listaBlocoIntermediariosAdicionados2 = []
     if(this.selectedProgramaDeTvBlocos.anexos.bloco3){
-      listaBlocoIntermediariosAdicionados2 = listaAdicionados.slice(indexIntervaloBloco2,indexIntervaloBloco3)
+      listaBlocoIntermediariosAdicionados2 = segundaParteBlocosParaOrganizar.slice(indexIntervaloBloco2,indexIntervaloBloco3)
     }
     let listaBlocoIntermediariosAdicionados3 = []
     if(this.selectedProgramaDeTvBlocos.anexos.bloco4){
-      listaBlocoIntermediariosAdicionados3 = listaAdicionados.slice(indexIntervaloBloco3,indexIntervaloBloco4)
+      listaBlocoIntermediariosAdicionados3 = segundaParteBlocosParaOrganizar.slice(indexIntervaloBloco3,indexIntervaloBloco4)
     }
     let listaBlocoIntermediariosAdicionados4 = []
     if(this.selectedProgramaDeTvBlocos.anexos.bloco5){
-      listaBlocoIntermediariosAdicionados4 = listaAdicionados.slice(indexIntervaloBloco4,indexIntervaloBloco5)
+      listaBlocoIntermediariosAdicionados4 = segundaParteBlocosParaOrganizar.slice(indexIntervaloBloco4,indexIntervaloBloco5)
     }
     let listaBlocoIntermediariosAdicionados5 = []
     if(this.selectedProgramaDeTvBlocos.anexos.bloco6){
-      listaBlocoIntermediariosAdicionados5 = listaAdicionados.slice(indexIntervaloBloco5,indexIntervaloBloco6)
+      listaBlocoIntermediariosAdicionados5 = segundaParteBlocosParaOrganizar.slice(indexIntervaloBloco5,indexIntervaloBloco6)
     }
 
     let indexInicioBlocoPosAdicionado = indexIntervaloBloco1
@@ -337,7 +337,7 @@ export class GradeComponent implements OnInit {
      
 
 
-    let listaBlocoPosAdicionados = listaAdicionados.slice(indexInicioBlocoPosAdicionado,listaAdicionados.length)
+    let listaBlocoPosAdicionados = segundaParteBlocosParaOrganizar.slice(indexInicioBlocoPosAdicionado,segundaParteBlocosParaOrganizar.length)
 
     setTimeout(()=>{
       let listaBloco1 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco1.includes(bloco.atracao))
@@ -367,14 +367,14 @@ export class GradeComponent implements OnInit {
         listaBloco6 = this.listaProgramasBlocos.filter(bloco=>this.selectedProgramaDeTvBlocos.anexos.bloco6.includes(bloco.atracao))
       }
 
-      let listaFinalAdicionados = [...listaBlocoPreAdicionados,
+      let listaFinalAdicionados = [...blocosPreAdicionados,
                                    ...listaBloco1,...listaBlocoIntermediariosAdicionados1,
                                    ...listaBloco2,...listaBlocoIntermediariosAdicionados2,
                                    ...listaBloco3,...listaBlocoIntermediariosAdicionados3,
                                    ...listaBloco4,...listaBlocoIntermediariosAdicionados4,
                                    ...listaBloco5,...listaBlocoIntermediariosAdicionados5,
                                    ...listaBlocoPosAdicionados]
-      let listaFinal=[...listaPreAdicionados,...listaFinalAdicionados,...listaPosAdicionados]
+      let listaFinal=[...primeiraParteBlocosParaOrganizar,...listaFinalAdicionados,...terceiraParteBlocosParaOrganizar]
       this.recalculaHorariosDeExibicao(listaFinal) 
     },1000)
   }
@@ -448,7 +448,6 @@ export class GradeComponent implements OnInit {
   }
 
   updateOnMongoDB(video,type):void {
-
     if(video.programaDeTv=="intCorujaoDois"){
     }
     this.mongodbService.updateVideo(video._id,video).subscribe(() => {
@@ -497,7 +496,7 @@ export class GradeComponent implements OnInit {
 
       })
     });
-    
+
   }
 
   addIntervalo(intAmount,intApi){
@@ -693,7 +692,7 @@ export class GradeComponent implements OnInit {
   }
 
   adicionarProgramaBloco(bloco): void {
-    
+
     let unsubscribe=
     this.mongodbService.getProgramasDeTv("dublado",bloco)
     .subscribe((data:any ) => {
@@ -828,7 +827,7 @@ export class GradeComponent implements OnInit {
   }
 
   getLista(){
-      this.canal = this.canais.find(canal=>canal.emissora==this.selectedCanal)
+    this.canal = this.canais.find(canal=>canal.emissora==this.selectedCanal)
       if(this.selectedDiaDaSemana&&!this.canal[this.selectedDiaDaSemana]) this.addDiasDeSemanaNoCanal()
       this.getListaDeProgramasDeTvFromMongodb()
   }
@@ -840,6 +839,7 @@ export class GradeComponent implements OnInit {
   }
 
   getListaDeProgramasDeTvFromMongodb(){
+    console.log('getListaDeProgramasDeTvFromMongodb');
     let unsubscribe = 
     this.mongodbService.getListaDeProgramasDeTv().subscribe((data:any)=>{
       if(this.selectedCanal){            
@@ -852,7 +852,7 @@ export class GradeComponent implements OnInit {
   }
 
   filterProgramaDeTV(canal){
-      this.programaDeTvFiltered=this.programaDeTv.filter(prog=> prog.canal== canal)
+    this.programaDeTvFiltered=this.programaDeTv.filter(prog=> prog.canal== canal)
   }
 
   getStyle(width,dia,index?){
@@ -963,32 +963,38 @@ export class GradeComponent implements OnInit {
       let canal:Canal = this.canais.find(canal=>canal.emissora==emissora)
       let indexOfCanal:number = this.canais.indexOf(canal)
 
-
       this.listaDeNomesDosDiasDaSemana.map((diaDaSemana:DiaDaSemana)=>{
-        let listaOriginal:any = canal[diaDaSemana]
-        if(listaOriginal){
-        let listaDiaReduzida = [...new Set(listaOriginal.map(prog=>prog.idProgMontado))]
+        let blocosDiaDaSemana:any = canal[diaDaSemana]
+        if(blocosDiaDaSemana){
+        let idsProgMontadoDiaDaSemana = [...new Set(blocosDiaDaSemana.map(bloco=>bloco.idProgMontado))]
 
-        let listaAnexosBloco = listaDiaReduzida.map((progId:any)=>{
-          let obj:any = {}
-          let progInfo = listaOriginal.find(prog=>prog.idProgMontado==progId&&prog.tipo!=="intervalos")
-          if(progInfo&&progInfo.atracao){
-            obj.atracao = progInfo.atracao
-            obj.idProgMontado = progInfo.idProgMontado
+        let listaProgramasMontados = idsProgMontadoDiaDaSemana.map((progIdMapeado:any)=>{
+          let programaMontado:any = {}
+          let blocoComProgIdMapeadoNaoIntervalo = blocosDiaDaSemana.find(prog=> prog.idProgMontado == progIdMapeado && prog.tipo !== "intervalos")
+          if(blocoComProgIdMapeadoNaoIntervalo && blocoComProgIdMapeadoNaoIntervalo.atracao){
+            programaMontado.atracao = blocoComProgIdMapeadoNaoIntervalo.atracao
+            programaMontado.idProgMontado = blocoComProgIdMapeadoNaoIntervalo.idProgMontado
           }
-          let blocos = listaOriginal.filter(prog2=>prog2.idProgMontado==progId)
+          let blocosComProgIdMapeado = blocosDiaDaSemana.filter(bloco=>bloco.idProgMontado==progIdMapeado)
           
-          obj.horarioDeExibicao = blocos[0].horarioDeExibicao
-          obj.blocos = blocos
-          if(blocos.filter(lista=>lista.tipo!="intervalos").length>0){
-            obj.arquivo = progInfo.titulo
-            obj.tituloAtracao = progInfo.tituloAtracao
+          programaMontado.horarioDeExibicao = blocosComProgIdMapeado[0].horarioDeExibicao
+          programaMontado.blocos = blocosComProgIdMapeado
+
+          if(blocosComProgIdMapeado.filter(bloco=>bloco.tipo != "intervalos").length > 0){
+            programaMontado.arquivo = blocoComProgIdMapeadoNaoIntervalo.titulo
+            programaMontado.tituloAtracao = blocoComProgIdMapeadoNaoIntervalo.tituloAtracao
           }
-          obj.tempoTotalEmSegundos = blocos.map(lista=>lista.duracaoTotalDaAtracaoEmSegundos).reduce((a,b)=>{return a+b})
-          obj.tempoTotal = sts.toTime(obj.tempoTotalEmSegundos)
-          return obj
+
+          programaMontado.tempoTotalEmSegundos = blocosComProgIdMapeado.map(lista=>lista.duracaoTotalDaAtracaoEmSegundos).reduce((a,b)=>{return a+b})
+
+          programaMontado.tempoTotal = sts.toTime(programaMontado.tempoTotalEmSegundos)
+
+          return programaMontado
+
         })
-        this.canais[indexOfCanal][diaDaSemana+"ProgramaMontado"]=listaAnexosBloco}
+
+        this.canais[indexOfCanal][diaDaSemana+"ProgramaMontado"]=listaProgramasMontados}
+
       })
 
         this.canal = this.canais[indexOfCanal][this.listaDeNomesDosDiasDaSemana[this.selectedDiaDaSemana]]
