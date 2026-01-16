@@ -978,8 +978,8 @@ export class GradeComponent implements OnInit {
   }
 
   gerarListasDeProgramasMontados(emissora){
-      let canal:Canal = this.gd.getCanais().find(canal=>canal.emissora==emissora)
-      let indexOfCanal:number = this.gd.getCanais().indexOf(canal)
+      let canal:Canal = this.canais.find(canal=>canal.emissora==emissora)
+      let indexOfCanal:number = this.canais.indexOf(canal)
 
       this.listaDeNomesDosDiasDaSemana.map((diaDaSemana:DiaDaSemana)=>{
         let blocosDiaDaSemana:any = canal[diaDaSemana]
