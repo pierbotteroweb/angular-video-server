@@ -100,6 +100,9 @@ export class PlaylistComponent {
             break
         case "32":
           this.selectCanal(canal.toString(),"Mtv")
+            break
+        case "42":
+          this.selectCanal(canal.toString(),"TVA")
           break
       }
     })
@@ -146,6 +149,9 @@ export class PlaylistComponent {
               break
           case "32":
             this.selectCanal(canal.toString(),"Mtv")
+              break
+          case "42":
+            this.selectCanal(canal.toString(),"TVA")
               break
         }
     },err=>{
@@ -223,6 +229,10 @@ export class PlaylistComponent {
       case "32":
         this.selectCanal(eventCode,"Mtv")
         this.changeChannel(32)
+          break
+      case "42":
+        this.selectCanal(eventCode,"TVA")
+        this.changeChannel(42)
           break
     }
 
