@@ -30,6 +30,7 @@ export class ArquivosComponent implements OnInit {
   novoPrograma:FormControl
   buttonMode:string
   tituloAtracao:string
+  windowInnerWidth:number
   
   selectedVideos: VideoModel[];
   selectedCanal:string
@@ -59,7 +60,6 @@ export class ArquivosComponent implements OnInit {
     { header:'canal', width:{"min-width":"100px"} },
     { header:'tipo', width:{"min-width":"100px"} },
     { header:'added', width:{"min-width":"100px"} },
-    { header:'em uso', width:{"min-width":"100px"} },
     { header:'order', width:{"min-width":"100px"} },
     { header:'cortes', width:{"min-width":"100px"} },
   ]
@@ -88,6 +88,7 @@ export class ArquivosComponent implements OnInit {
   // get canaisFormControl() { return this.selectVideoForm('canaisFormControl') as FormControl}
 
   ngOnInit() {
+    this.windowInnerWidth = window.innerWidth
     this.webSocketService.connect('ws://thisisshuffletv:9091');
       // this.productService.getProductsSmall().then(data => this.products = data);
       // this.retrieve()
@@ -334,53 +335,8 @@ export class ArquivosComponent implements OnInit {
     }
   }
 
-  uploadUsingMongoDb(index){
-
-    if(index<this.videosToUpload.length){
-      let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('mimeTypeFormControl').value+"Upload"
-
-      let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
-      .pipe(
-        uploadProgress(progress=>{
-          this.progress=progress;
-        }),
-        filterResponse()
-      ).subscribe(
-        res=>{
-          let videoObj:any = {
-            canal:"",
-            duracao:"",
-            titulo:""
-          }
-      
-          this.mongodbService.createVideo(this.selectedmimeType,videoObj).subscribe((newItemRes:any)=>{
-            console.log("newItemRes",newItemRes)
-                
-            let videoObjUpdate:any = {
-              duracao:Math.round(res['message'].file.duration),
-              titulo:res['message'].file.name,
-              tipo:this.selectedmimeType
-            }
-
-            if(this.selectedCanal){
-              videoObjUpdate.canal=this.selectedCanal
-            }
-                  
-            if(this.selectedProgramaDeTv){
-              videoObjUpdate.programaDeTv=this.selectedProgramaDeTv
-              videoObjUpdate.tituloAtracao=this.tituloAtracao
-            }
-
-      
-            this.mongodbService.updateVideo(newItemRes._id,videoObjUpdate).subscribe((videoUpdated:any)=>{
-      
-              
-            this.uploadUsingMongoDb(index+1)
-            })
-          })
-        }
-      )
-    }
+  asembleUploadUrl(){
+    return "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('mimeTypeFormControl').value+"Upload"
   }
 
 
@@ -608,7 +564,7 @@ export class ArquivosComponent implements OnInit {
         console.log('Video updated sucessfully')
         if(index){
           console.log(index)
-          this.uploadUsingMongoDb(index)
+          // this.uploadUsingMongoDb(index)
         }
       })
       
