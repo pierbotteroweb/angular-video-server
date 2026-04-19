@@ -60,7 +60,6 @@ export class ArquivosComponent implements OnInit {
     { header:'canal', width:{"min-width":"100px"} },
     { header:'tipo', width:{"min-width":"100px"} },
     { header:'added', width:{"min-width":"100px"} },
-    { header:'em uso', width:{"min-width":"100px"} },
     { header:'order', width:{"min-width":"100px"} },
     { header:'cortes', width:{"min-width":"100px"} },
   ]

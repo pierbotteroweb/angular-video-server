@@ -146,14 +146,13 @@
                </tr>
             </ng-template>
             <ng-template pTemplate="body" let-video let-rowIndex="rowIndex" let-columns="columns">
-               <tr [pSelectableRow]="video" [pSelectableRowIndex]="rowIndex" [ngClass]="{'arquivoEmUso' : video.emUso}" >
+               <tr [pSelectableRow]="video" [pSelectableRowIndex]="rowIndex">
                   <td style="min-width: 400px">{{video.titulo}}</td>
                   <td style="min-width: 50px;">{{sts.toTime(video.duracao)}}</td>
                   <td style="min-width: 250px;">{{getTituloProgramaDeTv(video.programaDeTv)}}</td>
                   <td style="min-width: 50px;">{{video.canal}}</td>
                   <td style="min-width: 50px;">{{video.tipo?video.tipo:""}}</td>
                   <td style="min-width: 50px;">{{video.added?"True":"False"}}</td>
-                  <td style="min-width: 50px;">{{video.emUso?"True":"False"}}</td>
                   <td style="min-width: 50px;">{{video.order?video.order:""}}</td>
                   <td style="min-width: 50px;">{{(video.cortesParaIntervalo.length||video.comComerciais)?"OK":"Pendente"}}</td>
                   <td></td>
