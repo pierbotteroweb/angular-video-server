@@ -17,6 +17,10 @@ export class MongodbService {
     return this.http.get('http://thisisshuffletv:9091/api/getCanais')
   }
 
+  getGrade(canal,diaDaSemana){
+    return this.http.post('http://thisisshuffletv:9091/api/getGrade', {'canal': canal,'diaDaSemana': diaDaSemana,})
+  }
+
   getProgramasDeTv(tipo,programaDeTv){
     return this.http.post('http://thisisshuffletv:9091/api/'+tipo, {"programaDeTv":programaDeTv})
   }
@@ -51,6 +55,7 @@ export class MongodbService {
   }
 
   updateSeletorDeCanal(content){
+    console.log("Running updateSeletorDeCanal",content)
     return this.http.post('http://thisisshuffletv:9091/api/updateSelectedCanal', {'id': "6584f9d879d896df8071c455",'content':content})
   }
 
