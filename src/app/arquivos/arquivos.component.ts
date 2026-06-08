@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import { FirebaseService } from '../services/firebase.service';
 import { map } from 'rxjs/operators';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -73,7 +72,6 @@ export class ArquivosComponent implements OnInit {
       private mongodbService: MongodbService,
       private pontoDePartidaService: PontoDePartidaService,
       private webSocketService: WebSocketService,
-      // private firebaseService: FirebaseService,
       private formBuilder: FormBuilder) { 
         this.selectVideoForm = this.formBuilder.group({
           canaisFormControl:[""],

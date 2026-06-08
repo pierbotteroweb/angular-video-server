@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
 import { CommonService } from 'src/services/common.service';
-import { FirebaseService } from '../services/firebase.service';
 import { Subject } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { MongodbService } from '../services/mongodb.service';
@@ -14,7 +13,6 @@ export class PlaylistComponent {
   constructor(
     @Inject(DOCUMENT) private document: any,
     private commonServices: CommonService,
-    private firebaseService: FirebaseService,
     private mongodbService: MongodbService) { }
 
 
@@ -41,7 +39,7 @@ export class PlaylistComponent {
   textLogoVisible:boolean=false
   textoAbaixoDoLogo:string=""
   unsubscribe:any
-  arrayNumerosCanais:Array<any>
+  arrayNumerosCanais:Array<string> = ["2","4","5","7","9","11","13","32","42"]
   viewport: number
 
   @ViewChild ('player') player: ElementRef;
@@ -49,20 +47,17 @@ export class PlaylistComponent {
   ngOnInit(){
     this.windowInnerWidth = window.innerWidth
     this.viewport = window.innerWidth / window.innerHeight
-    this.getCanaisFromMongoDB()
     this.spySelectedCanal = new Subject()
     this.spySelectedCanal.subscribe((canal)=>{
         this.getLista(canal)
     })
+    this.getSelectedChannelFromMongoDB()
     this.keyboardSetup()
 }
 
   changeChannel(channel){
     this.selectedCanal=channel
-    this.firebaseService.updateSeletorDeCanal({canal:channel})
-    this.mongodbService.updateSeletorDeCanal({canal:channel}).subscribe(() => {
-      console.log('Selected Canal updated successfully!');
-    })
+    this.mongodbService.updateSeletorDeCanal({canal:channel}).subscribe()
   }
 
   hideNumCanal(){
@@ -73,8 +68,6 @@ export class PlaylistComponent {
     this.mongodbService.getSeletorDeCanal()
     .subscribe(data=>{
       let canal = data[0].canal.toString()
-      console.log("getSelectedChannelFromMongoDB data",canal)
-      console.log("getSelectedChannelFromMongoDB data",typeof(canal))
       this.selectedCanal = canal
       switch (canal){
         case "2":  
@@ -107,56 +100,6 @@ export class PlaylistComponent {
       }
     })
   
-  }
-
-  getSelectedChanelFromFirebase(){
-    this.firebaseService.getSeletorDeCanal()
-    .snapshotChanges()
-    .subscribe(change=>{ 
-        let canal =  change[0].payload._delegate.doc._document.data.value.mapValue.fields.canal.integerValue   
-        canal = canal.toString()
-        this.selectedCanal = canal
-        switch (canal){
-          case "1":  
-            this.selectCanal(canal.toString(),"Gazeta")
-            break
-          case "2":  
-            this.selectCanal(canal.toString(),"Cultura")
-              break
-          case "3":
-            this.selectCanal(canal.toString(),"Bandeirantes")
-              break
-          case "4":
-            this.selectCanal(canal.toString(),"Sbt")
-              break
-          case "5":
-            this.selectCanal(canal.toString(),"Globo")
-              break
-          case "6":
-            this.selectCanal(canal.toString(),"Mtv")
-            break
-          case "7":
-            this.selectCanal(canal.toString(),"Record")
-              break
-          case "9":
-            this.selectCanal(canal.toString(),"Manchete")
-              break
-          case "11":
-            this.selectCanal(canal.toString(),"Gazeta")
-              break
-          case "13":
-            this.selectCanal(canal.toString(),"Bandeirantes")
-              break
-          case "32":
-            this.selectCanal(canal.toString(),"Mtv")
-              break
-          case "42":
-            this.selectCanal(canal.toString(),"TVA")
-              break
-        }
-    },err=>{
-      console.log("ERR",err)
-    })
   }
   
   keyboardSetup(){
@@ -238,17 +181,43 @@ export class PlaylistComponent {
 
   }
 
-  getCanaisFromMongoDB(){
+  getGradeFromMongoDB(emissora,diasDaSemana){
+    this.mongodbService.getGrade(emissora,diasDaSemana).subscribe((data:any)=>{
+      let horarioDeExibicaoAtualizado = ""
+      let duracaoEmSegundosDoProgramaAnterior = 0
 
-    this.unsubscribe=
-    this.mongodbService.getCanais().subscribe((data:any ) => {
-        this.fullCanaisCollection=data
-        this.arrayNumerosCanais=this.fullCanaisCollection.map(canal=>canal.canal).sort(sts.sortNumbers())
-        this.getSelectedChanelFromFirebase()
-        this.getSelectedChannelFromMongoDB()
-    },err=>{
-        console.log("Error ========",err)
-    });
+      let dataComHotarioDeExibicao = data.map(corte=>{
+
+        if(horarioDeExibicaoAtualizado == ""){
+          horarioDeExibicaoAtualizado = "06:30:00"
+        } else {
+          horarioDeExibicaoAtualizado = sts.toTime(sts.toSeconds(horarioDeExibicaoAtualizado) + duracaoEmSegundosDoProgramaAnterior)        
+        }
+
+        if (sts.toSeconds(horarioDeExibicaoAtualizado) > sts.toSeconds("23:59:59")){
+          horarioDeExibicaoAtualizado = sts.toTime(sts.toSeconds(horarioDeExibicaoAtualizado) - sts.toSeconds("24:00:00"))
+        }
+
+        duracaoEmSegundosDoProgramaAnterior = corte.duracaoTotalDaAtracaoEmSegundos
+
+        let { tipo:tipoDoCorte } = corte
+
+        if (tipoDoCorte == "noite" || tipoDoCorte == "madrugada" ){
+          tipoDoCorte = tipoDoCorte + "Filmes"
+        }
+
+        return {...corte,
+                horarioDeExibicao:horarioDeExibicaoAtualizado,
+                tipo:tipoDoCorte,
+                horarioDeExibicaoEmSegundos:sts.toSeconds(horarioDeExibicaoAtualizado)}
+      })
+
+      let dataFinal = dataComHotarioDeExibicao.sort(sts.sortPor("horarioDeExibicaoEmSegundos"))
+
+      this.playList = dataFinal
+
+      this.pegaVideoParaRodarPorHorarioDeExibicao()
+    })
   }
   
   getLista(selectedCanal){   
@@ -268,15 +237,7 @@ export class PlaylistComponent {
           let semanaIndex = dataDeHoje.getDay()>0?dataDeHoje.getDay()-1:6
           diaDaSemanaAtual=this.diasDaSemana[semanaIndex] 
         }
-        this.playList = this.fullCanaisCollection.filter(canal=>canal.emissora==selectedCanal)[0][diaDaSemanaAtual]
-        this.playList.map(playListNode=>{
-          playListNode.horarioDeExibicaoEmSegundos=
-          sts.toSeconds(playListNode.horarioDeExibicao)
-          if(playListNode.tipo=="madrugada") playListNode.tipo="madrugadaFilmes"
-          if(playListNode.tipo=="noite") playListNode.tipo="noiteFilmes"
-        })
-        this.playList.sort(sts.sortPor("horarioDeExibicaoEmSegundos"))
-        this.pegaVideoParaRodarPorHorarioDeExibicao()
+        this.getGradeFromMongoDB(selectedCanal,diaDaSemanaAtual)
   }
 
   clickPauseMovie(){
@@ -351,8 +312,7 @@ export class PlaylistComponent {
     let searchList = this.playList
     
     this.mediaEmExecucao = searchList.filter(videoPararodar=>{
-      return sts.toSeconds(videoPararodar['horarioDeExibicao'])
-      <sts.toSeconds(now)}).reverse()[0]
+      return sts.toSeconds(videoPararodar['horarioDeExibicao']) < sts.toSeconds(now)}).reverse()[0]
     
     if(!this.mediaEmExecucao){
       this.mediaEmExecucao = searchList.filter(videoPararodar=>
@@ -407,7 +367,6 @@ export class PlaylistComponent {
     if(this.windowInnerWidth>500){
       this.domDocumentElement = document.documentElement;
       this.domVideoElement = document.getElementsByTagName('video')[0]
-      this.updateVolume(this.mediaEmExecucao)
       this.domVideoElement.addEventListener('mousemove',event=>{
         this.mouseIsMoving=true
         setTimeout(()=>{
@@ -419,17 +378,9 @@ export class PlaylistComponent {
   }
 
   proximo(){
-    console.log("func this.próximo")
     setTimeout(()=>{
       this.pegaVideoParaRodarPorHorarioDeExibicao()
     },100)
-  }
-
-  updateVolume(infoDeVolDoFilmeAtual){
-    if(this.windowInnerWidth>500 && infoDeVolDoFilmeAtual.volume){
-      this.domVideoElement.volume=infoDeVolDoFilmeAtual.volume     
-
-    }
   }
 
   zapchannel(direction){
