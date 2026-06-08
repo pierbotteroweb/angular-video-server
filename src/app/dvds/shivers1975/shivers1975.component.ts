@@ -11,7 +11,7 @@ export class Shivers1975Component implements OnInit {
   constructor(
     private commonServices: CommonService
     ) { }
-  baseUrl:any="http://thisisshuffletv:1991/assets/dvds/"
+  baseUrl:any="http://thisisshuffletv:5091/assets/dvds/"
   elem: any;
   data:any={};
 
