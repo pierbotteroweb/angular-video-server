@@ -29,6 +29,10 @@ export class MongodbService {
     return this.http.get('http://thisisshuffletv:9091/api/getListaDeProgramasDeTv')
   }
 
+  getListaDeProgramasPorCanalDeTv(canal){
+    return this.http.post('http://thisisshuffletv:9091/api/getListaDeProgramasPorCanalDeTv',{"canal":canal})
+  }
+
   getProgramaDeTvById(id){
     return this.http.post('http://thisisshuffletv:9091/api/findProgramaById', {'id': id})
   }

@@ -1,0 +1,20 @@
+.bloco{
+    display: inline-block;
+    background:lightseagreen;
+    color: #fff;
+    border: solid 1px;
+    cursor: pointer;
+    &--selected{
+        background:blue
+    }
+}
+
+.titulo{
+    padding: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.horario{
+    padding: 0;
+}

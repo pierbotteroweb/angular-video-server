@@ -60,8 +60,9 @@ import { ArquivosComponent } from './arquivos/arquivos.component';
 import { OndemandComponent } from './ondemand/ondemand.component';
 import { Martin1977Component } from './dvds/martin1977/martin1977.component';
 import { SidebarsComponent } from './playlist/components/sidebars/sidebars.component';
-import { FileUploadComponent } from './arquivos/components/file-upload/file-upload.component';
-import { FilesManagementComponent } from './arquivos/components/files-management/files-management.component';
+import { ObservablesComponent } from './grade/components/observables/observables.component';
+import { BlocoComponent } from './grade/components/bloco/bloco.component';
+import { ProgramaMontadoComponent } from './grade/components/programa-montado/programa-montado.component';
 
 @NgModule({
   declarations: [
@@ -99,8 +100,9 @@ import { FilesManagementComponent } from './arquivos/components/files-management
     OndemandComponent,
     Martin1977Component,
     SidebarsComponent,
-    FileUploadComponent,
-    FilesManagementComponent
+    ObservablesComponent,
+    BlocoComponent,
+    ProgramaMontadoComponent
   ],
   imports: [
     CommonModule,

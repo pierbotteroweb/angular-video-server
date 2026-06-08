@@ -9,16 +9,33 @@ export interface Canal {
     sexta: Bloco[],
     sabado: Bloco[],
     domingo: Bloco[],
-    segundaProgramaMontado: Bloco[],
-    tercaProgramaMontado: Bloco[],
-    quartaProgramaMontado: Bloco[],
-    quintaProgramaMontado: Bloco[],
-    sextaProgramaMontado: Bloco[],
-    sabadoProgramaMontado: Bloco[],
-    domingoProgramaMontado: Bloco[],
+    segundaProgramaMontado: ProgramaMontado[],
+    tercaProgramaMontado: ProgramaMontado[],
+    quartaProgramaMontado: ProgramaMontado[],
+    quintaProgramaMontado: ProgramaMontado[],
+    sextaProgramaMontado: ProgramaMontado[],
+    sabadoProgramaMontado: ProgramaMontado[],
+    domingoProgramaMontado: ProgramaMontado[],
 }
 
-export interface Bloco {
+export interface Arquivo {
+    added: boolean,
+    canal: Emissora,
+    corteFinal: number,
+    corteInicio: number,
+    cortesParaIntervalo: number[],
+    duracao: number,
+    emUso: boolean,
+    volume?: number,
+    order: number,
+    programaDeTv: string,
+    tipo: TipoDePrograma,
+    titulo: string,
+    tituloAtracao: string,
+    _id: string,
+}
+
+export interface BlocoBase {
     atracao: string,
     tituloAtracao: string,
     titulo: string,
@@ -28,6 +45,29 @@ export interface Bloco {
     id: string,
     idProgMontado: string,
     tipo: TipoDePrograma,
+}
+
+export interface BlocoUI {
+    inicio?:number,
+    final?:number,
+    indice?:number,
+    added?:false,
+    dia?:DiaDaSemana
+}
+
+export type Bloco = BlocoBase & Partial<BlocoUI>;
+
+export interface ProgramaMontado {
+    atracao: string,
+    idProgMontado: string,
+    horarioDeExibicao: string,
+    arquivo: string,
+    blocos: Bloco[],
+    tituloAtracao: string,
+    tempoTotalEmSegundos: number,
+    indice?:number,
+    dia?:DiaDaSemana,
+    tempoTotal: string,
 }
 
 export interface ProgramasPorBloco {
@@ -59,6 +99,12 @@ export interface Anexos {
     bloco4?: string[],
     bloco5?: string[],
     bloco6?: string[]
+}
+
+export interface InfoIntPrePos {
+    intAmount:number,
+    intervaloApi?:string,
+    prePosApi?:string
 }
 
 export interface ListaParaDesuso {
