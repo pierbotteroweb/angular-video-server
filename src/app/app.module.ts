@@ -63,6 +63,7 @@ import { SidebarsComponent } from './playlist/components/sidebars/sidebars.compo
 import { ObservablesComponent } from './grade/components/observables/observables.component';
 import { BlocoComponent } from './grade/components/bloco/bloco.component';
 import { ProgramaMontadoComponent } from './grade/components/programa-montado/programa-montado.component';
+import { FileUploadComponent } from './arquivos/components/file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { ProgramaMontadoComponent } from './grade/components/programa-montado/pr
     Nakedlunch1991Component,
     NavbarComponent,
     GradeComponent,
+    FileUploadComponent,
     ProgramasComponent,
     Zelig1983Component,
     BasicdvdComponent,
