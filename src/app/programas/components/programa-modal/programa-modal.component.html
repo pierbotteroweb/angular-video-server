@@ -1,0 +1,19 @@
+<p-dialog
+  header="Detalhes do programa"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '420px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="fechar()">
+
+  <div class="programa-modal__content">
+    <p>Texto qualquer dentro do modal de programas.</p>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button type="button" class="btn btn-secondary" (click)="fechar()">
+      Fechar
+    </button>
+  </ng-template>
+</p-dialog>

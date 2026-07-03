@@ -47,6 +47,7 @@ export class ProgramasComponent implements OnInit {
   programaDeTvFiltered: ProgramaModel[]
   programaDeTvTable: ProgramaModel[]
   programaDeTvPrePosFiltered: ProgramaModel[]
+  exibirProgramaModal = false
   cols:Array<any>=[
     { header:'titulo', width:{"min-width":"400px"} },
     { header:'canal', width:{"min-width":"100px"} },
@@ -176,6 +177,10 @@ export class ProgramasComponent implements OnInit {
       } else {
         this.updateTableWithClickedProgramaDeTv(event.data)
       }
+  }
+
+  abrirModalPrograma(programa: ProgramaModel): void {
+    this.exibirProgramaModal = true
   }
 
   onRowUnselect(event) {

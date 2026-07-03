@@ -95,7 +95,7 @@
                </tr>
             </ng-template>
             <ng-template pTemplate="body" let-prog let-rowIndex="rowIndex" let-columns="columns">
-               <tr [pSelectableRow]="prog" [pSelectableRowIndex]="rowIndex">
+               <tr [pSelectableRow]="prog" [pSelectableRowIndex]="rowIndex" (click)="abrirModalPrograma(prog)">
                   <td style="min-width: 400px;">{{prog.titulo}}</td>
                   <td style="min-width: 50px;">{{prog.canal}}</td>
                   <td style="min-width: 50px;">{{prog.tipo?prog.tipo:""}}</td>
@@ -105,6 +105,8 @@
                </tr>
             </ng-template>
          </p-table>
+
+         <app-programa-modal [(visible)]="exibirProgramaModal"></app-programa-modal>
 
       </div>
    </div>

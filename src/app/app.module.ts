@@ -12,6 +12,7 @@ import { environment } from '../environments/environment';
 
 // MODULSO FIREBASE E PRIMENG
 import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
@@ -64,6 +65,7 @@ import { ObservablesComponent } from './grade/components/observables/observables
 import { BlocoComponent } from './grade/components/bloco/bloco.component';
 import { ProgramaMontadoComponent } from './grade/components/programa-montado/programa-montado.component';
 import { FileUploadComponent } from './arquivos/components/file-upload/file-upload.component';
+import { ProgramaModalComponent } from './programas/components/programa-modal/programa-modal.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +106,8 @@ import { FileUploadComponent } from './arquivos/components/file-upload/file-uplo
     SidebarsComponent,
     ObservablesComponent,
     BlocoComponent,
-    ProgramaMontadoComponent
+    ProgramaMontadoComponent,
+    ProgramaModalComponent
   ],
   imports: [
     CommonModule,
@@ -115,6 +118,7 @@ import { FileUploadComponent } from './arquivos/components/file-upload/file-uplo
     BrowserAnimationsModule,
 
     TableModule,
+    DialogModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule, // for firestore
     // SharedComponentsModule,
