@@ -157,6 +157,62 @@ export class ProgramasComponent implements OnInit {
     this.exibirProgramaModal = true
   }
 
+  salvarProgramaModal(event:any): void {
+    if(!event || !event.programa){
+      return
+    }
+
+    const programa = event.programa
+    const anexos = this.normalizarAnexosDoModal(event.anexos || {})
+    const programaAtualizado:any = {
+      _id: programa._id,
+      anexos: anexos
+    }
+
+    this.mongodbService.updateProgramaDeTv(programaAtualizado).subscribe((res:any)=>{
+      this.atualizarProgramaNasListas(res)
+      this.clickedProgramaDeTv = res
+      this.programaSelecionadoModal = res
+    })
+  }
+
+  normalizarAnexosDoModal(anexos:any): any {
+    const anexosNormalizados:any = {
+      ...anexos,
+      intervalo: anexos.intervalo || "",
+      prePos: anexos.prePos || "",
+      blocosAmount: 0
+    }
+
+    for(let i=1;i<=6;i++){
+      const blocoKey = "bloco"+i
+      const programasDoBloco = Array.isArray(anexos[blocoKey]) ? anexos[blocoKey] : []
+      anexosNormalizados[blocoKey] = programasDoBloco.filter(programa=>!!programa)
+
+      if(anexosNormalizados[blocoKey].length>0){
+        anexosNormalizados.blocosAmount = i
+      }
+    }
+
+    return anexosNormalizados
+  }
+
+  atualizarProgramaNasListas(programaAtualizado: ProgramaModel): void {
+    this.programaDeTv = this.substituirProgramaNaLista(this.programaDeTv, programaAtualizado)
+    this.programaDeTvFiltered = this.substituirProgramaNaLista(this.programaDeTvFiltered, programaAtualizado)
+    this.programaDeTvTable = this.getProgramasDaTabelaPrincipal(this.substituirProgramaNaLista(this.programaDeTvTable, programaAtualizado))
+  }
+
+  substituirProgramaNaLista(lista: ProgramaModel[], programaAtualizado: ProgramaModel): ProgramaModel[] {
+    if(!lista){
+      return lista
+    }
+
+    return lista.map(programa=>{
+      return programa._id==programaAtualizado._id ? programaAtualizado : programa
+    })
+  }
+
   deleteSelected() {
     if(this.clickedProgramaDeTvAnexo){
       if(this.clickedProgramaDeTvAnexo.tipo=="intervalos"){

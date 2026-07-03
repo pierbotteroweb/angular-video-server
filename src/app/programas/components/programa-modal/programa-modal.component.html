@@ -23,7 +23,11 @@
         <div class="programa-modal__split-item">
           <dt>Int</dt>
           <dd>
-            <select class="form-control" [attr.aria-label]="'Intervalo'">
+            <select
+              class="form-control"
+              [value]="getValorAnexo('intervalo')"
+              (change)="onAnexoChange('intervalo', $event)"
+              [attr.aria-label]="'Intervalo'">
               <option value="">Selecione um intervalo</option>
               <option
                 *ngFor="let programaOpcao of getProgramasParaDropdownDeAnexo('intervalo')"
@@ -38,7 +42,11 @@
         <div class="programa-modal__split-item">
           <dt>Pre/Pos</dt>
           <dd>
-            <select class="form-control" [attr.aria-label]="'Pre/Pos'">
+            <select
+              class="form-control"
+              [value]="getValorAnexo('prePos')"
+              (change)="onAnexoChange('prePos', $event)"
+              [attr.aria-label]="'Pre/Pos'">
               <option value="">Selecione um pre/pos</option>
               <option
                 *ngFor="let programaOpcao of getProgramasParaDropdownDeAnexo('prePos')"
@@ -58,6 +66,7 @@
             class="form-control"
             *ngFor="let dropdown of dropdownsPorBloco"
             [value]="getValorProgramaDoBloco(bloco, dropdown)"
+            (change)="onBlocoChange(bloco, dropdown, $event)"
             [attr.aria-label]="'Bloco ' + bloco + ' - Programa ' + dropdown">
             <option value="">Selecione um programa</option>
             <option
@@ -84,6 +93,13 @@
   </ng-template>
 
   <ng-template pTemplate="footer">
+    <button
+      type="button"
+      class="btn btn-primary programa-modal__save-button"
+      [disabled]="!temAlteracoes"
+      (click)="salvar()">
+      Salvar
+    </button>
     <button type="button" class="btn btn-secondary" (click)="fechar()">
       Fechar
     </button>

@@ -108,7 +108,8 @@
          <app-programa-modal
             [(visible)]="exibirProgramaModal"
             [programa]="programaSelecionadoModal"
-            [programas]="programaDeTv">
+            [programas]="programaDeTv"
+            (salvarPrograma)="salvarProgramaModal($event)">
          </app-programa-modal>
 
       </div>
