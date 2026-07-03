@@ -1,9 +1,70 @@
 .programa-modal__content {
   min-height: 80px;
-  display: flex;
-  align-items: center;
 }
 
-.programa-modal__content p {
+.programa-modal__details {
+  margin: 0;
+}
+
+.programa-modal__detail-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.programa-modal__detail-row:last-child {
+  border-bottom: 0;
+}
+
+.programa-modal__detail-row--stacked {
+  display: block;
+}
+
+.programa-modal__detail-row--split {
+  grid-template-columns: 1fr 1fr;
+}
+
+.programa-modal__split-item {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 0.75rem;
+}
+
+.programa-modal__split-item select {
+  min-width: 0;
+}
+
+.programa-modal__detail-row dt {
+  font-weight: 700;
+}
+
+.programa-modal__detail-row dd {
+  margin: 0;
+  word-break: break-word;
+}
+
+.programa-modal__bloco-selects {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.programa-modal__bloco-selects select {
+  min-width: 0;
+}
+
+.programa-modal__detail-row pre {
+  margin: 0.5rem 0 0;
+  padding: 0.75rem;
+  max-height: 180px;
+  overflow: auto;
+  background: #f8f9fa;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.programa-modal__empty {
   margin: 0;
 }

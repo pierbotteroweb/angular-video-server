@@ -1,15 +1,87 @@
 <p-dialog
-  header="Detalhes do programa"
+  [header]="programa?.titulo || 'Detalhes do programa'"
   [(visible)]="visible"
   [modal]="true"
-  [style]="{ width: '420px' }"
+  [style]="{ width: '900px', maxWidth: '95vw' }"
   [draggable]="false"
   [resizable]="false"
   (onHide)="fechar()">
 
-  <div class="programa-modal__content">
-    <p>Texto qualquer dentro do modal de programas.</p>
+  <div class="programa-modal__content" *ngIf="programa; else nenhumProgramaSelecionado">
+    <dl class="programa-modal__details">
+      <div class="programa-modal__detail-row">
+        <dt>Título</dt>
+        <dd>{{ programa.titulo }}</dd>
+      </div>
+
+      <div class="programa-modal__detail-row">
+        <dt>Canal</dt>
+        <dd>{{ programa.canal || '-' }}</dd>
+      </div>
+
+      <div class="programa-modal__detail-row programa-modal__detail-row--split">
+        <div class="programa-modal__split-item">
+          <dt>Int</dt>
+          <dd>
+            <select class="form-control" [attr.aria-label]="'Intervalo'">
+              <option value="">Selecione um intervalo</option>
+              <option
+                *ngFor="let programaOpcao of getProgramasParaDropdownDeAnexo('intervalo')"
+                [value]="programaOpcao.value"
+                [selected]="isProgramaSelecionadoNoAnexo('intervalo', programaOpcao)">
+                {{ programaOpcao.titulo }}
+              </option>
+            </select>
+          </dd>
+        </div>
+
+        <div class="programa-modal__split-item">
+          <dt>Pre/Pos</dt>
+          <dd>
+            <select class="form-control" [attr.aria-label]="'Pre/Pos'">
+              <option value="">Selecione um pre/pos</option>
+              <option
+                *ngFor="let programaOpcao of getProgramasParaDropdownDeAnexo('prePos')"
+                [value]="programaOpcao.value"
+                [selected]="isProgramaSelecionadoNoAnexo('prePos', programaOpcao)">
+                {{ programaOpcao.titulo }}
+              </option>
+            </select>
+          </dd>
+        </div>
+      </div>
+
+      <div class="programa-modal__detail-row" *ngFor="let bloco of blocos">
+        <dt>Bloco {{ bloco }}</dt>
+        <dd class="programa-modal__bloco-selects">
+          <select
+            class="form-control"
+            *ngFor="let dropdown of dropdownsPorBloco"
+            [value]="getValorProgramaDoBloco(bloco, dropdown)"
+            [attr.aria-label]="'Bloco ' + bloco + ' - Programa ' + dropdown">
+            <option value="">Selecione um programa</option>
+            <option
+              *ngFor="let programaOpcao of getProgramasParaDropdownDoBloco(bloco, dropdown)"
+              [value]="programaOpcao.value"
+              [selected]="isProgramaSelecionadoNoBloco(bloco, dropdown, programaOpcao)">
+              {{ programaOpcao.titulo }}
+            </option>
+          </select>
+        </dd>
+      </div>
+
+      <div class="programa-modal__detail-row programa-modal__detail-row--stacked" *ngIf="programa.anexos">
+        <dt>Anexos</dt>
+        <dd>
+          <pre>{{ programa.anexos | json }}</pre>
+        </dd>
+      </div>
+    </dl>
   </div>
+
+  <ng-template #nenhumProgramaSelecionado>
+    <p class="programa-modal__empty">Nenhum programa selecionado.</p>
+  </ng-template>
 
   <ng-template pTemplate="footer">
     <button type="button" class="btn btn-secondary" (click)="fechar()">

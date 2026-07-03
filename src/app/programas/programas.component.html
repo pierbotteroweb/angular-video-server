@@ -2,11 +2,10 @@
 <div class="container-fluid">
    <div class="row">
       <div class="col">
-         <p-table [value]="programaDeTvTable" selectionMode="multiple" [scrollable]="true" #video
+         <p-table [value]="programaDeTvTable" [scrollable]="true" #video
                   [globalFilterFields]="['titulo','programaDeTv']"  
-                  [(selection)]="selectedVideos" styleClass="p-mt-5"
-                  (onRowSelect)="onRowSelect($event)" scrollHeight="70vh"
-                  (onRowUnselect)="onRowUnselect($event)" dataKey="_id"
+                  styleClass="p-mt-5"
+                  scrollHeight="70vh"
                   [columns]="cols">
          
             <ng-template pTemplate="caption"> 
@@ -87,7 +86,7 @@
             </ng-template>
          
             <ng-template pTemplate="header" let-columns>
-               <tr [pSelectableRow]="video">
+               <tr>
                   <th *ngFor="let col of columns" [style]="col.width">
                      {{col.header}}
                   </th>
@@ -95,7 +94,7 @@
                </tr>
             </ng-template>
             <ng-template pTemplate="body" let-prog let-rowIndex="rowIndex" let-columns="columns">
-               <tr [pSelectableRow]="prog" [pSelectableRowIndex]="rowIndex" (click)="abrirModalPrograma(prog)">
+               <tr (click)="abrirModalPrograma(prog)">
                   <td style="min-width: 400px;">{{prog.titulo}}</td>
                   <td style="min-width: 50px;">{{prog.canal}}</td>
                   <td style="min-width: 50px;">{{prog.tipo?prog.tipo:""}}</td>
@@ -106,7 +105,11 @@
             </ng-template>
          </p-table>
 
-         <app-programa-modal [(visible)]="exibirProgramaModal"></app-programa-modal>
+         <app-programa-modal
+            [(visible)]="exibirProgramaModal"
+            [programa]="programaSelecionadoModal"
+            [programas]="programaDeTv">
+         </app-programa-modal>
 
       </div>
    </div>

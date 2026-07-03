@@ -48,6 +48,7 @@ export class ProgramasComponent implements OnInit {
   programaDeTvTable: ProgramaModel[]
   programaDeTvPrePosFiltered: ProgramaModel[]
   exibirProgramaModal = false
+  programaSelecionadoModal: ProgramaModel | null = null
   cols:Array<any>=[
     { header:'titulo', width:{"min-width":"400px"} },
     { header:'canal', width:{"min-width":"100px"} },
@@ -124,14 +125,18 @@ export class ProgramasComponent implements OnInit {
       if(this.selectedCanal){            
        data = [...data.filter(prog=>{ return prog.canal==this.selectedCanal})]
       }
-      this.programaDeTvTable=
-      this.programaDeTvFiltered=
-      this.programaDeTv=data.sort(sts.sortPorTitulo())
+      this.programaDeTv=
+      this.programaDeTvFiltered=data.sort(sts.sortPorTitulo())
+      this.programaDeTvTable=this.getProgramasDaTabelaPrincipal(this.programaDeTv)
       if(this.selectedCanal){            
         this.filterProgramaDeTV(this.selectedCanal)
       }
       unsubscribe.unsubscribe()
     })
+  }
+
+  getProgramasDaTabelaPrincipal(lista: ProgramaModel[]): ProgramaModel[] {
+    return lista.filter(programa => programa.tipo !== "intervalos")
   }
 
   filterProgramaDeTV(canal,tipo?){
@@ -146,47 +151,10 @@ export class ProgramasComponent implements OnInit {
       this.programaDeTvFiltered= unfiltered
   }
 
-  updateTableWithClickedProgramaDeTv(data){
-    if(data.tipo!=="intervalos"){
-      this.clickedProgramaDeTv = data
-      this.programaDeTvTable = []
-      this.programaDeTvTable.push(data)
-      if(data.anexos.intervalo){
-        this.programaDeTvTable.push(this.programaDeTv.find(prog=>prog.value==data.anexos.intervalo))
-
-      }
-      if(data.anexos.prePos){
-        this.programaDeTvTable.push(this.programaDeTv.find(prog=>prog.value==data.anexos.prePos))
-
-      }
-      for(let i=1;i<=data.anexos.blocosAmount;i++){
-        if(data.anexos['bloco'+i]){
-          data.anexos['bloco'+i].map(bloco=>{
-            let toPush = this.programaDeTv.find(prog=>prog.value==bloco)
-            toPush['bloco'] = 'bloco'+i
-            this.programaDeTvTable.push(toPush)
-          })
-        }
-      }
-    }
-  }
-
-  onRowSelect(event) {
-      if(event.data.tipo=="intervalos"||event.data.bloco){
-        this.clickedProgramaDeTvAnexo = event.data
-      } else {
-        this.updateTableWithClickedProgramaDeTv(event.data)
-      }
-  }
-
   abrirModalPrograma(programa: ProgramaModel): void {
+    this.clickedProgramaDeTv = programa
+    this.programaSelecionadoModal = programa
     this.exibirProgramaModal = true
-  }
-
-  onRowUnselect(event) {
-    if(this.clickedProgramaDeTv._id==event.data._id){
-      this.programaDeTvTable=this.programaDeTv
-    }
   }
 
   deleteSelected() {
@@ -213,7 +181,6 @@ export class ProgramasComponent implements OnInit {
             this.programaDeTv[index]=res
           }
         })
-          this.updateTableWithClickedProgramaDeTv(res)
       })
       
     } else {
@@ -222,6 +189,11 @@ export class ProgramasComponent implements OnInit {
   }
   
   addAnexos(tipo){
+    if(!this.clickedProgramaDeTv){
+      console.log("Selecione um programa antes de adicionar anexos")
+      return
+    }
+
     let anexosObj:any ={
       _id:this.clickedProgramaDeTv._id,
       anexos:{}
@@ -253,7 +225,6 @@ export class ProgramasComponent implements OnInit {
           this.programaDeTv[index]=res
         }
       })
-        this.updateTableWithClickedProgramaDeTv(res)
     })
   }
 
