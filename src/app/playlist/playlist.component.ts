@@ -31,6 +31,8 @@ export class PlaylistComponent {
   domVideoElement: HTMLVideoElement
   mouseIsMoving:boolean
   videoIsPaused:boolean=false
+  inicioMediaEmSegundos:number=0
+  seekAplicado:boolean=false
   selectedCanal:any
   spySelectedCanal:Subject<string>
   windowInnerWidth:number
@@ -355,7 +357,9 @@ export class PlaylistComponent {
       },1000)
     }
 
-    this.urlMediaPath= `http://thisisshuffletv:5091/assets/${this.mediaEmExecucao['tipo']}/${encodeURI(this.mediaEmExecucao['titulo'])}#t=${inicio}`
+    this.inicioMediaEmSegundos = Math.max(0, Math.floor(inicio))
+    this.seekAplicado = false
+    this.urlMediaPath= `http://thisisshuffletv:5091/assets/${this.mediaEmExecucao['tipo']}/${encodeURI(this.mediaEmExecucao['titulo'])}`
 
     setTimeout(()=>{
       this.updateAVElements()
@@ -375,6 +379,7 @@ export class PlaylistComponent {
     if(this.windowInnerWidth>500){
       this.domDocumentElement = document.documentElement;
       this.domVideoElement = document.getElementsByTagName('video')[0]
+      this.aplicarTempoInicialCompativelComSmartTv()
       this.domVideoElement.addEventListener('mousemove',event=>{
         this.mouseIsMoving=true
         setTimeout(()=>{
@@ -382,6 +387,43 @@ export class PlaylistComponent {
         },500)
       })
 
+    }
+  }
+
+  aplicarTempoInicialCompativelComSmartTv(){
+    if(!this.domVideoElement || this.seekAplicado){
+      return
+    }
+
+    let tempoInicial = this.inicioMediaEmSegundos || 0
+
+    if(tempoInicial <= 0){
+      this.seekAplicado = true
+      return
+    }
+
+    let aplicarSeek = () => {
+      if(this.seekAplicado || !this.domVideoElement){
+        return
+      }
+
+      try {
+        this.domVideoElement.currentTime = tempoInicial
+        this.seekAplicado = true
+        let playPromise = this.domVideoElement.play()
+        if(playPromise && playPromise.catch){
+          playPromise.catch(()=>{})
+        }
+      } catch (error) {
+        setTimeout(()=>aplicarSeek(),500)
+      }
+    }
+
+    if(this.domVideoElement.readyState >= 1){
+      aplicarSeek()
+    } else {
+      this.domVideoElement.addEventListener('loadedmetadata', aplicarSeek)
+      this.domVideoElement.addEventListener('canplay', aplicarSeek)
     }
   }
 
