@@ -1,5 +1,5 @@
 <p-dialog
-  [header]="programa?.titulo || 'Detalhes do programa'"
+  [header]="tituloDoModal"
   [(visible)]="visible"
   [modal]="true"
   [style]="{ width: '900px', maxWidth: '95vw' }"
@@ -7,16 +7,54 @@
   [resizable]="false"
   (onHide)="fechar()">
 
-  <div class="programa-modal__content" *ngIf="programa; else nenhumProgramaSelecionado">
+  <div class="programa-modal__content" *ngIf="programa || modoCriacao; else nenhumProgramaSelecionado">
     <dl class="programa-modal__details">
       <div class="programa-modal__detail-row">
         <dt>Título</dt>
-        <dd>{{ programa.titulo }}</dd>
+        <dd *ngIf="!modoCriacao; else tituloCriacao">{{ programa.titulo }}</dd>
+        <ng-template #tituloCriacao>
+          <dd>
+            <input
+              class="form-control"
+              type="text"
+              [value]="estadoAtual.titulo"
+              (input)="onTituloChange($event)"
+              placeholder="Título do programa">
+          </dd>
+        </ng-template>
       </div>
 
       <div class="programa-modal__detail-row">
         <dt>Canal</dt>
-        <dd>{{ programa.canal || '-' }}</dd>
+        <dd *ngIf="!modoCriacao; else canalCriacao">{{ programa.canal || '-' }}</dd>
+        <ng-template #canalCriacao>
+          <dd>
+            <select
+              class="form-control"
+              [value]="estadoAtual.canal"
+              (change)="onCanalChange($event)">
+              <option value="">Selecione um canal</option>
+              <option *ngFor="let canal of canais" [value]="canal.emissora">
+                {{ canal.emissora }}
+              </option>
+            </select>
+          </dd>
+        </ng-template>
+      </div>
+
+      <div class="programa-modal__detail-row" *ngIf="modoCriacao">
+        <dt>Tipo</dt>
+        <dd>
+          <select
+            class="form-control"
+            [value]="estadoAtual.tipo"
+            (change)="onTipoChange($event)">
+            <option value="">Selecione um tipo</option>
+            <option *ngFor="let tipo of tiposDeVideo" [value]="tipo.titulo">
+              {{ tipo.titulo }}
+            </option>
+          </select>
+        </dd>
       </div>
 
       <div class="programa-modal__detail-row programa-modal__detail-row--split">
@@ -59,8 +97,27 @@
         </div>
       </div>
 
-      <div class="programa-modal__detail-row" *ngFor="let bloco of blocos">
-        <dt>Bloco {{ bloco }}</dt>
+      <div class="programa-modal__detail-row programa-modal__detail-row--bloco" *ngFor="let bloco of blocosVisiveis">
+        <dt>
+          <button
+            *ngIf="bloco === 1 && podeExibirAdicionarBloco"
+            type="button"
+            class="btn btn-primary programa-modal__bloco-add-button"
+            [disabled]="!podeAdicionarBloco"
+            (click)="adicionarBloco()"
+            aria-label="Adicionar bloco">
+            <span aria-hidden="true">+</span>
+          </button>
+          <button
+            *ngIf="bloco > 1"
+            type="button"
+            class="btn btn-danger programa-modal__bloco-add-button"
+            (click)="removerBloco(bloco)"
+            [attr.aria-label]="'Remover Bloco ' + bloco">
+            <span aria-hidden="true">−</span>
+          </button>
+          <span class="programa-modal__bloco-label">Bloco {{ bloco }}</span>
+        </dt>
         <dd class="programa-modal__bloco-selects">
           <select
             class="form-control"
@@ -79,12 +136,6 @@
         </dd>
       </div>
 
-      <div class="programa-modal__detail-row programa-modal__detail-row--stacked" *ngIf="programa.anexos">
-        <dt>Anexos</dt>
-        <dd>
-          <pre>{{ programa.anexos | json }}</pre>
-        </dd>
-      </div>
     </dl>
   </div>
 
@@ -93,15 +144,33 @@
   </ng-template>
 
   <ng-template pTemplate="footer">
-    <button
-      type="button"
-      class="btn btn-primary programa-modal__save-button"
-      [disabled]="!temAlteracoes"
-      (click)="salvar()">
-      Salvar
-    </button>
-    <button type="button" class="btn btn-secondary" (click)="fechar()">
-      Fechar
-    </button>
+    <div class="programa-modal__footer">
+      <div class="programa-modal__delete-actions" *ngIf="!modoCriacao">
+        <button type="button" class="btn btn-danger" (click)="deletar()">
+          Deletar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger programa-modal__confirm-delete-button"
+          *ngIf="exibirConfirmacaoDelecao"
+          (click)="confirmarDelecao()">
+          Confirmar Deleção
+        </button>
+      </div>
+      <span *ngIf="modoCriacao"></span>
+
+      <div>
+        <button
+          type="button"
+          class="btn btn-primary programa-modal__save-button"
+          [disabled]="!temAlteracoes"
+          (click)="salvar()">
+          {{ modoCriacao ? 'Criar' : 'Salvar' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="fechar()">
+          Fechar
+        </button>
+      </div>
+    </div>
   </ng-template>
 </p-dialog>

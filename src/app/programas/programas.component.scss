@@ -12,3 +12,39 @@
     }
 }
 
+.programas__row {
+    cursor: pointer;
+}
+
+.programas__row--selected {
+    box-shadow: inset 4px 0 0 lightseagreen;
+}
+
+.programas__row--selected td {
+    background: #e0ffff !important;
+    border-top: 1px solid rgba(32, 178, 170, 0.35) !important;
+    border-bottom: 1px solid rgba(32, 178, 170, 0.35) !important;
+    color: #053f3d !important;
+    font-weight: 600;
+}
+
+.programas__toolbar {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.programas__toolbar-control {
+    max-width: 220px;
+}
+
+.programas__toolbar-search {
+    flex: 1;
+    min-width: 240px;
+}
+
+
+
+
+

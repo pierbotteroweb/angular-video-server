@@ -67,6 +67,10 @@ export class MongodbService {
     return this.http.post('http://thisisshuffletv:9091/api/createProgramaDeTv', {'content':content})
   }
 
+  deleteProgramaDeTv(content){
+    return this.http.post('http://thisisshuffletv:9091/api/deleteProgramaDeTv', {'content':content})
+  }
+
   updateVideo(id,content){
     return this.http.post('http://thisisshuffletv:9091/api/update'+content.tipo, {'id':id,'content':content})
   }

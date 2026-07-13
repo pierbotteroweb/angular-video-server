@@ -1,8 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { UploadVideoService } from '../services/upload-video.service';
-import { CommonService } from 'src/services/common.service';
+import { FormBuilder } from '@angular/forms';
 import { MongodbService } from '../services/mongodb.service';
 import { sts } from 'shuffle-tv-services/lib'
 import { ProgramaModel } from './programa';
@@ -16,22 +13,14 @@ import { ProgramaModel } from './programa';
 export class ProgramasComponent implements OnInit {
   
 
-  // Set ep uma interface de dados do Javascript
-  // que usamos aqui para evitar que arquivos duplicado ssejam enviados.
-  // Mas poderiamos ter usado um tipo Array
-  videosToUpload: any;
-  subscription: Subscription
-  progress:number = 0
-  novoPrograma:FormControl
-  buttonMode:string
   tituloAtracao:string
   
   selectedCanal:string
   currentRefList:[]
   selectedProgramaDeTv:string
   selectedmimeType:string
-  clickedProgramaDeTv:ProgramaModel
-  clickedProgramaDeTvAnexo:ProgramaModel
+  clickedProgramaDeTv:ProgramaModel | null = null
+  clickedProgramaDeTvAnexo:ProgramaModel | null = null
   canais: Array<any>
   tiposDeVideo: Array<any> = [
     { value: "listaNoite", titulo: "noite", port: "5091" },
@@ -48,6 +37,7 @@ export class ProgramasComponent implements OnInit {
   programaDeTvTable: ProgramaModel[]
   programaDeTvPrePosFiltered: ProgramaModel[]
   exibirProgramaModal = false
+  modoCriacaoPrograma = false
   programaSelecionadoModal: ProgramaModel | null = null
   cols:Array<any>=[
     { header:'titulo', width:{"min-width":"400px"} },
@@ -61,8 +51,6 @@ export class ProgramasComponent implements OnInit {
   sts = sts;
 
   constructor(
-      private commonServices: CommonService,
-      private uploadVideoService: UploadVideoService,
       private mongodbService: MongodbService,
       // private firebaseService: FirebaseService,
       private formBuilder: FormBuilder) { 
@@ -81,14 +69,12 @@ export class ProgramasComponent implements OnInit {
       this.getListaDeProgramasDeTvFromMongoDB()
       this.getCanaisFromMongoDB()
 
-      this.novoPrograma = new FormControl("")
-
-
       this.selectVideoForm.get('canaisFormControl')
       .valueChanges.subscribe(value=>{
         if(this.canais){
-          this.selectedCanal=this.canais.filter(canal=>canal._id==value)[0].emissora
-          this.filterProgramaDeTV(this.selectedCanal)
+          const canalSelecionado = this.canais.find(canal=>canal._id==value)
+          this.selectedCanal = canalSelecionado ? canalSelecionado.emissora : ""
+          this.filterProgramaDeTV()
         }
       })
 
@@ -100,12 +86,9 @@ export class ProgramasComponent implements OnInit {
 
       this.selectVideoForm.get('mimeTypeFormControl')
       .valueChanges.subscribe(value=>{
-        this.tiposDeVideo.map(tipo=>{
-          if(tipo.value==value){
-            this.selectedmimeType=tipo.titulo
-            this.filterProgramaDeTV(this.selectedCanal,this.selectedmimeType)
-          }
-        })
+        const tipoSelecionado = this.tiposDeVideo.find(tipo=>tipo.value==value)
+        this.selectedmimeType = tipoSelecionado ? tipoSelecionado.titulo : ""
+        this.filterProgramaDeTV()
       })
 
   }
@@ -122,15 +105,9 @@ export class ProgramasComponent implements OnInit {
     let unsubscribe=
     this.mongodbService.getListaDeProgramasDeTv()
     .subscribe((data:any)=>{
-      if(this.selectedCanal){            
-       data = [...data.filter(prog=>{ return prog.canal==this.selectedCanal})]
-      }
       this.programaDeTv=
       this.programaDeTvFiltered=data.sort(sts.sortPorTitulo())
-      this.programaDeTvTable=this.getProgramasDaTabelaPrincipal(this.programaDeTv)
-      if(this.selectedCanal){            
-        this.filterProgramaDeTV(this.selectedCanal)
-      }
+      this.filterProgramaDeTV()
       unsubscribe.unsubscribe()
     })
   }
@@ -139,25 +116,68 @@ export class ProgramasComponent implements OnInit {
     return lista.filter(programa => programa.tipo !== "intervalos")
   }
 
-  filterProgramaDeTV(canal,tipo?){
-      let unfiltered
-      if(tipo){
-        unfiltered = this.programaDeTv.filter(prog=> prog.canal == canal && prog.tipo == tipo )
-      } else {
-        unfiltered = this.programaDeTv.filter(prog=> prog.canal == canal)
+  filterProgramaDeTV(canal = this.selectedCanal, tipo = this.selectedmimeType){
+      if(!this.programaDeTv){
+        return
       }
+
+      let unfiltered = this.programaDeTv
+
+      if(canal){
+        unfiltered = unfiltered.filter(prog=> prog.canal == canal)
+      }
+
+      if(tipo){
+        unfiltered = unfiltered.filter(prog=> prog.tipo == tipo)
+      }
+
       this.programaDeTvPrePosFiltered = unfiltered.filter(prog=>(prog.titulo.includes("Int ") || prog.titulo.includes("Pre Pos ")))
       // this.programaDeTvFiltered= unfiltered.filter(prog=>(!prog.titulo.includes("Int ") && !prog.titulo.includes("Pre Pos ") ))
       this.programaDeTvFiltered= unfiltered
+      this.programaDeTvTable=this.getProgramasDaTabelaPrincipal(unfiltered)
   }
 
   abrirModalPrograma(programa: ProgramaModel): void {
+    this.modoCriacaoPrograma = false
     this.clickedProgramaDeTv = programa
     this.programaSelecionadoModal = programa
     this.exibirProgramaModal = true
   }
 
+  abrirModalCriacaoPrograma(): void {
+    this.clickedProgramaDeTv = null
+    this.clickedProgramaDeTvAnexo = null
+    this.programaSelecionadoModal = null
+    this.modoCriacaoPrograma = true
+    this.exibirProgramaModal = true
+  }
+
+  limparSelecaoPrograma(): void {
+    this.clickedProgramaDeTv = null
+    this.clickedProgramaDeTvAnexo = null
+    this.programaSelecionadoModal = null
+    this.modoCriacaoPrograma = false
+    this.exibirProgramaModal = false
+  }
+
+  deletarProgramaModal(programa: ProgramaModel): void {
+    if(!programa){
+      return
+    }
+
+    this.mongodbService.deleteProgramaDeTv(programa).subscribe((res:any)=>{
+      console.log(res)
+      this.removerProgramaDasListas(programa)
+      this.limparSelecaoPrograma()
+    })
+  }
+
   salvarProgramaModal(event:any): void {
+    if(event && event.acao === 'criar'){
+      this.criarProgramaOnMongoDb(event.programa)
+      return
+    }
+
     if(!event || !event.programa){
       return
     }
@@ -173,6 +193,29 @@ export class ProgramasComponent implements OnInit {
       this.atualizarProgramaNasListas(res)
       this.clickedProgramaDeTv = res
       this.programaSelecionadoModal = res
+    })
+  }
+
+  criarProgramaOnMongoDb(programaCriacao:any): void {
+    if(!programaCriacao || !programaCriacao.canal || !programaCriacao.titulo || !programaCriacao.tipo){
+      console.log("Selecione um canal, um tipo de vídeo e informe o nome do programa de TV")
+      return
+    }
+
+    const titulo = programaCriacao.titulo
+    const newProg:any = {
+      titulo: titulo,
+      tipo: programaCriacao.tipo,
+      value: sts.camelize(titulo.normalize('NFD').replace(/[\u0300-\u036f]/g, "")),
+      canal: programaCriacao.canal,
+      prePos: titulo.includes("Pre") ? true : false
+    }
+
+    this.mongodbService.createProgramaDeTv(newProg).subscribe((prog:any)=>{
+      this.getListaDeProgramasDeTvFromMongoDB()
+      this.modoCriacaoPrograma = false
+      this.exibirProgramaModal = false
+      this.programaSelecionadoModal = null
     })
   }
 
@@ -213,18 +256,39 @@ export class ProgramasComponent implements OnInit {
     })
   }
 
-  deleteSelected() {
-    if(this.clickedProgramaDeTvAnexo){
-      if(this.clickedProgramaDeTvAnexo.tipo=="intervalos"){
-        if(this.clickedProgramaDeTvAnexo.prePos){
+  removerProgramaDasListas(programaRemovido: ProgramaModel): void {
+    this.programaDeTv = this.removerProgramaDaLista(this.programaDeTv, programaRemovido)
+    this.programaDeTvFiltered = this.removerProgramaDaLista(this.programaDeTvFiltered, programaRemovido)
+    this.programaDeTvPrePosFiltered = this.removerProgramaDaLista(this.programaDeTvPrePosFiltered, programaRemovido)
+    this.programaDeTvTable = this.getProgramasDaTabelaPrincipal(this.removerProgramaDaLista(this.programaDeTvTable, programaRemovido))
+  }
+
+  removerProgramaDaLista(lista: ProgramaModel[], programaRemovido: ProgramaModel): ProgramaModel[] {
+    if(!lista){
+      return lista
+    }
+
+    return lista.filter(programa=>programa._id!=programaRemovido._id)
+  }
+
+  deleteSelected(programaParaRemover?: ProgramaModel) {
+    if(!this.clickedProgramaDeTv){
+      return
+    }
+
+    const programaSelecionadoParaRemover = programaParaRemover || this.clickedProgramaDeTvAnexo
+
+    if(programaSelecionadoParaRemover){
+      if(programaSelecionadoParaRemover.tipo=="intervalos"){
+        if(programaSelecionadoParaRemover.prePos){
           this.clickedProgramaDeTv.anexos["prePos"] = ""
         } else {
           this.clickedProgramaDeTv.anexos["intervalo"] = ""
         }
       } else {
-          this.clickedProgramaDeTv.anexos[this.clickedProgramaDeTvAnexo.bloco] =
-          this.clickedProgramaDeTv.anexos[this.clickedProgramaDeTvAnexo.bloco]
-          .filter(bloco=>bloco!=this.clickedProgramaDeTvAnexo.value)
+          this.clickedProgramaDeTv.anexos[programaSelecionadoParaRemover.bloco] =
+          this.clickedProgramaDeTv.anexos[programaSelecionadoParaRemover.bloco]
+          .filter(bloco=>bloco!=programaSelecionadoParaRemover.value)
       }
       let anexosObj:any ={
         _id:this.clickedProgramaDeTv._id,

@@ -40,6 +40,26 @@
   font-weight: 700;
 }
 
+.programa-modal__detail-row--bloco dt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: right;
+}
+
+.programa-modal__bloco-add-button {
+  align-items: center;
+  display: inline-flex;
+  height: 24px;
+  justify-content: center;
+  padding: 0;
+  width: 24px;
+}
+
+.programa-modal__bloco-label {
+  margin-left: auto;
+}
+
 .programa-modal__detail-row dd {
   margin: 0;
   word-break: break-word;
@@ -55,18 +75,24 @@
   min-width: 0;
 }
 
-.programa-modal__detail-row pre {
-  margin: 0.5rem 0 0;
-  padding: 0.75rem;
-  max-height: 180px;
-  overflow: auto;
-  background: #f8f9fa;
-  border-radius: 4px;
-  font-size: 0.85rem;
-}
-
 .programa-modal__empty {
   margin: 0;
+}
+
+.programa-modal__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.programa-modal__delete-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.programa-modal__confirm-delete-button {
+  white-space: nowrap;
 }
 
 .programa-modal__save-button {
