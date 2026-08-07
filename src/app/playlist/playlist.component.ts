@@ -33,6 +33,7 @@ export class PlaylistComponent {
   videoIsPaused:boolean=false
   inicioMediaEmSegundos:number=0
   seekAplicado:boolean=false
+  autoplayMuted:boolean=false
   selectedCanal:any
   spySelectedCanal:Subject<string>
   windowInnerWidth:number
@@ -252,7 +253,13 @@ export class PlaylistComponent {
 
   clickPauseMovie(){
     this.videoIsPaused=!this.videoIsPaused
-    this.videoIsPaused?this.domVideoElement.pause():this.domVideoElement.play()
+    if(this.videoIsPaused){
+      this.domVideoElement.pause()
+    } else {
+      this.autoplayMuted=false
+      this.domVideoElement.muted=false
+      this.tentarIniciarVideo()
+    }
   }
 
 
@@ -359,6 +366,8 @@ export class PlaylistComponent {
 
     this.inicioMediaEmSegundos = Math.max(0, Math.floor(inicio))
     this.seekAplicado = false
+    this.videoIsPaused = false
+    this.autoplayMuted = false
     this.urlMediaPath= `http://thisisshuffletv:5091/assets/${this.mediaEmExecucao['tipo']}/${encodeURI(this.mediaEmExecucao['titulo'])}`
 
     setTimeout(()=>{
@@ -380,6 +389,7 @@ export class PlaylistComponent {
       this.domDocumentElement = document.documentElement;
       this.domVideoElement = document.getElementsByTagName('video')[0]
       this.aplicarTempoInicialCompativelComSmartTv()
+      this.tentarIniciarVideo()
       this.domVideoElement.addEventListener('mousemove',event=>{
         this.mouseIsMoving=true
         setTimeout(()=>{
@@ -399,6 +409,7 @@ export class PlaylistComponent {
 
     if(tempoInicial <= 0){
       this.seekAplicado = true
+      this.tentarIniciarVideo()
       return
     }
 
@@ -410,10 +421,7 @@ export class PlaylistComponent {
       try {
         this.domVideoElement.currentTime = tempoInicial
         this.seekAplicado = true
-        let playPromise = this.domVideoElement.play()
-        if(playPromise && playPromise.catch){
-          playPromise.catch(()=>{})
-        }
+        this.tentarIniciarVideo()
       } catch (error) {
         setTimeout(()=>aplicarSeek(),500)
       }
@@ -424,6 +432,26 @@ export class PlaylistComponent {
     } else {
       this.domVideoElement.addEventListener('loadedmetadata', aplicarSeek)
       this.domVideoElement.addEventListener('canplay', aplicarSeek)
+    }
+  }
+
+  tentarIniciarVideo(){
+    if(!this.domVideoElement || this.videoIsPaused){
+      return
+    }
+
+    let playPromise = this.domVideoElement.play()
+
+    if(playPromise && playPromise.catch){
+      playPromise.catch(()=>{
+        this.autoplayMuted=true
+        this.domVideoElement.muted=true
+
+        let mutedPlayPromise = this.domVideoElement.play()
+        if(mutedPlayPromise && mutedPlayPromise.catch){
+          mutedPlayPromise.catch(()=>{})
+        }
+      })
     }
   }
 
