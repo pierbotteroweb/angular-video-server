@@ -11,7 +11,7 @@ export class Crash1996Component implements OnInit {
   constructor(
     private commonServices: CommonService,
     ) { }
-  baseUrl:any="http://thisisshuffletv:5091/assets/dvds/"
+  baseUrl:any="http://thisisshuffletv/files/assets/dvds/"
   elem: any;
   data:any={};
 

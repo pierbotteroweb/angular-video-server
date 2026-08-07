@@ -43,8 +43,8 @@ export class OndemandComponent implements OnInit {
                 })
                }
 
-  baseUrl:string="http://thisisshuffletv:5091/assets/"
-  baseRequestUrl:string="http://thisisshuffletv:5091/"
+  baseUrl:string="http://thisisshuffletv/files/assets/"
+  baseRequestUrl:string="http://thisisshuffletv/files/"
 
   title = 'angular-video-server';
   sts = sts;
@@ -640,7 +640,7 @@ export class OndemandComponent implements OnInit {
       }
     })
     // let lista = this["video"+[this.horario]]
-    // let url = "http://thisisshuffletv:5091/"+request+"UpdateList"
+    // let url = "http://thisisshuffletv/files/"+request+"UpdateList"
 
     // this.firebaseService.update(this.horario,id, media).then(() => {
     //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)
@@ -665,7 +665,7 @@ export class OndemandComponent implements OnInit {
       }
     })
     let lista = this["video"+[this.horario]]
-    let url = "http://thisisshuffletv:5091/"+request+"UpdateList"
+    let url = "http://thisisshuffletv/files/"+request+"UpdateList"
 
     // this.firebaseService.update(this.horario,id, media).then(() => {
     //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)
