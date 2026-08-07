@@ -16,7 +16,7 @@ export class Themanwhowasntthere2001Component implements OnInit {
     private http: HttpClient,
     @Inject(DOCUMENT) private document: any
   ) { }
-  baseUrl: any = "http://thisisshuffletv:5091/assets/dvds/"
+  baseUrl: any = "http://thisisshuffletv/files/assets/dvds/"
   elem: any;
   data: any = {};
 

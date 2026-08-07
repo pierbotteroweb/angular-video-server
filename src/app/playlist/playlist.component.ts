@@ -368,7 +368,7 @@ export class PlaylistComponent {
     this.seekAplicado = false
     this.videoIsPaused = false
     this.autoplayMuted = false
-    this.urlMediaPath= `http://thisisshuffletv:5091/assets/${this.mediaEmExecucao['tipo']}/${encodeURI(this.mediaEmExecucao['titulo'])}`
+    this.urlMediaPath= `http://thisisshuffletv/files/assets/${this.mediaEmExecucao['tipo']}/${encodeURI(this.mediaEmExecucao['titulo'])}`
 
     setTimeout(()=>{
       this.updateAVElements()
