@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   BASE_URL:"http://thisisshuffletv/files/assets/dvds/",
-  API: 'http://localhost:3000/',
+  API: 'http://thisisshuffletv/api-nest/',
   firebase: {
     apiKey: "AIzaSyCwnQT7_QChY_ce7z3uoiFWy6GMqlF--1c",
     authDomain: "shuffletv-dec45.firebaseapp.com",
