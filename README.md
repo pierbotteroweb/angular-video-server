@@ -12,7 +12,7 @@ docker run -p 1991:1991 angular-video-server
 ```
 
 ## Test
-Open `http://localhost:1991/` in your browser.
+Open `http://localhost/` in your browser.
 
 
 ## Etapas para mudar todas as referencias do que se chama hoje de bloco mas na verdade deve ser ProgramaMontado
