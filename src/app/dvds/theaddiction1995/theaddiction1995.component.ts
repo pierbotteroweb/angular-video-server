@@ -11,7 +11,7 @@ export class TheAddiction1995Component {
   constructor(
     private commonServices: CommonService
     ) { }
-  baseUrl:any="http://thisisshuffletv/files/assets/dvds/"
+  baseUrl:any="/files/assets/dvds/"
   elem: any;
   data:any={};
 

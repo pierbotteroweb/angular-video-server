@@ -12,7 +12,7 @@ export class Obandidodaluzvermelha1968Component {
 
   constructor(private http: HttpClient,
     private commonServices: CommonService) { }
-  baseUrl:any="http://thisisshuffletv/files/assets/dvds/"
+  baseUrl:any="/files/assets/dvds/"
   filmesDvds:any
 
   subList:Array<string>
@@ -64,7 +64,7 @@ export class Obandidodaluzvermelha1968Component {
 
   ngOnInit(): void {
 
-    this.http.get("http://thisisshuffletv/files/api/listaDvds")
+    this.http.get("/files/api/listaDvds")
     .subscribe(response=>{
 
       let listaDvds:any= response

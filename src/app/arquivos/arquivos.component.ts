@@ -87,7 +87,7 @@ export class ArquivosComponent implements OnInit {
 
   ngOnInit() {
     this.windowInnerWidth = window.innerWidth
-    this.webSocketService.connect('ws://thisisshuffletv:9091');
+    this.webSocketService.connect('/mongodb');
       // this.productService.getProductsSmall().then(data => this.products = data);
       // this.retrieve()
 
@@ -243,7 +243,7 @@ export class ArquivosComponent implements OnInit {
   // upload(index){
 
   //   if(index<this.videosToUpload.length){
-  //     let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('mimeTypeFormControl').value+"Upload"
+  //     let url = "/files/"+this.selectVideoForm.get('mimeTypeFormControl').value+"Upload"
 
   //     let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
   //     .pipe(
@@ -295,7 +295,7 @@ export class ArquivosComponent implements OnInit {
 
   getNewFileOnDirectory(){
     if(this.selectVideoForm.get('mimeTypeFormControl')){
-      let url = "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('mimeTypeFormControl').value+"GetInfoFromNewFilesOnServer"
+      let url = "/files/"+this.selectVideoForm.get('mimeTypeFormControl').value+"GetInfoFromNewFilesOnServer"
     this.uploadVideoService.getNewFileOnDirectory(url)
     .subscribe((res:any)=>{
       console.log("data",res)
@@ -334,7 +334,7 @@ export class ArquivosComponent implements OnInit {
   }
 
   asembleUploadUrl(){
-    return "http://thisisshuffletv:1991/api/"+this.selectVideoForm.get('mimeTypeFormControl').value+"Upload"
+    return "/files/"+this.selectVideoForm.get('mimeTypeFormControl').value+"Upload"
   }
 
 
@@ -920,7 +920,7 @@ export class ArquivosComponent implements OnInit {
   //       )
   //     ).subscribe((data:any)=>{
   //       this.listaParaAtualizar=data
-  //       let url = "http://thisisshuffletv:1991/api/"+
+  //       let url = "/files/"+
   //       this.selectVideoForm.get('mimeTypeFormControl').value+"UpdateList"
   //       this.uploadVideoService.listUpdate(this.listaParaAtualizar,url)
   //       .subscribe(res=>{

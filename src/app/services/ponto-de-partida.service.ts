@@ -7,8 +7,7 @@ import { take } from "rxjs/operators";
 })
 export class PontoDePartidaService {
 
-  // private readonly API:any= 'http://thisisshuffletv:2099/data'
-  private readonly API:any= 'http://thisisshuffletv:9091/api'
+  private readonly API:any= '/mongodb/api'
 
   constructor(private http: HttpClient) { }
 
