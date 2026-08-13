@@ -9,7 +9,7 @@ export class WebSocketService {
   private messages = new Subject<string>();
 
   connect(url: string): void {
-    this.socket = new WebSocket(url);
+    this.socket = new WebSocket(this.resolveUrl(url));
 
     // Listen for messages from the server
     this.socket.onmessage = (event) => {
@@ -30,5 +30,16 @@ export class WebSocketService {
 
   getMessages() {
     return this.messages.asObservable();
+  }
+
+  private resolveUrl(url: string): string {
+    if (url.startsWith('ws://') || url.startsWith('wss://')) {
+      return url;
+    }
+
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const path = url.startsWith('/') ? url : `/${url}`;
+
+    return `${protocol}//${window.location.host}${path}`;
   }
 }
