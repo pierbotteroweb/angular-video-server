@@ -43,8 +43,8 @@ export class OndemandComponent implements OnInit {
                 })
                }
 
-  baseUrl:string="http://thisisshuffletv/files/assets/"
-  baseRequestUrl:string="http://thisisshuffletv/files/"
+  baseUrl:string="/files/assets/"
+  baseRequestUrl:string="/files/"
 
   title = 'angular-video-server';
   sts = sts;
@@ -186,7 +186,7 @@ export class OndemandComponent implements OnInit {
 
 
   ngOnInit(){
-    this.webSocketService.connect('ws://thisisshuffletv:9091');
+    this.webSocketService.connect('/mongodb');
 
     // Listen for messages from the server
     this.webSocketService.getMessages().subscribe((message) => {
@@ -640,7 +640,7 @@ export class OndemandComponent implements OnInit {
       }
     })
     // let lista = this["video"+[this.horario]]
-    // let url = "http://thisisshuffletv/files/"+request+"UpdateList"
+    // let url = "/files/"+request+"UpdateList"
 
     // this.firebaseService.update(this.horario,id, media).then(() => {
     //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)
@@ -665,7 +665,7 @@ export class OndemandComponent implements OnInit {
       }
     })
     let lista = this["video"+[this.horario]]
-    let url = "http://thisisshuffletv/files/"+request+"UpdateList"
+    let url = "/files/"+request+"UpdateList"
 
     // this.firebaseService.update(this.horario,id, media).then(() => {
     //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)

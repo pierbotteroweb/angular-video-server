@@ -1,18 +1,27 @@
 const PROXY_CONFIG = [
   {
-    context: ['/api'],
+    context: ['/files'],
     target: 'http://file-server:5091',
     secure: false,
     changeOrigin: true,
-    pathRewrite: { '^/api': '' },
+    pathRewrite: { '^/files': '' },
     logLevel: 'debug'
   },
   {
-    context: ['/backend'],
+    context: ['/mongodb'],
     target: 'http://backend-server:9091',
     secure: false,
     changeOrigin: true,
-    pathRewrite: { '^/backend': '' },
+    pathRewrite: { '^/mongodb': '' },
+    ws: true,
+    logLevel: 'debug'
+  },
+  {
+    context: ['/api-nest'],
+    target: 'http://backend-server-nest:3000',
+    secure: false,
+    changeOrigin: true,
+    pathRewrite: { '^/api-nest': '' },
     logLevel: 'debug'
   }
 ];
