@@ -1,11 +1,10 @@
 import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
 import { CommonService } from 'src/services/common.service';
-import { FirebaseService } from '../services/firebase.service';
-import { fromEvent, Observable, Subject } from 'rxjs';
-import { DOCUMENT } from '@angular/common';
+import { fromEvent, Observable, Subject, interval } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 import { sts } from 'shuffle-tv-services/lib'
 import { takeUntil } from 'rxjs/operators';
+import { WebSocketService } from '../services/WebSocketService.service';
 @Component({
   selector: 'app-playlist',
   templateUrl: './playlist.component.html',
@@ -14,7 +13,8 @@ import { takeUntil } from 'rxjs/operators';
 export class PlaylistComponent {
   constructor(
     private commonServices: CommonService,
-    private mongodbService: MongodbService) { }
+    private mongodbService: MongodbService,
+    private webSocketService: WebSocketService) { }
 
   fullCanaisCollection:any
   urlMediaPath:any
@@ -44,6 +44,7 @@ export class PlaylistComponent {
   viewport: number
   keyboardEvents$: Observable<KeyboardEvent>
   destroy$ = new Subject()
+  selectedChannelPollingInterval = 1000
 
   @ViewChild ('player') player: ElementRef;
 
@@ -54,6 +55,8 @@ export class PlaylistComponent {
     this.spySelectedCanal.subscribe((canal)=>{
         this.getLista(canal)
     })
+    this.listenSelectedChannelFromMongoDBChanges()
+    this.startSelectedChannelPolling()
     this.getSelectedChannelFromMongoDB()
     this.keyboardSetup()
   }
@@ -64,8 +67,31 @@ export class PlaylistComponent {
   }
 
   changeChannel(channel){
-    this.selectedCanal=channel
-    this.mongodbService.updateSeletorDeCanal({canal:channel}).subscribe()
+    let canalInfo = this.aplicarCanalSelecionado(channel)
+
+    if(!canalInfo){
+      return
+    }
+
+    this.mongodbService.updateSeletorDeCanal({canal:canalInfo.numero}).subscribe()
+  }
+
+  listenSelectedChannelFromMongoDBChanges(){
+    this.webSocketService.connect('/mongodb');
+
+    this.webSocketService.getMessages().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(()=>{
+      this.getSelectedChannelFromMongoDB()
+    })
+  }
+
+  startSelectedChannelPolling(){
+    interval(this.selectedChannelPollingInterval).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(()=>{
+      this.getSelectedChannelFromMongoDB()
+    })
   }
 
   hideNumCanal(){
@@ -76,36 +102,17 @@ export class PlaylistComponent {
     this.mongodbService.getSeletorDeCanal()
     .subscribe(data=>{
       let canal = data[0].canal.toString()
-      this.selectedCanal = canal
-      switch (canal){
-        case "2":  
-          this.selectCanal(canal.toString(),"Cultura")
-            break
-        case "4":
-          this.selectCanal(canal.toString(),"Sbt")
-            break
-        case "5":
-          this.selectCanal(canal.toString(),"Globo")
-            break
-        case "7":
-          this.selectCanal(canal.toString(),"Record")
-            break
-        case "9":
-          this.selectCanal(canal.toString(),"Manchete")
-            break
-        case "11":  
-          this.selectCanal(canal.toString(),"Gazeta")
-          break
-        case "13":
-          this.selectCanal(canal.toString(),"Bandeirantes")
-            break
-        case "32":
-          this.selectCanal(canal.toString(),"Mtv")
-            break
-        case "42":
-          this.selectCanal(canal.toString(),"TVA")
-          break
+      let canalInfo = this.getCanalInfo(canal)
+
+      if(!canalInfo){
+        return
       }
+
+      if(this.selectedCanal && this.selectedCanal.toString() == canalInfo.numero){
+        return
+      }
+
+      this.aplicarCanalSelecionado(canal)
     })
   
   }
@@ -137,59 +144,44 @@ export class PlaylistComponent {
 
   switchEventChannel(eventCode:any){
     eventCode=sts.removeFromString(["Digit","Numpad"],eventCode.toString())
-    switch (eventCode){
+    this.changeChannel(eventCode)
+  }
+
+  getCanalInfo(canal){
+    switch (canal.toString()){
       case "1":
-        this.selectCanal(eventCode,"Gazeta")
-        this.changeChannel(1)
-        this.numCanal=11
-          break
-      case "2":
-        this.selectCanal(eventCode,"Cultura")
-        this.changeChannel(2)
-          break
-      case "3":
-        this.selectCanal(eventCode,"Bandeirantes")
-        this.changeChannel(3)
-        this.numCanal=13
-          break
-      case "4":
-        this.selectCanal(eventCode,"Sbt")
-        this.changeChannel(4)
-          break
-      case "5":
-        this.selectCanal(eventCode,"Globo")
-        this.changeChannel(5)
-          break
-      case "6":
-        this.selectCanal(eventCode,"Mtv")
-        this.changeChannel(6)
-          break
-      case "7":
-        this.selectCanal(eventCode,"Record")
-        this.changeChannel(7)
-          break
-      case "9":
-        this.selectCanal(eventCode,"Manchete")
-        this.changeChannel(9)
-          break
       case "11":
-        this.selectCanal(eventCode,"Gazeta")
-        this.changeChannel(11)
-          break
+        return {numero:"11", emissora:"Gazeta"}
+      case "2":
+        return {numero:"2", emissora:"Cultura"}
+      case "3":
       case "13":
-        this.selectCanal(eventCode,"Bandeirantes")
-        this.changeChannel(13)
-          break
+        return {numero:"13", emissora:"Bandeirantes"}
+      case "4":
+        return {numero:"4", emissora:"Sbt"}
+      case "5":
+        return {numero:"5", emissora:"Globo"}
+      case "6":
       case "32":
-        this.selectCanal(eventCode,"Mtv")
-        this.changeChannel(32)
-          break
+        return {numero:"32", emissora:"Mtv"}
+      case "7":
+        return {numero:"7", emissora:"Record"}
+      case "9":
+        return {numero:"9", emissora:"Manchete"}
       case "42":
-        this.selectCanal(eventCode,"TVA")
-        this.changeChannel(42)
-          break
+        return {numero:"42", emissora:"TVA"}
+    }
+  }
+
+  aplicarCanalSelecionado(canal){
+    let canalInfo = this.getCanalInfo(canal)
+
+    if(!canalInfo){
+      return false
     }
 
+    this.selectCanal(canalInfo.numero, canalInfo.emissora)
+    return canalInfo
   }
 
   getGradeFromMongoDB(emissora,diasDaSemana){
@@ -284,6 +276,7 @@ export class PlaylistComponent {
 
   selectCanal(text,canal){
     this.numCanal=text.replace("Numpad","").replace("Digit","")
+    this.selectedCanal=this.numCanal
     this.exibeNumCanal=true
     this.hideNumCanal()
     this.spySelectedCanal.next(canal)
