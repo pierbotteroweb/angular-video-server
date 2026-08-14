@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FirebaseService } from 'src/app/services/firebase.service';
 import { MongodbService } from 'src/app/services/mongodb.service';
 
 @Component({
@@ -10,7 +9,6 @@ import { MongodbService } from 'src/app/services/mongodb.service';
 export class SidebarsComponent {
 
   constructor(
-    private firebaseService: FirebaseService,
     private mongodbService: MongodbService) { }
   @Input() viewport
   @Input() arrayNumerosCanais
@@ -40,7 +38,6 @@ export class SidebarsComponent {
 
   changeChannel(channel){
     this.selectedCanal=channel
-    this.firebaseService.updateSeletorDeCanal({canal:channel})
     this.mongodbService.updateSeletorDeCanal({canal:channel}).subscribe(() => {
       console.log('Selected Canal updated successfully!');
     })

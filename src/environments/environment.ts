@@ -5,15 +5,7 @@
 export const environment = {
   production: false,
   BASE_URL:"/files/assets/dvds/",
-  API: '/api-nest/',
-  firebase: {
-    apiKey: "AIzaSyCwnQT7_QChY_ce7z3uoiFWy6GMqlF--1c",
-    authDomain: "shuffletv-dec45.firebaseapp.com",
-    projectId: "shuffletv-dec45",
-    storageBucket: "shuffletv-dec45.appspot.com",
-    messagingSenderId: "255968457120",
-    appId: "1:255968457120:web:b6eab2c4fd190bc80d74c5"
-  }
+  API: '/api-nest/'
 };
 ''
 /*

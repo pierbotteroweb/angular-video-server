@@ -4,9 +4,8 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { PontoDePartidaService } from '../services/ponto-de-partida.service';
 import { DOCUMENT } from '@angular/common';
 import { CommonService } from 'src/services/common.service';
-import { FirebaseService } from '../services/firebase.service';
 import { UploadVideoService } from '../services/upload-video.service';
-import { map, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { MongodbService } from '../services/mongodb.service';
 import { sts } from 'shuffle-tv-services/lib'
 import { WebSocketService } from '../services/WebSocketService.service';
@@ -25,7 +24,6 @@ export class OndemandComponent implements OnInit {
               private mongodbService: MongodbService,
               private uploadVideoService: UploadVideoService,
               private webSocketService: WebSocketService,
-              private firebaseService: FirebaseService,
               private commonServices: CommonService,
               private formBuilder: FormBuilder) {
                 this.selectVideoForm = this.formBuilder.group({ 
@@ -721,16 +719,6 @@ export class OndemandComponent implements OnInit {
         media['cortesParaIntervalo']= this["video"+[this.horario]].cortesParaIntervalo = this.pontosDeCorte.cortesParaIntervalo.map(ponto=>ponto.valor)
       }
     })
-    // let lista = this["video"+[this.horario]]
-    // let url = "/files/"+request+"UpdateList"
-
-    // this.firebaseService.update(this.horario,id, media).then(() => {
-    //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)
-    //   .subscribe(res=>{
-    //     unsubscribe.unsubscribe()
-    //   })
-    // });
-
     this.updateOnMongoDB(media)
     
   }
@@ -746,16 +734,6 @@ export class OndemandComponent implements OnInit {
         media['boost']= this.boost
       }
     })
-    let lista = this["video"+[this.horario]]
-    let url = "/files/"+request+"UpdateList"
-
-    // this.firebaseService.update(this.horario,id, media).then(() => {
-    //   let unsubscribe = this.uploadVideoService.listUpdate(lista,url)
-    //   .subscribe(res=>{
-    //     unsubscribe.unsubscribe()
-    //   })
-    // });
-
     this.updateOnMongoDB(media)
 
 
@@ -1157,24 +1135,6 @@ export class OndemandComponent implements OnInit {
     })
   }
 
-  getListaDeProgramasDeTv(){
-    let unsubscribe=
-    this.firebaseService.getAll("programasDeTv").snapshotChanges()
-    .pipe(
-      map(changes =>
-        changes.map(c =>
-          ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-        )
-      )
-    ).subscribe(data=>{
-      if(this.selectedCanal){            
-       data = [...data.filter(prog=>{ return prog.canal==this.selectedCanal})]
-      }
-      this.programaDeTvFiltered=this.programaDeTv=data.sort(sts.sortPorTitulo())
-      unsubscribe.unsubscribe()
-    })
-  } 
-  
   getCanaisFromMongoDB(){
     let unsubscribe=
     this.mongodbService.getCanais().subscribe((data:any )=>{ 

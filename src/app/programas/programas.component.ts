@@ -52,7 +52,6 @@ export class ProgramasComponent implements OnInit {
 
   constructor(
       private mongodbService: MongodbService,
-      // private firebaseService: FirebaseService,
       private formBuilder: FormBuilder) { 
         this.selectVideoForm = this.formBuilder.group({
           canaisFormControl:[""],

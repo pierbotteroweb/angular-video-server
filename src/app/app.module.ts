@@ -7,14 +7,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-// AMBIENTE
-import { environment } from '../environments/environment';
-
-// MODULSO FIREBASE E PRIMENG
+// MODULOS PRIMENG
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 
 // COMPONENTS
@@ -119,8 +114,6 @@ import { ProgramaModalComponent } from './programas/components/programa-modal/pr
 
     TableModule,
     DialogModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule, // for firestore
     // SharedComponentsModule,
     NgxBootstrapIconsModule.pick(allIcons)
   ],

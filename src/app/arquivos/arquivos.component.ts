@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import { map } from 'rxjs/operators';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { filterResponse, uploadProgress } from 'src/app/shared/rxjs-operators';
 import { UploadVideoService } from '../services/upload-video.service';
 import { CommonService } from 'src/services/common.service';
 import { VideoModel } from './video';
@@ -202,28 +200,6 @@ export class ArquivosComponent implements OnInit {
     })
   }
 
-
-  // getListaDeProgramasDeTv(){
-  //   this.programaDeTvFiltered=[]
-  //   this.programaDeTv=[]
-  //   this.listaParaAtualizar=[]
-  //   let unsubscribe=
-  //   this.firebaseService.getAll("programasDeTv").snapshotChanges()
-  //   .pipe(
-  //     map(changes =>
-  //       changes.map(c =>
-  //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //       )
-  //     )
-  //   ).subscribe(data=>{
-  //     this.programaDeTvFiltered=this.programaDeTv=data.sort(sts.sortPorTitulo())
-  //     if(this.selectedCanal){            
-  //       this.filterProgramaDeTV(this.selectedCanal)
-  //     }
-  //     unsubscribe.unsubscribe()
-  //   })
-  // }
-
   filterVideos(canal){
     this.videosFiltered = this.videos.filter((video:any)=> video.canal == canal)
   }
@@ -239,59 +215,6 @@ export class ArquivosComponent implements OnInit {
       // this.programaDeTvFiltered= unfiltered.filter(prog=>(!prog.titulo.includes("Int ") && !prog.titulo.includes("Pre Pos ") ))
       this.programaDeTvFiltered= unfiltered
   }
-
-  // upload(index){
-
-  //   if(index<this.videosToUpload.length){
-  //     let url = "/files/"+this.selectVideoForm.get('mimeTypeFormControl').value+"Upload"
-
-  //     let subscription = this.uploadVideoService.upload(this.videosToUpload[index], url)
-  //     .pipe(
-  //       uploadProgress(progress=>{
-  //         this.progress=progress;
-  //       }),
-  //       filterResponse()
-  //     ).subscribe(
-  //       res=>{
-  //         let videoObj:any = {
-  //           canal:"",
-  //           duracao:"",
-  //           titulo:""
-  //         }
-
-  //         this.firebaseService.create(this.selectedmimeType,videoObj).then((newItemRes) => {
-                
-  //           let videoObjUpdate:any = {
-  //             canal:this.selectedCanal,
-  //             duracao:Math.round(res['message'].file.duration),
-  //             titulo:res['message'].file.name,
-  //             tipo:this.selectedmimeType,
-  //             tituloAtracao:this.tituloAtracao,
-  //           }
-
-  //           if(this.selectedProgramaDeTv){
-  //             videoObjUpdate.programaDeTv=this.selectedProgramaDeTv
-  //           }
-
-  //           this.firebaseService.update(this.selectedmimeType,newItemRes.id, videoObjUpdate).then(() => {
-  //             if(this.selectedProgramaDeTv){
-  //               this.firebaseService.addItemToRefCollection(
-  //                 this.selectedProgramaDeTv,
-  //                 this.selectedmimeType,newItemRes.id)
-  //                 .then(data=>{
-  //                   this.upload(index+1)
-  //                 })
-  //             }else{
-  //               this.upload(index+1)
-  //             }
-  //           });
-  //         });
-  //       }
-  //     )
-  //   } else {
-  //     this.atualizaListaLocal()
-  //   }
-  // }
 
   getNewFileOnDirectory(){
     if(this.selectVideoForm.get('mimeTypeFormControl')){
@@ -601,44 +524,6 @@ export class ArquivosComponent implements OnInit {
     //  })
   }
 
-  // setProgramaDeTv(){
-
-  //     this.selectedVideos.map(video=>{
-  //         this.update(video.tipo,video.id,{
-  //           programaDeTv:this.selectedProgramaDeTv,
-  //           tituloAtracao:this.tituloAtracao,
-  //         })
-
-  //         this.videos.map(video2=>{
-  //           if(video.id==video2.id){
-  //             video2['programaDeTv']=this.selectedProgramaDeTv
-  //           }
-  //         })
-  //         this.firebaseService.addItemToRefCollection(
-  //           this.selectedProgramaDeTv,
-  //           this.selectedmimeType,video.id)
-  //           .then(data=>{
-  //           })
-  //     })
-      
-  //     this.clearSelect()
-  // }
-
-  // addParaTia(){
-  //     this.selectedVideos.map(video=>{
-  //       this.update(video.tipo,video.id,{
-  //         tipo:this.selectedmimeType
-  //       })
-  //         this.firebaseService.addItemToRefCollection(
-  //           "filmeDaTia",
-  //           this.selectedmimeType,video.id)
-  //           .then(data=>{
-  //             this.update(video.tipo,video.id,{tia:true})
-  //           })
-  //     })
-  //     this.clearSelect()
-  // }  
-
   clearProgFromSelected(){
     const functionThatReturnsAPromise = video => { //a function that returns a promise
       this.clearProgFromMongoDB(video)
@@ -676,91 +561,6 @@ export class ArquivosComponent implements OnInit {
       console.log("Todos os itens selecionados foram deletados")
     }) 
   }
-
-
-
-  // retrieveSemCanal(): void {
-  //   this.listaParaAtualizar=[]
-  //   let unsubscribe =
-  //   this.firebaseService.getAll(this.selectedmimeType).snapshotChanges().pipe(
-  //     map(changes =>
-  //       changes.map(c =>
-  //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //       )
-  //     )
-  //   ).subscribe((data:any ) => {
-  //     this.videos=data.filter(data=>{
-  //       return !data.canal
-  //     })
-  //     .sort(sts.sortPorTitulo())
-  //     console.log("videos",this.videos)
-  //   });
-
-  //   unsubscribe.unsubscribe()
-  // }
-
-  // getListMovies(){
-  //   this.listaParaAtualizar=[]
-  //   if(this.selectedmimeType=="dvds"||this.selectedmimeType=="movies")
-  //   this.firebaseService.getAll(this.selectedmimeType).snapshotChanges()
-  //   .pipe(
-  //     map(changes =>
-  //       changes.map(c =>
-  //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //       )
-  //     )
-  //   ).subscribe((data:any)=>{
-  //     this.videos=data.sort(sts.sortPorTitulo())
-  //     console.log("videos Movies",this.videos)
-  //   })
-  // }
-
-  // getList(canalOuPrograma): void {
-  //   this.listaParaAtualizar=[]
-  //   let data = canalOuPrograma=="canal"?this.selectedCanal:this.selectedProgramaDeTv
-    
-  //   let unsubscribe=
-  //   this.firebaseService.getListFromfirestore(this.selectedmimeType,canalOuPrograma,data).snapshotChanges().pipe(
-  //     map(changes =>
-  //       changes.map(c =>
-  //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //       )
-  //     )
-  //   ).subscribe((data:any ) => {
-  //     console.log("list of programa",data)
-  //     let regTeste = data.find(prog=>prog.ref=="Teste")
-  //     if(regTeste){
-  //       console.log("Reg Teste Found: ",regTeste)
-  //       this.delete("refId",regTeste.id)
-  //     }
-  //     this.currentRefList=data
-  //     let tempData=[]
-  //     if(canalOuPrograma=="programa"){
-  //       data.map(registro=>{
-  //         if(registro.ref!="Teste"){
-  //           registro.ref.get()
-  //           .then(res=>{
-  //             let obj = res.data()
-  //             if(registro.ref.id){
-  //               obj.id = registro.ref.id
-  //               obj.refId = registro.id
-  //               tempData.push(obj)
-  //             }
-  //           })
-  //         }            
-  //       })
-  //     } else {
-  //       this.currentRefList=[]
-  //       tempData=data
-  //     }
-  //     setTimeout(()=>{
-  //       this.videos=tempData.sort(sts.sortPorTitulo())
-  //       console.log("Uma lista de prog de TV",this.videos)
-  //       unsubscribe.unsubscribe()
-  //     },1000)
-  //   });
-  // }
-
   criarProgramaOnMongoDb(){
     if(this.selectedCanal,this.novoPrograma.value){
       console.log("this.novoPrograma.value",this.novoPrograma.value)
@@ -779,19 +579,6 @@ export class ArquivosComponent implements OnInit {
     }
   }
 
-  // criarPrograma(){
-  //   if(this.selectedCanal,this.novoPrograma.value){
-  //     this.firebaseService.createNewProgDeTVCollection({
-  //       value:sts.camelize(this.novoPrograma.value.normalize('NFD').replace(/[\u0300-\u036f]/g, "")),
-  //       titulo:this.novoPrograma.value,
-  //       canal:this.selectedCanal
-  //     })
-  //     this.getListaDeProgramasDeTvFromMongoDB()
-  //   } else {
-  //     console.log("Selecione um canal e informe o nome do programa de TV")
-  //   }
-  // }
-  
   checkIfProgExists(progValue,type){
 
     let intProg = sts.camelize(type+" "+progValue.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))
@@ -799,64 +586,6 @@ export class ArquivosComponent implements OnInit {
     return found?true:false
   }
   
-
-  // newInt(){
-  //   if(this.selectedCanal,this.selectedProgramaDeTv){
-  //     if(!this.checkIfProgExists(this.selectedProgramaDeTv,"int")){
-  //       console.log(this,this.programaDeTv)
-  //       let progTitulo
-  //       this.programaDeTv.map(prog=>{
-  //         if(prog.value==this.selectedProgramaDeTv){
-  //           progTitulo=prog.titulo
-  //         }
-  //       })
-  //       this.firebaseService.createNewProgDeTVCollection({
-  //         value:"int"+sts.toTitleCase(sts.camelize(this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))),
-  //         titulo:"Int "+progTitulo,
-  //         canal:this.selectedCanal
-  //       })
-
-  //       setTimeout(()=>{
-  //         this.getListaDeProgramasDeTvFromMongoDB()
-  //         let prog = sts.toTitleCase(sts.camelize("int "+this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))) 
-  //         console.log(prog) 
-  //         this.selectVideoForm.get('programaDeTvFormControl').setValue("int"+prog)
-  //       },1000)
-  //     }
-  //   } else {
-  //     console.log("Selecione um canal e informe o nome do programa de TV")
-  //   }
-  // }
-  
-  
-
-  // newPrepos(){
-  //   if(this.selectedCanal,this.selectedProgramaDeTv){
-  //     if(!this.checkIfProgExists(this.selectedProgramaDeTv,"prePos")){
-  //       console.log(this,this.programaDeTv)
-  //       let progTitulo
-  //       this.programaDeTv.map(prog=>{
-  //         if(prog.value==this.selectedProgramaDeTv){
-  //           progTitulo=prog.titulo
-  //         }
-  //       })
-  //       this.firebaseService.createNewProgDeTVCollection({
-  //         value:"prePos"+sts.toTitleCase(sts.camelize(this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))),
-  //         titulo:"Pre Pos "+progTitulo,
-  //         canal:this.selectedCanal
-  //       })
-
-  //       setTimeout(()=>{
-  //         this.getListaDeProgramasDeTvFromMongoDB()
-  //         let prog = sts.camelize("pre Pos "+this.selectedProgramaDeTv.normalize('NFD').replace(/[\u0300-\u036f]/g, "")) 
-  //         console.log(prog) 
-  //         this.selectVideoForm.get('programaDeTvFormControl').setValue("prePos"+prog)
-  //       },1000)
-  //     }
-  //   } else {
-  //     console.log("Selecione um canal e informe o nome do programa de TV")
-  //   }
-  // }
 
   retreiveFromMongoDB(){
     console.log(this.selectedmimeType)
@@ -873,74 +602,6 @@ export class ArquivosComponent implements OnInit {
 
   }
   
-  // retrieve(): void {
-  //   let termoParaFiltro =this.selectVideoForm.get('filtroDeBuscaFormControl').value
-  //   let unsubscribe =
-  //   this.firebaseService.getAll(this.selectedmimeType,termoParaFiltro).snapshotChanges().pipe(
-  //     map(changes =>
-  //       changes.map(c =>
-  //         ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //       )
-  //     )
-  //   ).subscribe((data:any )=> {
-      
-  //     let tempData=[]
-  //     tempData=data
-  //     this.videos=tempData.sort(sts.sortPorTitulo())
-  //     console.log("videos",this.videos)
-  //     unsubscribe.unsubscribe()
-  //   });
-
-  // }
-
-  // save(media): void {
-  //   this.firebaseService.create(this.selectedmimeType,media).then((res) => {
-  //     console.log('Created new item successfully! =>',res.id);
-  //   });
-  // }
-
-
-  // update(tipo,id, media,url?): void {
-  //   this.firebaseService.update(tipo,id, media).then(() => {
-  //     console.log('Item updated successfully!');
-  //     this.uploadVideoService.idUpdate(url.replace("Upload","videoId"),id)
-  //     .subscribe(res=>{
-  //       console.log('update',res)
-  //     })
-  //   });
-  // }
-
-  // atualizaListaLocal(){
-  //   let unsubscribe=
-  //     this.firebaseService.getAll(this.selectedmimeType).snapshotChanges().pipe(
-  //       map(changes =>
-  //         changes.map(c =>
-  //           ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-  //         )
-  //       )
-  //     ).subscribe((data:any)=>{
-  //       this.listaParaAtualizar=data
-  //       let url = "/files/"+
-  //       this.selectVideoForm.get('mimeTypeFormControl').value+"UpdateList"
-  //       this.uploadVideoService.listUpdate(this.listaParaAtualizar,url)
-  //       .subscribe(res=>{
-          
-  //         unsubscribe.unsubscribe()
-  //       })
-  //     })
-  // }
-
-  // delete(tipoId,id): void {
-  //   if(tipoId=="refId"){
-  //     this.firebaseService.deleteRef(this.selectedProgramaDeTv,id)
-    
-  //   }else {
-  //     this.firebaseService.delete(this.selectedmimeType,id).then(() => {
-  //       console.log('Item deleted successfully!');
-  //     });
-  //   }
-  // }
-
   deleteFromMongoDB(id): void {
     this.mongodbService.deleteFromVideoCollection(this.selectedmimeType,id).subscribe(() => {
       console.log('Item deleted successfully!');

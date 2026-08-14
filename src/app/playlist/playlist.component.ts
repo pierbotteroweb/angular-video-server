@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonService } from 'src/services/common.service';
 import { fromEvent, Observable, Subject, interval } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
