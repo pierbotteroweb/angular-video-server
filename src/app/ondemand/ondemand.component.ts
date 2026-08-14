@@ -129,6 +129,9 @@ export class OndemandComponent implements OnInit {
   touchStart:number
   touchend:number
   pontoDeCorteSelecionado:any
+  inicioMediaEmSegundos:number=0
+  seekAplicado:boolean=false
+  seekListenersRegistrados:boolean=false
 
   selectedCanal:string
   selectedProgramaDeTv:string
@@ -138,20 +141,20 @@ export class OndemandComponent implements OnInit {
   boost:number
 
   cortesInicio:Array<Object>=[
-    {texto:'MACROSS',tempo:"#t=180"},
-    {texto:'Zillion',tempo:"#t=96"},
-    {texto:'Denver',tempo:"#t=65"},
-    {texto:'Transformers',tempo:"#t=30"},
-    {texto:'Pirata Do Espaço',tempo:"#t=61"},
-    {texto:'Capitão America 1966 -',  tempo:"#t=21"},
-    {texto:'A Familia Adams',tempo:"#t=60"},
-    {texto:'Thundercats',tempo:"#t=77"},
-    {texto:'Mestre dos Sonhos',tempo:"#t=0"},
-    {texto:'Volta de Hachiman',tempo:"#t=0"},
-    {texto:'Centurions',tempo:"#t=58"},
-    {texto:'Homem Aranha 1967',tempo:"#t=64"},
-    {texto:'A Familia Adams',tempo:"#t=60"},
-    {texto:'Simpsons',tempo:"#t=33"}
+    {texto:'MACROSS',tempo:180},
+    {texto:'Zillion',tempo:96},
+    {texto:'Denver',tempo:65},
+    {texto:'Transformers',tempo:30},
+    {texto:'Pirata Do Espaço',tempo:61},
+    {texto:'Capitão America 1966 -',  tempo:21},
+    {texto:'A Familia Adams',tempo:60},
+    {texto:'Thundercats',tempo:77},
+    {texto:'Mestre dos Sonhos',tempo:0},
+    {texto:'Volta de Hachiman',tempo:0},
+    {texto:'Centurions',tempo:58},
+    {texto:'Homem Aranha 1967',tempo:64},
+    {texto:'A Familia Adams',tempo:60},
+    {texto:'Simpsons',tempo:33}
   ]
 
   extensoes:Array<String>=[
@@ -299,9 +302,9 @@ export class OndemandComponent implements OnInit {
       
             this.selectVideoForm.get(this.horario+"FormControl").setValue(data[0].idDoFilme)
       
+            this.definirTempoInicialDaMedia(this.definePontoDePartida(filme))
             this.url=this.baseUrl+this.horario+"/"
-                      +encodeURI(filme.titulo)+"#t="
-                      +(this.definePontoDePartida(filme))
+                      +encodeURI(filme.titulo)
             let infoDoFilmeAtual = {}
             infoDoFilmeAtual['cortesParaIntervalo'] = filme?.cortesParaIntervalo
             infoDoFilmeAtual['corteInicio'] = (filme?.corteInicio?filme.corteInicio:"0")
@@ -330,7 +333,8 @@ export class OndemandComponent implements OnInit {
             },1000)
           })
         } else {
-          this.url = this.baseUrl+"dublado/"+encodeURI("Civic TV, chanel 83.mp4")+"#t=11"
+          this.definirTempoInicialDaMedia(11)
+          this.url = this.baseUrl+"dublado/"+encodeURI("Civic TV, chanel 83.mp4")
           this.exibeVideo=true
           this.timeBarUpdate()
         }
@@ -355,6 +359,81 @@ export class OndemandComponent implements OnInit {
 
             return filme.pontoDePartida
 
+  }
+
+  definirTempoInicialDaMedia(tempo:any): void{
+    this.inicioMediaEmSegundos = this.normalizarTempoInicialEmSegundos(tempo)
+    this.seekAplicado = false
+    this.seekListenersRegistrados = false
+    this.pause = false
+  }
+
+  normalizarTempoInicialEmSegundos(tempo:any): number{
+    if(tempo === undefined || tempo === null || tempo === ""){
+      return 0
+    }
+
+    let tempoNormalizado = tempo
+
+    if(typeof tempoNormalizado === "string"){
+      tempoNormalizado = tempoNormalizado.replace("#t=", "")
+    }
+
+    let tempoNumerico = Number(tempoNormalizado)
+
+    if(isNaN(tempoNumerico)){
+      return 0
+    }
+
+    return Math.max(0, tempoNumerico)
+  }
+
+  tentarIniciarVideo(): void{
+    if(!this.videoElement || this.pause){
+      return
+    }
+
+    let playPromise = this.videoElement.play()
+
+    if(playPromise && playPromise.catch){
+      playPromise.catch(()=>{})
+    }
+  }
+
+  aplicarTempoInicialCompativelComSmartTv(): void{
+    if(!this.videoElement || this.seekAplicado){
+      return
+    }
+
+    let tempoInicial = this.inicioMediaEmSegundos || 0
+
+    if(tempoInicial <= 0){
+      this.seekAplicado = true
+      this.tentarIniciarVideo()
+      return
+    }
+
+    let aplicarSeek = () => {
+      if(this.seekAplicado || !this.videoElement){
+        return
+      }
+
+      try {
+        this.videoElement.currentTime = tempoInicial
+        this.seekAplicado = true
+        this.tentarIniciarVideo()
+      } catch (error) {
+        setTimeout(()=>aplicarSeek(),500)
+      }
+    }
+
+    if(this.videoElement.readyState >= 1){
+      aplicarSeek()
+    } else if(!this.seekListenersRegistrados) {
+      this.seekListenersRegistrados = true
+      this.videoElement.addEventListener('loadedmetadata', aplicarSeek)
+      this.videoElement.addEventListener('canplay', aplicarSeek)
+    }
   }
 
   carregandoListasDeVideosDoMongoDB(){
@@ -532,6 +611,9 @@ export class OndemandComponent implements OnInit {
 
     this.timeBarUpdate$.subscribe(time=>{
       this.updateAVElements()        
+      if(!this.videoElement){
+        return
+      }
       this.videoElement.addEventListener('volumechange',event=>{
         this.audiovolumebar.setValue(event.target['volume']*100)  
       })
@@ -763,6 +845,7 @@ export class OndemandComponent implements OnInit {
   updateAVElements(){    
     this.videoElement = document.getElementsByTagName('video')[0]
     this.audioElement = document.getElementsByTagName('audio')[0]
+    this.aplicarTempoInicialCompativelComSmartTv()
   }
 
   proximoVideoManual(){
@@ -793,9 +876,7 @@ export class OndemandComponent implements OnInit {
           let infoDoFilmeAtual = this['filtredvideo'+this.horario].filter(video=>video._id==this.idDofilmeAtual)[0]
           this.updatePontosDeCorte(infoDoFilmeAtual)        
     
-          if(infoDoFilmeAtual?.corteInicio){
-            this.url=this.url+"#t="+infoDoFilmeAtual?.corteInicio
-          }
+          this.definirTempoInicialDaMedia(infoDoFilmeAtual?.corteInicio ? infoDoFilmeAtual.corteInicio : 0)
 
         this.selectVideoForm.get(this.horario+"FormControl").setValue(this.idDofilmeAtual)
 
@@ -1028,18 +1109,22 @@ export class OndemandComponent implements OnInit {
 
     this.url = this.baseUrl+horario+"/"+encodeURI(this.nomeDoFilmeAtual)
 
+    let tempoInicial = 0
+
     if(infoDoFilmeAtual?.pontoDePartida){
-      this.url=this.url+"#t="+infoDoFilmeAtual.pontoDePartida
+      tempoInicial = infoDoFilmeAtual.pontoDePartida
     }else if(infoDoFilmeAtual?.corteInicio){
       console.log("infoDoFilmeAtual?.corteInicio ",infoDoFilmeAtual.corteInicio)
-      this.url=this.url+"#t="+infoDoFilmeAtual.corteInicio
+      tempoInicial = infoDoFilmeAtual.corteInicio
     } else {
       this.cortesInicio.map(video=>{
         if(this.nomeDoFilmeAtual.includes(video['texto'])){
-          this.url=this.url+video['tempo']
+          tempoInicial = video['tempo']
         }
       })
-    }    
+    }
+
+    this.definirTempoInicialDaMedia(tempoInicial)    
 
     setTimeout(()=>{
       this.exibeVideo=true
@@ -1137,12 +1222,15 @@ export class OndemandComponent implements OnInit {
 
   clickPauseMovie(){
     this.pause=!this.pause
-    this.pause?this.videoElement.pause():this.videoElement.play()
+    if(!this.videoElement){
+      return
+    }
+    this.pause?this.videoElement.pause():this.tentarIniciarVideo()
   }
   
   clickPlayMovie(){
     this.pause=false
-    this.videoElement.play()
+    this.tentarIniciarVideo()
   }
   updatevideoVolumeOnBarChange(){
     this.videoElement.volume=this.audiovolumebar.value/100
