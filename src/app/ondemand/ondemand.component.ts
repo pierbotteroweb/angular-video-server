@@ -9,7 +9,7 @@ import { takeUntil } from 'rxjs/operators';
 import { MongodbService } from '../services/mongodb.service';
 import { sts } from 'shuffle-tv-services/lib'
 import { WebSocketService } from '../services/WebSocketService.service';
-import { fromEvent, Observable, Subject, timer } from 'rxjs';
+import { fromEvent, interval, Observable, Subject, timer } from 'rxjs';
 
 @Component({
   selector: 'app-ondemand',
@@ -130,6 +130,16 @@ export class OndemandComponent implements OnInit {
   inicioMediaEmSegundos:number=0
   seekAplicado:boolean=false
   seekListenersRegistrados:boolean=false
+  pontoDePartidaPollingInterval:number=3000
+  ultimoIdDoFilmeDoPontoDePartida:string=""
+  ultimoHorarioDoPontoDePartida:string=""
+  videoCurrentTimeIntervalId:any
+  videoMongoUpdateIntervalId:any
+  videoElementComListenersDeTempo: HTMLVideoElement | null = null
+  videoVolumeChangeListener:any
+  videoMouseMoveListener:any
+  videoTimeUpdateListener:any
+  mouseMovingTimeoutId:any
 
   selectedCanal:string
   selectedProgramaDeTv:string
@@ -190,11 +200,15 @@ export class OndemandComponent implements OnInit {
     this.webSocketService.connect('/mongodb');
 
     // Listen for messages from the server
-    this.webSocketService.getMessages().subscribe((message) => {
+    this.webSocketService.getMessages().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((message) => {
       let change = JSON.parse(message)
       console.log("Change", change)
       this.getPontoDePartida()
     });
+
+    this.startPontoDePartidaPolling()
 
 
     console.log(window.URL)
@@ -204,7 +218,7 @@ export class OndemandComponent implements OnInit {
     this.getIpUsuario()
     this.carregandoListasDeVideosDoMongoDB()
     // this.carregandoListasDeVideos()
-    this.getPontoDePartida()
+    this.getPontoDePartida(true)
     this.avancaERecuaTempoVideoPorTeclado()
     this.getListaDeProgramasDeTvFromMongoDB()
     // this.getListaDeProgramasDeTv()
@@ -228,8 +242,18 @@ export class OndemandComponent implements OnInit {
   }
 
   ngOnDestroy(){
+    this.clearMediaProgressIntervals()
+    this.removeTimeBarListeners()
     this.destroy$.next()
     this.destroy$.complete()    
+  }
+
+  startPontoDePartidaPolling(){
+    interval(this.pontoDePartidaPollingInterval).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(()=>{
+      this.getPontoDePartida()
+    })
   }
 
   filterProgramaDeTV(canal){
@@ -281,24 +305,44 @@ export class OndemandComponent implements OnInit {
     })
   }
 
-  getPontoDePartida(){
-
-    this.exibeVideo=false
-
+  getPontoDePartida(forceUpdate:boolean=false){
     this.pontoDePartidaService.getPontoDePartida().subscribe(
       data=>{
-        if(data[0].idDoFilme!=""){
-          this.mongodbService.getFromVideoCollectionById(data[0].horario,data[0].idDoFilme).subscribe((filme:any)=>{
+        let pontoDePartida = data && data[0]
+
+        if(!pontoDePartida){
+          return
+        }
+
+        let idDoFilme = pontoDePartida.idDoFilme || ""
+        let horario = pontoDePartida.horario || ""
+        let pontoDePartidaMudou = idDoFilme != this.ultimoIdDoFilmeDoPontoDePartida ||
+                                  horario != this.ultimoHorarioDoPontoDePartida
+
+        if(!forceUpdate && !pontoDePartidaMudou){
+          return
+        }
+
+        this.ultimoIdDoFilmeDoPontoDePartida = idDoFilme
+        this.ultimoHorarioDoPontoDePartida = horario
+        this.exibeVideo=false
+
+        if(idDoFilme!=""){
+          this.mongodbService.getFromVideoCollectionById(horario,idDoFilme).subscribe((filme:any)=>{
+            if(!filme){
+              return
+            }
+
             console.log("123",data)
 
             this.audioExterno=false
-            this.horario = data[0].horario
-            this.idDofilmeAtual = data[0].idDoFilme
+            this.horario = horario
+            this.idDofilmeAtual = idDoFilme
             this.nomeDoFilmeAtual = filme.titulo
             sts.updatePageTitle(this.nomeDoFilmeAtual)
             this.duracaoVideoSelecionado = filme.duracao
       
-            this.selectVideoForm.get(this.horario+"FormControl").setValue(data[0].idDoFilme)
+            this.selectVideoForm.get(this.horario+"FormControl").setValue(idDoFilme)
       
             this.definirTempoInicialDaMedia(this.definePontoDePartida(filme))
             this.url=this.baseUrl+this.horario+"/"
@@ -499,15 +543,16 @@ export class OndemandComponent implements OnInit {
   updatePontoDePartidaNoVideoNoMongoDBACadaSegundo(){
 
     this.updateAVElements()
+    this.clearMediaProgressIntervals()
 
-    setInterval(()=>{
+    this.videoCurrentTimeIntervalId = setInterval(()=>{
       
       if(this.videoElement){
         this.videoCurrentTime= sts.toTime(this.videoElement.currentTime)
       }
     },1000)
 
-    setInterval(()=>{
+    this.videoMongoUpdateIntervalId = setInterval(()=>{
       if(this.videoElement){
       let media
       this["video"+[this.horario]].find(video=>{ 
@@ -528,6 +573,18 @@ export class OndemandComponent implements OnInit {
       }
 
     },15000)       
+  }
+
+  clearMediaProgressIntervals(){
+    if(this.videoCurrentTimeIntervalId){
+      clearInterval(this.videoCurrentTimeIntervalId)
+      this.videoCurrentTimeIntervalId = null
+    }
+
+    if(this.videoMongoUpdateIntervalId){
+      clearInterval(this.videoMongoUpdateIntervalId)
+      this.videoMongoUpdateIntervalId = null
+    }
   }
 
   avancaERecuaTempoVideoPorTeclado(){
@@ -607,28 +664,84 @@ export class OndemandComponent implements OnInit {
 
     this.timeBarUpdate$ = timer(500)
 
-    this.timeBarUpdate$.subscribe(time=>{
+    this.timeBarUpdate$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(time=>{
       this.updateAVElements()        
       if(!this.videoElement){
         return
       }
-      this.videoElement.addEventListener('volumechange',event=>{
-        this.audiovolumebar.setValue(event.target['volume']*100)  
-      })
-        
-      this.videoElement.addEventListener('mousemove',event=>{
-        this.mouseMoving=true
-        this.setSubPosition(-30)
-        setTimeout(()=>{
-          this.mouseMoving=false
-        this.setSubPosition(-4)
-        },3000)
-      })
-      this.videoElement.addEventListener('timeupdate',(event)=>{
-        this.videobar.setValue((this.videoElement.currentTime/this.duracaoVideoSelecionado)*100)
-      })
+
+      this.registerTimeBarListeners()
       
     })
+  }
+
+  registerTimeBarListeners(){
+    if(!this.videoElement){
+      return
+    }
+
+    if(this.videoElementComListenersDeTempo === this.videoElement){
+      return
+    }
+
+    this.removeTimeBarListeners()
+
+    this.videoVolumeChangeListener = event=>{
+      this.audiovolumebar.setValue(event.target['volume']*100)
+    }
+
+    this.videoMouseMoveListener = event=>{
+      this.mouseMoving=true
+      this.setSubPosition(-30)
+
+      if(this.mouseMovingTimeoutId){
+        clearTimeout(this.mouseMovingTimeoutId)
+      }
+
+      this.mouseMovingTimeoutId = setTimeout(()=>{
+        this.mouseMoving=false
+        this.setSubPosition(-4)
+      },3000)
+    }
+
+    this.videoTimeUpdateListener = event=>{
+      this.videobar.setValue((this.videoElement.currentTime/this.duracaoVideoSelecionado)*100)
+    }
+
+    this.videoElement.addEventListener('volumechange',this.videoVolumeChangeListener)
+    this.videoElement.addEventListener('mousemove',this.videoMouseMoveListener)
+    this.videoElement.addEventListener('timeupdate',this.videoTimeUpdateListener)
+    this.videoElementComListenersDeTempo = this.videoElement
+  }
+
+  removeTimeBarListeners(){
+    if(!this.videoElementComListenersDeTempo){
+      return
+    }
+
+    if(this.videoVolumeChangeListener){
+      this.videoElementComListenersDeTempo.removeEventListener('volumechange',this.videoVolumeChangeListener)
+    }
+
+    if(this.videoMouseMoveListener){
+      this.videoElementComListenersDeTempo.removeEventListener('mousemove',this.videoMouseMoveListener)
+    }
+
+    if(this.videoTimeUpdateListener){
+      this.videoElementComListenersDeTempo.removeEventListener('timeupdate',this.videoTimeUpdateListener)
+    }
+
+    if(this.mouseMovingTimeoutId){
+      clearTimeout(this.mouseMovingTimeoutId)
+      this.mouseMovingTimeoutId = null
+    }
+
+    this.videoVolumeChangeListener = null
+    this.videoMouseMoveListener = null
+    this.videoTimeUpdateListener = null
+    this.videoElementComListenersDeTempo = null
   }
   
   adicionaPontoDeCorte(){
