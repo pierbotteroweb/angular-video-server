@@ -32,7 +32,7 @@ export class ProgramaModalComponent implements OnChanges {
   @Output() salvarPrograma = new EventEmitter<any>();
   @Output() deletarPrograma = new EventEmitter<ProgramaModel>();
   blocos = [1, 2, 3, 4, 5, 6];
-  dropdownsPorBloco = [1, 2, 3];
+  dropdownsPorBloco = [1, 2, 3, 4, 5, 6];
   quantidadeBlocosVisiveis = 1;
   exibirConfirmacaoDelecao = false;
 
