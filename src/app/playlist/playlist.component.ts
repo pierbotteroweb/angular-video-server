@@ -3,7 +3,7 @@ import { CommonService } from 'src/services/common.service';
 import { fromEvent, Observable, Subject, interval } from 'rxjs';
 import { MongodbService } from '../services/mongodb.service';
 import { sts } from 'shuffle-tv-services/lib'
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { WebSocketService } from '../services/WebSocketService.service';
 @Component({
   selector: 'app-playlist',
@@ -56,7 +56,6 @@ export class PlaylistComponent {
         this.getLista(canal)
     })
     this.listenSelectedChannelFromMongoDBChanges()
-    this.startSelectedChannelPolling()
     this.getSelectedChannelFromMongoDB()
     this.keyboardSetup()
   }
@@ -80,17 +79,12 @@ export class PlaylistComponent {
     this.webSocketService.connect('/mongodb');
 
     this.webSocketService.getMessages().pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(()=>{
-      this.getSelectedChannelFromMongoDB()
-    })
-  }
-
-  startSelectedChannelPolling(){
-    interval(this.selectedChannelPollingInterval).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(()=>{
-      this.getSelectedChannelFromMongoDB()
+      takeUntil(this.destroy$),
+      tap((msg)=>console.log("mensagem do web socket",JSON.parse(msg).change.updateDescription.updatedFields))
+    ).subscribe((msg)=>{
+      const canal = JSON.parse(msg).change.updateDescription.updatedFields?.canal || null
+      if(! canal) return
+      this.aplicarCanalSelecionado(canal)
     })
   }
 
