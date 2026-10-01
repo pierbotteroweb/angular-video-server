@@ -5,7 +5,7 @@ import { PontoDePartidaService } from '../services/ponto-de-partida.service';
 import { DOCUMENT } from '@angular/common';
 import { CommonService } from 'src/services/common.service';
 import { UploadVideoService } from '../services/upload-video.service';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { MongodbService } from '../services/mongodb.service';
 import { sts } from 'shuffle-tv-services/lib'
 import { WebSocketService } from '../services/WebSocketService.service';
@@ -201,14 +201,12 @@ export class OndemandComponent implements OnInit {
 
     // Listen for messages from the server
     this.webSocketService.getMessages().pipe(
-      takeUntil(this.destroy$)
+      takeUntil(this.destroy$),
     ).subscribe((message) => {
-      let change = JSON.parse(message)
-      console.log("Change", change)
+      let idDoFilme = JSON.parse(message).change.updateDescription.updatedFields?.idDoFilme || null
+      if(!idDoFilme) return
       this.getPontoDePartida()
     });
-
-    this.startPontoDePartidaPolling()
 
 
     console.log(window.URL)
@@ -246,14 +244,6 @@ export class OndemandComponent implements OnInit {
     this.removeTimeBarListeners()
     this.destroy$.next()
     this.destroy$.complete()    
-  }
-
-  startPontoDePartidaPolling(){
-    interval(this.pontoDePartidaPollingInterval).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(()=>{
-      this.getPontoDePartida()
-    })
   }
 
   filterProgramaDeTV(canal){

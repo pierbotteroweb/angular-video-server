@@ -44,7 +44,6 @@ export class PlaylistComponent {
   viewport: number
   keyboardEvents$: Observable<KeyboardEvent>
   destroy$ = new Subject()
-  selectedChannelPollingInterval = 1000
 
   @ViewChild ('player') player: ElementRef;
 
@@ -79,8 +78,7 @@ export class PlaylistComponent {
     this.webSocketService.connect('/mongodb');
 
     this.webSocketService.getMessages().pipe(
-      takeUntil(this.destroy$),
-      tap((msg)=>console.log("mensagem do web socket",JSON.parse(msg).change.updateDescription.updatedFields))
+      takeUntil(this.destroy$)
     ).subscribe((msg)=>{
       const canal = JSON.parse(msg).change.updateDescription.updatedFields?.canal || null
       if(! canal) return
