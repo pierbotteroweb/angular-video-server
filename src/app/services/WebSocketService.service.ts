@@ -52,7 +52,6 @@ export class WebSocketService {
 
     // Listen for messages from the server
     this.socket.onmessage = (event) => {
-      console.log("this.socket.onmessage event",JSON.parse(event.data).change.updateDescription.updatedFields)
       this.messages.next(event.data);
     };
 
